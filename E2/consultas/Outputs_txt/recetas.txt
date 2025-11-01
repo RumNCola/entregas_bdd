@@ -1,0 +1,5 @@
+"receta"
+"Paciente: Isabel Paula Araya RUN: 395297-5                   Diagnóstico: Coloproctología                   ACIDO IBANDRONICO 150 MG CM REC  1 comprimido cada 6 horas                    MONTELUKAST 10 MG CM/CM REC  1 comprimido cada 12 horas con comida.                   Fecha: 2024-06-05"
+
+"receta"
+"Paciente: Daniel Soto González RUN: 129414-8                   Diagnóstico: Depresión mayor                   REMIFENTANILO 1 MG LIOF P/SOL INY IV FAM  1 gramo cada 24 horas por 5 días.                   Código de Autorización: NO HAY CODIGOS DE AUTORIZACIÖN EN EL ESQUEMAFecha: 2025-01-30"
