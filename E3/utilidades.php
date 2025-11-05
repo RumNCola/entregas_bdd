@@ -111,7 +111,9 @@ function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK
     return;
 }
 
-function revisar_restriccion_integridad()
+function revisar_restriccion_integridad() {
+    return;
+}
 
 function revisar_personas(){
     #Lectura de archivos importantes
