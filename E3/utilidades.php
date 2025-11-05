@@ -55,31 +55,57 @@ function eliminar_duplicados(array $array, string $nombre_csv): array{
     return array($resultado, $duplicados);
 }
 
-function escribir_oks(array $array, string $csv, string $tipo_archivo="OK"): void{
+function escribir_log(array $array, string $csv_nombre): void{
     // 
-    // funcion que recibe un array de datos y los escribe en el archivo csv
-    // csv_limpios/{$csv}{$tipo_archivo}.csv. El $tipo_archivo puede ser OK o ERR
+    // funcion que recibe un array (fila) y la escribe en el log entregado en el archivo de 
+    // csv_nombre, que viene en formato "Persona.csv".
     //
+    $ruta_log = $carpeta_logs . explode(".", $csv_nombre)[0] . "LOG.txt";
+    $archivo_log = fopen($ruta_log, "w");
+    fwrite($archivo_log, implode(";", $array) . "\n");
+    fclose($archivo_log);
+    return;
+}
+
+function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK"): void{
+    // 
+    // funcion que recibe un array de datos y los escribe en el archivo csv (OK o ERR y LOG)
+    // csv_limpios/{$csv}{$tipo_archivo}.csv si $tipo_archivo es OK o en csv_errores/{$csv}
+    // {$tipo_archivo}.csv si $tipo_archivo es ERR
+    //
+    
     $csv_nombre         = explode(".", $csv)[0];
-    $ruta_archivo_ok    = $carpeta_limpios . $csv_nombre . $tipo_archivo . "csv";
+    
+    // Definimos la ruta del archivo a escribir segun tipo_archivo
+    if($tipo_archivo == "OK"){
+        $ruta_archivo_nuevo    = $carpeta_limpios . $csv_nombre . $tipo_archivo . "csv";
+    }
+    else{
+        $ruta_archivo_nuevo    = $carpeta_errores . $csv_nombre . $tipo_archivo . "csv";
+    }
     
     // Si el archivo de oks no existe, lo creamos y agregamos el header (atributos)
-    if (!file_exists(ruta_archivo_ok)){
-        $archivo_ok     = fopen($ruta_archivo_ok, "w");
+    if (!file_exists($ruta_archivo_nuevo)){
+        $archivo     = fopen($ruta_archivo_nuevo, "w");
     }
     else {
-        $archivo_ok     = fopen($ruta_archivo_ok, "w");
+        $archivo     = fopen($ruta_archivo_nuevo, "w");
         $atributos      = leer_encabezado($carpeta_original . $csv);
-        fwrite($archivo_ok, implode(';', $atributos) . "\n");
+        fwrite($archivo, implode(';', $atributos) . "\n");
     }
 
     // Escribimos los datos correctos de $array y cerramos el archivo.
     foreach ($array as $fila) {
-        fwrite($archivo_ok, implode(';', $fila) . "\n");
-    fclose($archivo_ok);
+        fwrite($archivo, implode(';', $fila) . "\n");
+        #Si estamos escribiendo los errores, le puse para que printee en terminal la fila con error.
+        if($tipo_archivo == "ERR"){
+            escribir_log($fila, $csv);
+            echo 'Fila con error escrita en el log: ' . implode(';', $fila) . '\n';
+        }
+    fclose($archivo);
 
     // Agregué este print pa depurar.
-    echo 'Archivo ' . $ruta_archivo_ok . ' escrito con éxito.\n';
+    echo 'Archivo ' . $ruta_archivo_nuevo . ' escrito con éxito.\n';
     return;
 }
 

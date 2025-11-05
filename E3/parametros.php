@@ -17,6 +17,7 @@ $archivo_arancel_dcc                = "Arancel DCColita de rana.csv";
 $carpeta_original                   = "csv_originales/";
 $carpeta_limpios                    = "csv_limpios/";
 $carpeta_errores                    = "csv_errores/";
+$carpeta_logs                       = "csv_logs/";
 
 $carpeta_planes_originales          = carpeta_origial + "planes/";
 $carpeta_firmas_originales          = carpeta_original + "firmas/";
