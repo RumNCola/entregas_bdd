@@ -60,9 +60,12 @@ function escribir_log(array $array, string $csv_nombre): void{
     // funcion que recibe un array (fila) y la escribe en el log entregado en el archivo de 
     // csv_nombre, que viene en formato "Persona.csv".
     //
-    $ruta_log = $carpeta_logs . explode(".", $csv_nombre)[0] . "LOG.txt";
-    $archivo_log = fopen($ruta_log, "w");
+    $ruta_log       = $carpeta_logs . explode(".", $csv_nombre)[0] . "LOG.txt";
+    $archivo_log    = fopen($ruta_log, "w");
     fwrite($archivo_log, implode(";", $array) . "\n");
+    
+    #Printeo para depurar e identificar el error
+    echo 'Fila con error escrita en el log: ' . implode(';', $array) . '\n';
     fclose($archivo_log);
     return;
 }
@@ -73,8 +76,8 @@ function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK
     // csv_limpios/{$csv}{$tipo_archivo}.csv si $tipo_archivo es OK o en csv_errores/{$csv}
     // {$tipo_archivo}.csv si $tipo_archivo es ERR
     //
-    
-    $csv_nombre         = explode(".", $csv)[0];
+
+    $csv_nombre                = explode(".", $csv)[0];
     
     // Definimos la ruta del archivo a escribir segun tipo_archivo
     if($tipo_archivo == "OK"){
@@ -86,10 +89,10 @@ function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK
     
     // Si el archivo de oks no existe, lo creamos y agregamos el header (atributos)
     if (!file_exists($ruta_archivo_nuevo)){
-        $archivo     = fopen($ruta_archivo_nuevo, "w");
+        $archivo        = fopen($ruta_archivo_nuevo, "w");
     }
     else {
-        $archivo     = fopen($ruta_archivo_nuevo, "w");
+        $archivo        = fopen($ruta_archivo_nuevo, "w");
         $atributos      = leer_encabezado($carpeta_original . $csv);
         fwrite($archivo, implode(';', $atributos) . "\n");
     }
@@ -97,11 +100,10 @@ function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK
     // Escribimos los datos correctos de $array y cerramos el archivo.
     foreach ($array as $fila) {
         fwrite($archivo, implode(';', $fila) . "\n");
-        #Si estamos escribiendo los errores, le puse para que printee en terminal la fila con error.
         if($tipo_archivo == "ERR"){
             escribir_log($fila, $csv);
-            echo 'Fila con error escrita en el log: ' . implode(';', $fila) . '\n';
         }
+    }
     fclose($archivo);
 
     // Agregué este print pa depurar.
@@ -109,10 +111,7 @@ function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK
     return;
 }
 
-
-fclose($archivo_rol);
-}
-
+function revisar_restriccion_integridad()
 
 function revisar_personas(){
     #Lectura de archivos importantes
@@ -120,7 +119,6 @@ function revisar_personas(){
     $personas               = eliminar_duplicados($personas);
     $personas_no_duplicadas = $personas[0];
     $personas_duplicadas    = $personas[1];
-
 
     return $resultado;
 }
