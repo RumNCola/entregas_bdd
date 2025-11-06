@@ -119,7 +119,7 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
         foreach($restricciones as $i => $attr){
             $correcto = True;
             if (gettype($attr) == "string"){
-                if (gettype(fila[i]) != $attr){
+                if (gettype($fila[i]) != $attr){
                     echo "\nRestriccion de integridad no respetada. Agregando a ERR.\n";
                     $array_ERR[] = $fila;
                     $correcto = False;
@@ -143,7 +143,6 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
     escribir_ok_err_log($array_ERR, $csv, "ERR");
     return array_OK;
 }
-
 function revisar_csv(string $csv, string $carpeta_csv): array{
     // 
     // Función que recibe el nobmre de un csv en formato "Persona.csv", lo corrige y lo retorna
