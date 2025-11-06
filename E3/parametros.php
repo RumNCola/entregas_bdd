@@ -101,9 +101,9 @@ $rdi_farmacia = array(
 );
 
 // ese 'diccionario' lo uso para hacer la revision de IC
-$dict_rdi = [
+$dict_rdi = array(
     "Persona.csv" => $rdi_persona #Por llenar
-];
+);
 
 
 ?>

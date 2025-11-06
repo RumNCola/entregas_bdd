@@ -113,8 +113,9 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
     //
     $array_ERR = array();
     $array_OK = array();
+    echo ($csv);
     $restricciones = $dict_rdi[$csv];
-    foreach($array as $fila){
+    foreach($tuplas as $fila){
         foreach($restricciones as $i => $attr){
             $correcto = True;
             if (gettype($attr) == "string"){
