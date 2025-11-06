@@ -49,4 +49,6 @@ Según el enunciado se deben tener las siguientes consideraciones (serán escrit
 2. Se usa para concatenar strings https://www.w3schools.com/php/php_string_concatenate.asp 
 3. Explode para hacer los splits de python en strings. https://www.php.net/explode 
 4. filexists para revisar si los csv existen y usarlo como condicino en utilidades.php https://www.php.net/manual/en/function.file-exists.php 
-5.
+5. COmo no hay diccionarios, tuve que usar esto: https://stackoverflow.com/questions/6490482/are-there-dictionaries-in-php 
+6. Para poder iterar las listas y acceder a los indices https://stackoverflow.com/questions/141108/how-to-find-the-foreach-index 
+7. 

@@ -39,8 +39,6 @@ function eliminar_duplicados(array $array, string $csv): array{
     //  elminando los elementos duplicados
     // 
     $nombre_csv     = explode('.', $csv)[0];
-    $archivo_log    = fopen($carpeta_errores . $nombre_csv . "LOG.txt", "w");
-
     $resultado      = array();
     $cuenta         = 0;
     foreach ($array as $fila) {
@@ -48,10 +46,10 @@ function eliminar_duplicados(array $array, string $csv): array{
             $resultado[]  = $fila;
         }
         else {
-            $resultado += 1;
+            $cuenta += 1;
         }
     }
-    echo("\nSe eliminaron " . $resultado . " duplicados en el archivo " . $csv . "\n");
+    echo("\nSe eliminaron " . $cuenta . " duplicados en el archivo " . $csv . "\n");
     return $resultado;
 }
 
@@ -70,9 +68,9 @@ function escribir_log(array $array, string $csv_nombre): void{
     return;
 }
 
-function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK"): void{
+function escribir_ok_err(array $array, string $csv, string $tipo_archivo="OK"): void{
     // 
-    // funcion que recibe un array de datos y los escribe en el archivo csv (OK o ERR y LOG)
+    // funcion que recibe un array de datos y los escribe en el archivo csv (OK o ERR)
     // csv_limpios/{$csv}{$tipo_archivo}.csv si $tipo_archivo es OK o en csv_errores/{$csv}
     // {$tipo_archivo}.csv si $tipo_archivo es ERR
     //
@@ -100,9 +98,6 @@ function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK
     // Escribimos los datos correctos de $array y cerramos el archivo.
     foreach ($array as $fila) {
         fwrite($archivo, implode(';', $fila) . "\n");
-        if($tipo_archivo == "ERR"){
-            escribir_log($fila, $csv);
-        }
     }
     fclose($archivo);
 
@@ -111,18 +106,69 @@ function escribir_ok_err_log(array $array, string $csv, string $tipo_archivo="OK
     return;
 }
 
-function revisar_restriccion_integridad() {
-    return;
+function revisar_restriccion_integridad(array $tuplas, string $csv): array {
+    //
+    // funcion que recibe tuplas de una tabla y el nombre de un csv Revisa el cumplimiento
+    // de las IC. Si no cumple, la manda a ERR y se printea cual no cumple
+    //
+    $array_ERR = array();
+    $array_OK = array();
+    $restricciones = $dict_rdi[$csv];
+    foreach($array as $fila){
+        foreach($restricciones as $i => $attr){
+            $correcto = True;
+            if (gettype($attr) == "string"){
+                if (gettype(fila[i]) != $attr){
+                    echo "\nRestriccion de integridad no respetada. Agregando a ERR.\n";
+                    $array_ERR[] = $fila;
+                    $correcto = False;
+                    break;
+                }
+            elseif (gettype($attr) == "array"){
+                if(!in_array($fila[i], $attr)){
+                    echo "\nRestriccion de integridad no respetada. Agregando a ERR.\n";
+                    $array_ERR[] = $fila;
+                    $correcto = False;
+                    break;
+
+                }
+            }
+        }
+        }
+        if ($correcto){
+            $array_OK[] = $fila;
+        }  
+    }
+    escribir_ok_err_log($array_ERR, $csv, "ERR");
+    return array_OK;
 }
 
-function revisar_personas(){
-    #Lectura de archivos importantes
-    $personas               = leer_archivo($carpeta_original + $carpeta_personas);
-    $personas               = eliminar_duplicados($personas);
-    $personas_no_duplicadas = $personas[0];
-    $personas_duplicadas    = $personas[1];
+function revisar_csv(string $csv, string $carpeta_csv): array{
+    // 
+    // Función que recibe el nobmre de un csv en formato "Persona.csv", lo corrige y lo retorna
+    // como array, es decir:
+    // 0. Lectura de datos
+    // 1. Elimina duplicados
+    // 2. Revisa restricciones de integridad
+    // 3. Revisa dominios de las restricciones de integridad
+    // 4. Corregir datos nulos 
+    // 5. Eliminar llaves duplicadas
+    // 6. Estandarizar Datos
+    // 
 
-    return $resultado;
+    // 0. Lectura
+    $tuplas = leer_archivo($carpeta_csv . $csv);
+    
+    // 1. eliminación de duplicados
+    $tuplas = eliminar_duplicados($tuplas, $csv);
+
+    // 2. Revisión de restricciones IC
+    $tuplas = revisar_restriccion_integridad($tuplas, $csv);
+    
+    //2. 
+    
+
+    return $tuplas;
 }
 
 ?>
