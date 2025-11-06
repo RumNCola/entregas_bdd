@@ -29,6 +29,37 @@ $carpeta_firmas_limpias             = carpeta_limpios + "firmas/";
 // elemento es el type de la variable, el segundo su longitud máxima y el tercero True si IS NOT
 // NULL, false si no.
 $rdi_persona = array(
+    integer,  //id
+    string,     //RUT
+    string,     //nombre
+    string,     //apellido
+    string,   //direccion
+    string,   //correo. el 1e9 es analogo a poner que es varchar(infinito)
+    integer,  // telefono, el número minimo es el que puse en el sgdo attr el 1e9
+                                 // sirve para que se cumpla la restriccion del valor numérico.
+    array('beneficiario', 'titular', ''), //tipo
+    array('Staff médico', 'administrativo', 'paciente', '', 'Staff médico, paciente', //rol
+     'administrativo, paciente'),
+    string,     // especialidad
+    string,     // firma
+    string
+);
+$rdi_persona_dominio = array(
+    NULL, //id
+    10,     //RUT
+    30,     //nombre
+    30,     //apellido
+    100,   //direccion
+    Null,   //correo. el 1e9 es analogo a poner que es varchar(infinito)
+    1e9,  // telefono, el número minimo es el que puse en el sgdo attr el 1e9
+                                 // sirve para que se cumpla la restriccion del valor numérico.
+    NULL, //tipo
+    // array(NULL),               //tiitular
+    30,     // especialidad
+    30,     // firma
+    30      // InsSalPrev
+);
+$rdi_persona = array(
     arrau(integer, false, true), //id
     array(string, 10, true),     //RUT
     array(string, 30, true),     //nombre
@@ -42,8 +73,9 @@ $rdi_persona = array(
      'administrativo, paciente'), false, false),
     array(string, 30, false),     // especialidad
     array(string, 30, false),     // firma
-    array(string, 30, false)
+    array(string, 30, false)        
 );
+
 
 $rdi_instituciones_salud = array(
     array(integer, false, true),        // codigo

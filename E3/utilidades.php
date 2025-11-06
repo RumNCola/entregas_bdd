@@ -33,26 +33,26 @@ function leer_encabezado(string $nombreArchivo): array{
 }
 
 // funcion copiada de la ayudantía
-function eliminar_duplicados(array $array, string $nombre_csv): array{
+function eliminar_duplicados(array $array, string $csv): array{
     // 
-    // función que recibe un array y el nombre csv sin la extension ("Persona") y retorna este pero
+    // función que recibe un array y el nombre csv tipo ("Persona.csv") y retorna este pero
     //  elminando los elementos duplicados
     // 
+    $nombre_csv     = explode('.', $csv)[0];
     $archivo_log    = fopen($carpeta_errores . $nombre_csv . "LOG.txt", "w");
-    $archivo_error  = fopen($carpeta_errores . $nombre_csv . "ERR.csv", "w");
-    
 
     $resultado      = array();
-    $duplicados     = array();
+    $cuenta         = 0;
     foreach ($array as $fila) {
         if (!in_array($fila, $resultado)) {
             $resultado[]  = $fila;
         }
         else {
-            $duplicados[] = $fila;
+            $resultado += 1;
         }
     }
-    return array($resultado, $duplicados);
+    echo("\nSe eliminaron " . $resultado . " duplicados en el archivo " . $csv . "\n");
+    return $resultado;
 }
 
 function escribir_log(array $array, string $csv_nombre): void{
