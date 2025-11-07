@@ -17,6 +17,20 @@ function reparar_profesion_persona(array $tuplas): array{
             $tuplas[$i][10] = 'médico/a';
             $cuenta += 1;
         }
+
+        // solo los médicos tienen profesion
+        if(str_contains($fila[9], 'médico') && $fila[10] == ''){
+            $tuplas[$i][10] = 'No Informada';
+        }
+        elseif(!str_contains($fila[9], 'médico') && $fila[10] != ''){
+            $tuplas[$i][10] = '';
+        }
+        // los medicos/admins son titulares
+        if(str_contains($fila[10], 'médico') || str_contains($fila[10], 'admin')){
+            if($fila[8] != $fila[1]){
+                $tuplas[$i][8] = $fila[1]; //si no es titular, se le hace titular
+            }
+        }
     }
     echo "\n" . 'Se ha reparado '. $cuenta .' profesion/es en persona';
     return $tuplas;

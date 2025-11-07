@@ -10,7 +10,7 @@ function leer_archivo(string $nombreArchivo): array{
     // 
     $arreglo    = array();
     $archivo    = fopen($nombreArchivo, "r");
-    $header         = fgets($archivo); // sacar encabezado
+    $header     = fgets($archivo); // sacar encabezado
     while (!feof($archivo)) {
         $linea = fgets($archivo);
         
@@ -65,17 +65,21 @@ function eliminar_duplicados(array $array, string $csv): array{
     return $resultado;
 }
 
-function escribir_log(array $array, string $csv_nombre): void{
+function escribir_log(string $csv_nombre): void{
     // 
-    // funcion que recibe un array (fila) y la escribe en el log entregado en el archivo de 
+    // funcion que escribe en el log entregado en el archivo de 
     // csv_nombre, que viene en formato "Persona.csv".
     //
+    global $carpeta_errores;
+
+    $array    = leer_archivo($carpeta_errores . explode('.', $csv_nombre)[0] . 'ERR.csv');
     $ruta_log       = $carpeta_logs . explode(".", $csv_nombre)[0] . "LOG.txt";
     $archivo_log    = fopen($ruta_log, "w");
-    fwrite($archivo_log, implode(";", $array) . "\n");
-    
-    #Printeo para depurar e identificar el error
-    echo 'Fila con error escrita en el log: ' . implode(';', $array) . '\n';
+    foreach($array as $fila){
+        fwrite($archivo_log, 'Se declara irreparable: '. implode(";", $fila) . "\n");
+        #Printeo para depurar e identificar el error
+        echo 'Fila con error escrita en el log: ' . implode(';', $fila) . '\n';
+    }
     fclose($archivo_log);
     return;
 }
@@ -404,11 +408,11 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     // Función que recibe el nobmre de un csv en formato "Persona.csv", lo corrige y lo retorna
     // como array. En paralelo, agrega los errores a CSV_LIMPIOS
     // 
-    echo '\n========================================================';
+    echo "\n" .'========================================================';
     echo "\n";
-    echo '\n              LIMPIANDO ' . $csv;
+    echo "\n" .'              LIMPIANDO ' . $csv;
     echo "\n";
-    echo '\n========================================================';
+    echo '========================================================';
     // 0. Lectura
     $tuplas = leer_archivo($carpeta_csv . $csv);
     
@@ -427,19 +431,15 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     // 4. Descarta los datos no estandarizados y no reparables
     $tuplas = estandarizar_tuplas($tuplas, $csv);
 
-    echo '\nArchivo de Errores escrito con éxito.\n';
+    echo "\n". 'Archivo de Errores escrito con éxito.' . "\n";
+
+    escribir_ok_err($tuplas, $csv, "OK");
+    escribir_log($csv);
+    echo "\n" .'========================================================';
+    echo "\n";
+    echo "\n" .'              LIMPIEZA TERMINADA: ' . $csv;
+    echo "\n";
+    echo '========================================================';
     return $tuplas;
-}
-
-
-
-function reparar_csv(array $tuplas, string $csv): void{
-    //
-    //funcion que recibe tuplas, nombre del csv y repara las tuplas
-    // posibles para devolverlas.
-    //
-    global $carpeta_errores;
-    $ruta_errores = $carpeta_errores . $csv;
-    
 }
 ?>
