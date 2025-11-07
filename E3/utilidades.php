@@ -91,11 +91,11 @@ function escribir_ok_err(array $array, string $csv, string $tipo_archivo="OK"): 
     // Si el archivo de oks no existe, lo creamos y agregamos el header (atributos)
     if (!file_exists($ruta_archivo_nuevo)){
         $archivo        = fopen($ruta_archivo_nuevo, "w");
-    }
-    else {
-        $archivo        = fopen($ruta_archivo_nuevo, "w");
         $atributos      = leer_encabezado($carpeta_original . $csv);
         fwrite($archivo, implode(';', $atributos));
+    }
+    else {
+        $archivo        = fopen($ruta_archivo_nuevo, "a");
     }
 
     // Escribimos los datos correctos de $array y cerramos el archivo.
@@ -105,7 +105,7 @@ function escribir_ok_err(array $array, string $csv, string $tipo_archivo="OK"): 
     fclose($archivo);
 
     // Agregué este print pa depurar.
-    echo 'Archivo ' . $ruta_archivo_nuevo . ' escrito con éxito.\n';
+    
     return;
 }
 
@@ -300,7 +300,7 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
                         $cuenta += 1;
                         $array_ERR[] = $fila;
                         $correcto = False;
-                        echo 'falla de la tupla ' . $fila . ' en ' . $header[$i];
+                        echo 'falla de la tupla ' . var_dump($fila[$i]) . ' en ' . $header[$i];
                         break;
                     }
                 }
@@ -333,19 +333,68 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
     return $array_OK;
 }
 
+function estandarizar_tuplas(array $tuplas, string $csv): array{
+    //
+    // funcion que recibe tuplas y estandariza según el csv ingresado
+    //
+    $resultado = array();
+    $resultadoERR = array();
+    $cuenta = 0;
+    foreach($tuplas as $fila){
+        if ($csv == "Persona.csv"){ //7 -> tipo, 9 -> rol, 10 -> profesion
+            if(!in_array($fila[7], array('beneficiario', 'titular', ''))){
+                $cuenta += 1;
+                $resultadoERR[] = $fila;
+            }
+            if(!in_array($fila[9], array('Staff médico', 'administrativo', 'paciente',
+             '', 'Staff médico, paciente', 'administrativo, paciente'))){
+                $cuenta += 1;
+                $resultadoERR[] = $fila;
+             }
+            if(!in_array($fila[10], array('TENS', 'enfermero/a', 
+            'Kinesiólogo/a', 'médico/a', ''))){
+                $cuenta += 1;
+                $resultadoERR[] = $fila;
+            }
+        }
+        elseif($csv == "Instituciones previsionales de salud.csv"){
+            if(!in_array(fila[2], array('abierta', 'cerrada'))){
+                $cuenta += 1;
+                $resultadoERR[] = $fila;
+            }
+        }
+        elseif($csv == "Farmacia.csv"){
+            if(!in_array($fila[3], array('Alimentos', 'Equipamiento', 
+            'Fármacos', 'insumos', 'psicotrópicos', 'Refrigerados', 'Sueros'))){
+                $cuenta += 1;
+                $resultadoERR[] = $fila;
+            }
+            if(!in_array($fila[7], array('activo', 'inactivo'))){
+                $cuenta += 1;
+                $resultadoERR[] = $fila;
+            }
+            if(!in_array($fila[8], array('0', '1'))){
+                $cuenta += 1;
+                $resultadoERR[] = $fila;
+            }
+        }
+    }
+    echo "\n". 'Encontré ' . $cuenta .' errores de estandarizacion en '. $csv . "\n";
+    echo "\n";
+    escribir_ok_err($resultadoERR, $csv, "ERR");
+    return $resultado;
+}
+
 function revisar_csv(string $csv, string $carpeta_csv): array{
     // 
     // Función que recibe el nobmre de un csv en formato "Persona.csv", lo corrige y lo retorna
-    // como array, es decir:
-    // 0. Lectura de datos
-    // 1. Elimina duplicados
-    // 2. Revisa restricciones de integridad
-    // 3. Revisa dominios de las restricciones de integridad
-    // 4. Corregir datos nulos 
-    // 5. Eliminar llaves duplicadas
-    // 6. Estandarizar Datos
+    // como array. En paralelo, agrega los errores a CSV_LIMPIOS
     // 
-
+    echo '\n========================================================';
+    echo "\n";
+    echo '\n              LIMPIANDO ' . $csv;
+    echo "\n";
+    echo '\n========================================================';
     // 0. Lectura
     $tuplas = leer_archivo($carpeta_csv . $csv);
     
@@ -358,8 +407,10 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     // 3. Revisar Datos fuera de formato. (Personas, InstdeSalud y Atención)
     $tuplas = revisar_formatos($tuplas, $csv);
 
-    
+    // 4. Estandarizar
+    $tuplas = estandarizar_tuplas($tuplas, $csv);
 
+    echo '\nArchivo de Errores escrito con éxito.\n';
     return $tuplas;
 }
 ?>
