@@ -71,6 +71,7 @@ function escribir_log(string $csv_nombre): void{
     // csv_nombre, que viene en formato "Persona.csv".
     //
     global $carpeta_errores;
+    global $carpeta_logs;
 
     $array    = leer_archivo($carpeta_errores . explode('.', $csv_nombre)[0] . 'ERR.csv');
     $ruta_log       = $carpeta_logs . explode(".", $csv_nombre)[0] . "LOG.txt";
