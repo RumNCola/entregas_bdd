@@ -12,9 +12,20 @@ function leer_archivo(string $nombreArchivo): array{
     $header         = fgets($archivo); // sacar encabezado
     while (!feof($archivo)) {
         $linea = fgets($archivo);
-        if ($linea !== false && $linea != "") {
-            $arreglo[] = explode(";", $linea);
+        
+        $vacio = true;
+        //para no leer las tuplas vacias
+        for($i=0; $i < strlen($linea); $i++){
+            if($linea[$i] != '' && $linea[$i] != ';'){
+                $vacio = false;
+            }
         }
+        if(!$vacio){
+        if ($linea !== false && $linea != "") {
+            if($linea != $vacio){
+            $arreglo[] = explode(";", $linea);
+            }
+        }}
     }
     fclose($archivo);
     return $arreglo;
@@ -49,7 +60,7 @@ function eliminar_duplicados(array $array, string $csv): array{
             $cuenta += 1;
         }
     }
-    echo("\nSe eliminaron " . $cuenta . " duplicados en el archivo " . $csv . "\n");
+    echo("\nSe eliminaron " . $cuenta . " duplicados/filas vacías en el archivo " . $csv . "\n");
     return $resultado;
 }
 
@@ -412,5 +423,15 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
 
     echo '\nArchivo de Errores escrito con éxito.\n';
     return $tuplas;
+}
+
+function reparar_csv(array $tuplas, string $csv): void{
+    //
+    //funcion que recibe tuplas, nombre del csv y repara las tuplas
+    // posibles para devolverlas.
+    //
+    global $carpeta_errores;
+    $ruta_errores = $carpeta_errores . $csv;
+    
 }
 ?>
