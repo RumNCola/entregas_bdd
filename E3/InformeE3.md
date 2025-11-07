@@ -52,3 +52,4 @@ Según el enunciado se deben tener las siguientes consideraciones (serán escrit
 5. COmo no hay diccionarios, tuve que usar esto: https://stackoverflow.com/questions/6490482/are-there-dictionaries-in-php 
 6. Para poder iterar las listas y acceder a los indices https://stackoverflow.com/questions/141108/how-to-find-the-foreach-index 
 7. Resulta que en php las variablesd eclaradas globalmente (parametros.php) no las lee localmente las funciones, asi que tuve que usar global https://forum.exercism.org/t/global-variables-declared-outside-the-expected-solution-functions-are-not-recognized/9750/8
+8. Para revisar números en restriccciones de integridad https://www.php.net/manual/en/function.is-numeric.php

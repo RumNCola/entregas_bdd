@@ -132,15 +132,25 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
             }
             //Si el la restriccion dice atributo es un string, se revisa que así lo sea.
             if (gettype($attr) == "string"){
-                if (gettype($fila[$i]) != $attr){
-                    // echo $fila[$i];
-                    // echo $attr . ": string"."\n";
-                    $cuenta += 1;
-                    
-                    $array_ERR[] = $fila;
-                    $correcto = False;
-                    break;
+                if ($attr == 'integer' or $attr == 'float')
+                {
+                    if (!is_numeric($fila[$i])){
+                        $cuenta += 1;
+                        $array_ERR[] = $fila;
+                        $correcto = False;
+                        break;
+                    }
                 }
+                elseif ($attr == 'string'){
+                    if (gettype($fila[$i]) != $attr){
+                        // echo $fila[$i];
+                        // echo $attr . ": string"."\n";
+                        $cuenta += 1;
+                        $array_ERR[] = $fila;
+                        $correcto = False;
+                        break;
+                }
+            }
             }
             //Si la restriccion dice que el campo vale algun valor tipo ('administrativo', 'medico') lo revisa
             elseif (gettype($attr) == "array"){
@@ -184,7 +194,7 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     // 2. Revisión de restricciones IC
     $tuplas = revisar_restriccion_integridad($tuplas, $csv);
     
-    //2. 
+    // 3. Revisar Datos fuera de formato. 
     
 
     return $tuplas;
