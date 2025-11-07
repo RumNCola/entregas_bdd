@@ -13,6 +13,7 @@ Esta versión del esquema tiene una sección que rompe con 3NF;
 1. Farmacia (CodONU -> ClasONU rome 3NF)
 Para Transformar el esquema a BCNF, debemos quitar CodOnu y ClasONU de la tabla farmacia y crear una nueva tabla que guarde este valor, de la forma:
 -- FarmaciaONU(CodONU SERIAL PK, ClasONU VARCHAR NOT NULL) --
+2. Dentro de los csvs, hay parametros que no cumplen la primera forma normal, entre ellos el rol de persona, es decir, si es paciente, staff o admin.
 
 #### Homologar Atributos y Restricciones de Integridad
 Por otro lado, los archivos excel tienen distintos nobmres para los atributos de la entrega pasada, además hay restricciones de integridad que cambia (por ejemplo, en el esquema E2 hay parametros que son BOOL que en los csv son INT). Para esto, actualizaremos las siguientes tablas:
@@ -23,24 +24,16 @@ Por otro lado, los archivos excel tienen distintos nobmres para los atributos de
 ![Esquema relacional BCNF](esquema_nuevo.png)
 
 ### 2. Revisión PHP
-#### Personas.csv
-##### Revisión de restricciones de integridad.
-1. ID no puede ser NULL y es UNIQUE. Es un número.
-2. RUN es text de longitud 10. el primer carácter es un número del 1 al 9, el último carácter es un número del 0 al 9 o K y el resto de caracteres son numeros del 0 al 9.
-3. nombre es texto de longitud máxima 3 y no nulo.
-4. apellido es texto de longitud máxima 3 y no nulo.
-5. direccion es texto de lingitud 100. Puede ser nulo
-6. correo es texto que contiene un "@", a la derecha del arroba debe ir un punto y un finalizador (.com o .cl por ejemplo). Puede ser nulo.
-7. telefono es un INT cuyo primer dígito es un número dle 1 al 9.
-8. 
+Para hacer la revisión de formato de atributos (correos, run, rut, etc), revisión superficial de restricciones de integridad, eliminación de tuplas duplicadas y revisar/corregir datos estandarizados (como persona que puede ser paciente, Staff, admin o una combinación) se crearon los siguientes módulos de php, enfocados en el orden y pep8.
 
-persona."rol" puede ser null (no es paciente ni trabajador del centro), 'paciente', 'Staff médico', 'administraivo', 'Staff médico, paciente' o 'administrativo, paciente'.
- 
-##### Revisión de implicancias de Persona.csv 
-Según el enunciado se deben tener las siguientes consideraciones (serán escritas en pseudocódigo):
-1. si persona."rol" ILIKE "%Staff médico%" entonces profesion."Profesion" de dicha persona IS NOT NULL. En caso contrario, profesion."Profesion" IS NULL.
-2. Si persona."rol" ILIKE "%Staff médico%" OR persona."rol" ILIKE "%administrativo%", entonces beneficiario."Beneficiario" = False AND beneficiario."IDPersona" = beneficiario."IDTitular".
-3. persona."InstSalud" IS NULL o contiene un texto contenido en institucion."Nombre".
+1. parametros.php -> Módulo donde se definen variables que serán meros parametros: por ejemplo las rutas de los archivos o dominios de los attributos.
+2. utilidades.php -> Módulo que contiene las funciones importantes para hacer la limpeiza de los archivos. Las funciones están **parametrizadas** y **estandarizadas**, es decir, son compatibles con todos los archivos csv y se adaptan a cada uno.
+3. main.php -> Archivo principal que incorpora utilidades y parametros para hacer la limpieza. Aquí se llama a las funciones para crear los log y csvs nuevos.
+
+
+
+
+
 
 
 
