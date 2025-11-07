@@ -368,19 +368,26 @@ function estandarizar_tuplas(array $tuplas, string $csv): array{
     $cuenta = 0;
     foreach($tuplas as $fila){
         if ($csv == "Persona.csv"){ //7 -> tipo, 9 -> rol, 10 -> profesion
+            $correcto = True;
             if(!in_array($fila[7], array('beneficiario', 'titular', ''))){
                 $cuenta += 1;
+                $correcto = False;
                 $resultadoERR[] = $fila;
             }
             if(!in_array($fila[9], array('Staff médico', 'administrativo', 'paciente',
              '', 'Staff médico, paciente', 'administrativo, paciente'))){
                 $cuenta += 1;
+                $correcto = False;
                 $resultadoERR[] = $fila;
              }
             if(!in_array($fila[10], array('TENS', 'enfermero/a', 
             'Kinesiólogo/a', 'médico/a', ''))){
                 $cuenta += 1;
+                $correcto = False;
                 $resultadoERR[] = $fila;
+            }
+            if($correcto){
+                $resultado[] = $fila;
             }
         }
         elseif($csv == "Instituciones previsionales de salud.csv"){
@@ -388,22 +395,33 @@ function estandarizar_tuplas(array $tuplas, string $csv): array{
                 $cuenta += 1;
                 $resultadoERR[] = $fila;
             }
+            else{
+                $resultado[] = $fila;
+            }
         }
         elseif($csv == "Farmacia.csv"){
+            $correcto = True;
             if(!in_array($fila[3], array('Alimentos', 'Equipamiento', 
             'Fármacos', 'insumos', 'psicotrópicos', 'Refrigerados', 'Sueros'))){
                 $cuenta += 1;
+                $correcto = False;
                 $resultadoERR[] = $fila;
             }
             if(!in_array($fila[7], array('activo', 'inactivo'))){
                 $cuenta += 1;
+                $correcto = False;
                 $resultadoERR[] = $fila;
             }
             if(!in_array($fila[8], array('0', '1'))){
                 $cuenta += 1;
+                $correcto = False;
                 $resultadoERR[] = $fila;
             }
-        }
+            if($correcto){}
+                $resultado[] = $fila;
+            }
+
+        
     }
     echo "\n". 'Encontré ' . $cuenta .' errores de estandarizacion en '. $csv . "\n";
     echo "\n";
@@ -441,7 +459,7 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
 
     echo "\n". 'Archivo de Errores escrito con éxito.' . "\n";
 
-    escribir_ok_err($tuplas, $csv, "OK");
+    escribir_ok_err($tuplas, $csv);
     escribir_log($csv);
     echo "\n" .'========================================================';
     echo "\n";
