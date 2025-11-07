@@ -250,17 +250,19 @@ function revisar_formatos(array $tuplas, string $csv): array{
     $cuenta = 0;
     $resultado = array();
     $resultadoERR = array();
-    foreach($tuplas as $fila){
+    foreach($tuplas as $i => $fila){
         $estado = true;
-        if (str_contains($csv, 'Persona')){
-            $estado = revisar_run($fila[1]) && revisar_correo($fila[5]);
+        if (str_contains($csv, 'Persona')){;
             if(!revisar_run($fila[1])){
+                $estado = false;
                 echo "\n" . 'En persona, fallo el run ' . $fila[1];
             }
             if(!revisar_correo($fila[5])){
                 echo "\n". 'En persona, fallo correo' . $fila[5];
                 echo $fila[5];
                 echo '';
+                $tuplas[$i][5] = '';
+                echo "\nreparacion de correo realizada\n";
             }
         }
         elseif (str_contains($csv, 'Atencion')){
@@ -413,13 +415,16 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     // 1. eliminación de duplicados
     $tuplas = eliminar_duplicados($tuplas, $csv);
 
+    // 1.1 Estandariza los datos
+    $tuplas = corregir_estandarizados_csv($tuplas, $csv);
+
     // 2. Revisión de restricciones IC
     $tuplas = revisar_restriccion_integridad($tuplas, $csv);
     
     // 3. Revisar Datos fuera de formato. (Personas, InstdeSalud y Atención)
     $tuplas = revisar_formatos($tuplas, $csv);
 
-    // 4. Estandarizar
+    // 4. Descarta los datos no estandarizados y no reparables
     $tuplas = estandarizar_tuplas($tuplas, $csv);
 
     echo '\nArchivo de Errores escrito con éxito.\n';

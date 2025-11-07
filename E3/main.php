@@ -7,7 +7,7 @@ echo '\n              EJECUTANDO MAIN - PURGA INICIADA';
 echo "\n";
 echo '\n========================================================';
 
-// revisar_csv($archivo_personas, $carpeta_original);
+revisar_csv($archivo_personas, $carpeta_original);
 
 // revisar_csv($archivo_orden, $carpeta_original);
 
@@ -21,7 +21,7 @@ echo '\n========================================================';
 
 // revisar_csv($archivo_arancel_dcc, $carpeta_original);
 
-revisar_csv($archivo_farmacia, $carpeta_original);
+// revisar_csv($archivo_farmacia, $carpeta_original);
 
 
 
