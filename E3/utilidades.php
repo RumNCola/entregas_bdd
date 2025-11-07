@@ -158,28 +158,33 @@ function revisar_rut(string $rut): bool{
     // ESTE ES PARA ISAPRES
     $resultado = True;
     //revisar largo (me ahorro los comentarios apra revisar_run porque son analogos)
-    if (strlen($rut) != 12){
+    echo "\n". $rut . "\n";
+    echo strlen($rut);
+    
+    if (strlen($rut) != 12 && strlen($rut) != 14){
         $resultado = false;
+        echo 'aqui';
         return $resultado;
     }
     // revisar que contenga -
-    if (!str_contains($rut, '-')){
+    if (!str_contains($rut, '‑')){
         $resultado = false;
         return $resultado;
     }
-    $dv = explode('-', $rut)[1];
+    $dv = explode('‑', $rut)[1];
     // revisar dv (digito verificador)
-    if  (!is_numeric($dv) && ($dv != 'K' && $dv != 'k')){
+    if  (!is_numeric($dv) && $dv != 'K' && $dv != 'k'){
         $resultado = false;
         return $resultado;
     }
 
-    $rut = explode('.', explode('-', $rut)[0])[0]; // el resto de numeros menos dv, puntos y guión
-    if(!is_numeric($rut)){
+    $rut = explode('.', explode('‑', $rut)[0]); // el resto de numeros menos dv, puntos y guión
+    if(!is_numeric($rut[0]) || !is_numeric($rut[1]) || !is_numeric($rut[2])){
         $resultado = false;
         return $resultado;
     }
     elseif($rut[0] < 6){
+        
         $resultado = false;
         return $resultado;
     }
@@ -197,18 +202,18 @@ function revisar_run(string $run): bool{
         return $resultado;
     }
 
-    if (!str_contains($run, '-')){
+    if (!str_contains($run, '‑')){
         $resultado = false;
         return $resultado;
     }
 
-    $dv  = explode('-', $run)[1];
+    $dv  = explode('‑', $run)[1];
     if  (!is_numeric($dv) && ($dv != 'K' && $dv != 'k')){
         $resultado = false;
         return $resultado;
     }
 
-    $run = explode('-', $run)[0];
+    $run = explode('‑', $run)[0];
     if (!is_numeric($run[0]) || $run[0] == 0){
         $resultado = false;
         return $resultado;
@@ -238,7 +243,9 @@ function revisar_enlace(string $enlace): bool{
     }
     $prefijo = explode('//', $enlace)[0];
 
-    if( $prefijo != 'http' && $prefijo != 'https' ){
+    if( $prefijo != 'http:' && $prefijo != 'https:' ){
+        echo 'aqui' . "\n";
+        echo $prefijo ."\n";
         $resultado = False;
         return $resultado;
     }
@@ -257,7 +264,7 @@ function revisar_formatos(array $tuplas, string $csv): array{
     $resultadoERR = array();
     foreach($tuplas as $i => $fila){
         $estado = true;
-        if (str_contains($csv, 'Persona')){;
+        if (str_contains($csv, 'Persona')){
             if(!revisar_run($fila[1])){
                 $estado = false;
                 echo "\n" . 'En persona, fallo el run ' . $fila[1];
@@ -274,7 +281,7 @@ function revisar_formatos(array $tuplas, string $csv): array{
             $estado = revisar_run($fila[2]) && revisar_run($fila[3]);
         }
         elseif (str_contains($csv, "Instituciones previsionales de salud")){
-            $estado = revisar_rut($fila[3]) && revisar_enlace($fila[4]);
+            $estado = revisar_enlace($fila[4]); //al final revisaré los ruts en el sql nomas. Aca había un bug duro
         }
         if ($estado != true){
             $resultadoERR[] = $fila;
@@ -377,7 +384,7 @@ function estandarizar_tuplas(array $tuplas, string $csv): array{
             }
         }
         elseif($csv == "Instituciones previsionales de salud.csv"){
-            if(!in_array(fila[2], array('abierta', 'cerrada'))){
+            if(!in_array($fila[2], array('abierta', 'cerrada'))){
                 $cuenta += 1;
                 $resultadoERR[] = $fila;
             }
