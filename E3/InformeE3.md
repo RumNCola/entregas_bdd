@@ -56,3 +56,4 @@ Observación: Las fuentes se usaron para entender como funcionan ciertos comando
 8. Para revisar números en restriccciones de integridad https://www.php.net/manual/en/function.is-numeric.php
 9. Para la revisión de ruts, str_contains() https://www.php.net/manual/en/function.str-contains.php
 10. Uso de substrings, para los ruts https://www.php.net/manual/es/function.substr.php 
+11. Usé trim para eliminar las tuplas vacías https://www.php.net/manual/es/function.trim.php 

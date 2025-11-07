@@ -54,12 +54,8 @@ function eliminar_duplicados(array $array, string $csv): array{
     $resultado      = array();
     $cuenta         = 0;
     foreach ($array as $fila) {
-        
-        $string_editado = implode('', $fila);
-        echo ($string_editado) . "\n";
-        echo strlen($string_editado). "\n";
-        echo var_dump(empty($string_editado)). "\n";
-        if($string_editado != null){
+        $string_editado = trim(implode('', $fila));
+        if($string_editado != ''){
             if (!in_array($fila, $resultado)) {
                 $resultado[]  = $fila;
             }
@@ -67,12 +63,7 @@ function eliminar_duplicados(array $array, string $csv): array{
                 $cuenta += 1;
                 
             }
-        }
-        else{
-            echo 'STRING VACIO';
-        }
-        
-        
+        }      
     }
     echo("\nSe eliminaron " . $cuenta . " duplicados/filas vacías en el archivo " . $csv . "\n");
     return $resultado;
