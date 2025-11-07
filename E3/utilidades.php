@@ -13,23 +13,23 @@ function leer_archivo(string $nombreArchivo): array{
     while (!feof($archivo)) {
         $linea = fgets($archivo);
         if ($linea !== false && $linea != "") {
-            $arreglo[] = explode(",", $linea);
+            $arreglo[] = explode(";", $linea);
         }
     }
     fclose($archivo);
     return $arreglo;
 }
 
-function leer_encabezado(string $nombreArchivo): array{
+function leer_encabezado(string $csv): array{
     // 
     // Funcion que lee un csv de nombre  y retorna su encabezado en forma de array
     // 
-    $archivo    = fopen($nombreArchivo, "r");
+    $archivo    = fopen($csv, "r");
     $arreglo    = array();
     $header     = fgets($archivo);
-    $arreglo[]  = explode(",", $header);
+    $arreglo    = explode(";", $header);
     fclose($archivo);
-    return $header;
+    return $arreglo;
 }
 
 // funcion copiada de la ayudantía
@@ -76,6 +76,7 @@ function escribir_ok_err(array $array, string $csv, string $tipo_archivo="OK"): 
     //
     global $carpeta_limpios; 
     global $carpeta_errores;
+    global $carpeta_original;
 
     $csv_nombre                = explode(".", $csv)[0];
     
@@ -94,18 +95,162 @@ function escribir_ok_err(array $array, string $csv, string $tipo_archivo="OK"): 
     else {
         $archivo        = fopen($ruta_archivo_nuevo, "w");
         $atributos      = leer_encabezado($carpeta_original . $csv);
-        fwrite($archivo, implode(';', $atributos) . "\n");
+        fwrite($archivo, implode(';', $atributos));
     }
 
     // Escribimos los datos correctos de $array y cerramos el archivo.
     foreach ($array as $fila) {
-        fwrite($archivo, implode(';', $fila) . "\n");
+        fwrite($archivo, implode(';', $fila));
     }
     fclose($archivo);
 
     // Agregué este print pa depurar.
     echo 'Archivo ' . $ruta_archivo_nuevo . ' escrito con éxito.\n';
     return;
+}
+
+function revisar_correo(string $correo): bool{
+    // 
+    // Función que recibe un string y revisa si cumple el formato de correo. retorna un
+    // booleano según el resultado
+    // 
+    $resultado = True;
+    if($enlace == ''){
+        return $resultado;
+    }
+    if (!str_contains($correo, '@')){
+        $resultado = False;
+        return $resultado;
+    }
+    if (!str_contains($correo, '.')){
+        $resultado = False;
+        return $resultado;
+    }
+    return $resultado;
+}
+
+function revisar_rut(string $rut): bool{
+    // 
+    // función que recibe un string $rut y retorna un booleano si cumple el formato rut
+    // ESTE ES PARA ISAPRES
+    $resultado = True;
+    //revisar largo (me ahorro los comentarios apra revisar_run porque son analogos)
+    if (strlen($rut) >= 13 || strlen($rut) <= 11){
+        $resultado = false;
+        return $resultado;
+    }
+    // revisar que contenga -
+    if (!str_contains($rut, '-')){
+        $resultado = false;
+        return $resultado;
+    
+    $dv = explode('-', $rut)[1];
+    // revisar dv (digito verificador)
+    if  (!is_numeric($dv) && ($dv != 'K' && $dv != 'k')){
+        $resultado = false;
+        return $resultado;
+    }
+
+    $rut = explode('.', explode('-', $rut)[0]); // el resto de numeros menos dv, puntos y guión
+    if(!is_nueric($rut)){
+        $resultado = false;
+        return $resultado;
+    }
+    elseif($rut[0] < 6){
+        $resultado = false;
+        return $resultado;
+    }
+    return $resultado;
+}
+}
+
+function revisar_run(string $run): bool{
+    // 
+    // función que recibe un string $run y retorna un booleano si cumple el formato run
+    // ESTE ES PARA PERSONAS
+    $resultado = True;
+    if (strlen($run) >= 11 || strlen($run) <= 8){
+        $resultado = false;
+        return $resultado;
+    }
+
+    if (!str_contains($run, '-')){
+        $resultado = false;
+        return $resultado;
+    }
+
+    $dv  = explode('-', $run)[1];
+    if  (!is_numeric($dv) && ($dv != 'K' && $dv != 'k')){
+        $resultado = false;
+        return $resultado;
+    }
+
+    $run = explode('-', $run)[0];
+    if (!is_numeric($run[0]) || $run[0] == 0){
+        $resultado = false;
+        return $resultado;
+    }
+    else{
+        for($i=1; $i < strlen($run); $i++){
+            if(!is_numeric($run[$i])){
+                $resultado = false;
+                return $resultado;
+            }
+        }
+    }
+    return $resultado;
+}
+
+function revisar_enlace(string $enlace): bool{
+    // 
+    // función que recibe un string $rut y retorna un booleano si cumple el formato rut
+    //
+    $resultado = True;
+    if($enlace == ''){
+        return $resultado;
+    }
+    if (!str_contains($enlace, '//')){
+        $resultado = False;
+        return $resultado;
+    }
+    $prefijo = explode('//', $enlace)[0];
+
+    if( $prefijo != 'http' && $prefijo != 'https' ){
+        $resultado = False;
+        return $resultado;
+    }
+    return $resultado;
+}
+
+function revisar_formatos(array $tuplas, string $csv): array{
+    //
+    // Recibe las tuplas en forma array del csv $csv y revisa las que cumplen los formatos.
+    // (Correos, ruts, etc).
+    //
+    global $carpeta_errores;
+
+    $resultado = array();
+    $resultadoERR = array();
+    foreach($tuplas as $fila){
+        $estado = true;
+        if (str_contains($csv, 'Persona')){
+            $estado = revisar_run($fila[1]) && revisar_correo($fila[5]);
+        }
+        elseif (str_contains($csv, 'Atencion')){
+            $estado = revisar_run($fila[2]) && revisar_run($fila[3]);
+        }
+        elseif (str_contains($csv, "Instituciones previsionales de salud")){
+            $estado = revisar_rut($fila[3]) && revisar_enlace($fila[4]);
+        }
+        if ($estado == False){
+            $resultadoERR[] = $fila;
+        }
+        else {
+            $resultado[] = $fila;
+        }
+       }
+    escribir_ok_err($resultadoERR, $csv, "ERR");
+    return $resultado;
 }
 
 function revisar_restriccion_integridad(array $tuplas, string $csv): array {
@@ -119,13 +264,13 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
     $cuenta = 0;
     $array_ERR = array();
     $array_OK = array();
-    echo ($csv);
+    $header     = leer_encabezado('csv_originales/' .$csv);
     $restricciones = $dict_rdi[$csv];
     foreach($tuplas as $fila){
         $correcto = True;
         //Iterar sobre las restricciones de parametros.php
         foreach($restricciones as $i => $attr){
-            echo gettype($fila[$i]);
+            ;
             //Si el atributo es null o '' se skipea (la validaciond de nulls se ve despues)
             if ($fila[$i] == '' || is_null($fila[$i])){
                 continue;
@@ -138,16 +283,16 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
                         $cuenta += 1;
                         $array_ERR[] = $fila;
                         $correcto = False;
+                        echo 'falla de la tupla ' . $fila . ' en ' . $header[$i];
                         break;
                     }
                 }
                 elseif ($attr == 'string'){
                     if (gettype($fila[$i]) != $attr){
-                        // echo $fila[$i];
-                        // echo $attr . ": string"."\n";
                         $cuenta += 1;
                         $array_ERR[] = $fila;
                         $correcto = False;
+                        echo 'falla de la tupla ' . $fila . ' en ' . $header[$i];
                         break;
                 }
             }
@@ -155,8 +300,6 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
             //Si la restriccion dice que el campo vale algun valor tipo ('administrativo', 'medico') lo revisa
             elseif (gettype($attr) == "array"){
                 if(!in_array($fila[$i], $attr)){
-                    // echo $fila[$i];
-                    // echo $attr . ": " . $attr ."\n";
                     $cuenta += 1;
                     $array_ERR[] = $fila;
                     $correcto = False;
@@ -168,10 +311,11 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
             $array_OK[] = $fila;
         }  
     }
-    echo "\n" . $cuenta ." restricciones de integridad no respetada. Agregando a ERR.\n";
+    echo "\n" . $cuenta ." restricciones de integridad no respetadas. Agregando a ERR.\n";
     escribir_ok_err($array_ERR, $csv, "ERR");
     return $array_OK;
 }
+
 function revisar_csv(string $csv, string $carpeta_csv): array{
     // 
     // Función que recibe el nobmre de un csv en formato "Persona.csv", lo corrige y lo retorna
@@ -194,10 +338,11 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     // 2. Revisión de restricciones IC
     $tuplas = revisar_restriccion_integridad($tuplas, $csv);
     
-    // 3. Revisar Datos fuera de formato. 
+    // 3. Revisar Datos fuera de formato. (Personas, InstdeSalud y Atención)
+    $tuplas = revisar_formatos($tuplas, $csv);
+
     
 
     return $tuplas;
 }
-
 ?>

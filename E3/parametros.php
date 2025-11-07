@@ -39,9 +39,8 @@ $rdi_persona = array(
     'string',   //correo. el 1e9 es analogo a poner que es varchar(infinito)
     'integer',  // telefono, el número minimo es el que puse en el sgdo attr el 1e9
                                  // sirve para que se cumpla la restriccion del valor numérico.
-    array('beneficiario', 'titular', ''), //tipo
-    array('Staff médico', 'administrativo', 'paciente', '', 'Staff médico, paciente', //rol
-     'administrativo, paciente'),
+    'string', //tipo
+    'string', //rol
     'string',     // especialidad
     'string',     // firma
     'string'
@@ -66,7 +65,7 @@ $rdi_persona_dominio = array(
 $rdi_ips = array(
     'integer', //codigo
     'string',  //nombre
-    array('abierta', 'cerrada'), //tipo
+    'string', //tipo
     'string', //rut
     'string'  //enlace
 );
@@ -76,13 +75,12 @@ $rdi_farmacia = array(
     'integer',         // id
     'string',          //nombre
     'string',          //descripcion
-    array('Alimentos', 'Equipamiento', 'Fármacos', 'insumos',
-    'psicotrópicos', 'Refrigerados', 'Sueros'), //tipo
+    'string', //tipo
     'integer',          //codonu
     'string',           //clasonu
     'string',           //clasificacion
-    array('activo', 'inactivo'), //estado
-    array('0', '1'),        //esencial
+    'string', //estado
+    'integer',        //esencial
     'integer'               //precio
 );
 
