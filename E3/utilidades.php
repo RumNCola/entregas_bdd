@@ -48,18 +48,31 @@ function leer_encabezado(string $csv): array{
 function eliminar_duplicados(array $array, string $csv): array{
     // 
     // función que recibe un array y el nombre csv tipo ("Persona.csv") y retorna este pero
-    //  elminando los elementos duplicados
+    //  elminando los elementos duplicados. También elimina las filas vacías.
     // 
     $nombre_csv     = explode('.', $csv)[0];
     $resultado      = array();
     $cuenta         = 0;
     foreach ($array as $fila) {
-        if (!in_array($fila, $resultado)) {
-            $resultado[]  = $fila;
+        
+        $string_editado = implode('', $fila);
+        echo ($string_editado) . "\n";
+        echo strlen($string_editado). "\n";
+        echo var_dump(empty($string_editado)). "\n";
+        if($string_editado != null){
+            if (!in_array($fila, $resultado)) {
+                $resultado[]  = $fila;
+            }
+            else {
+                $cuenta += 1;
+                
+            }
         }
-        else {
-            $cuenta += 1;
+        else{
+            echo 'STRING VACIO';
         }
+        
+        
     }
     echo("\nSe eliminaron " . $cuenta . " duplicados/filas vacías en el archivo " . $csv . "\n");
     return $resultado;

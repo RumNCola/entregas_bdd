@@ -55,3 +55,4 @@ Observación: Las fuentes se usaron para entender como funcionan ciertos comando
 7. Resulta que en php las variablesd eclaradas globalmente (parametros.php) no las lee localmente las funciones, asi que tuve que usar global https://forum.exercism.org/t/global-variables-declared-outside-the-expected-solution-functions-are-not-recognized/9750/8
 8. Para revisar números en restriccciones de integridad https://www.php.net/manual/en/function.is-numeric.php
 9. Para la revisión de ruts, str_contains() https://www.php.net/manual/en/function.str-contains.php
+10. Uso de substrings, para los ruts https://www.php.net/manual/es/function.substr.php 
