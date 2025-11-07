@@ -63,7 +63,7 @@ function eliminar_duplicados(array $array, string $csv): array{
                 $cuenta += 1;
                 
             }
-        }      
+        }
     }
     echo("\nSe eliminaron " . $cuenta . " duplicados/filas vacías en el archivo " . $csv . "\n");
     return $resultado;
@@ -171,18 +171,18 @@ function revisar_rut(string $rut): bool{
         return $resultado;
     }
     // revisar que contenga -
-    if (!str_contains($rut, '‑')){
+    if (!str_contains($rut, '-')){
         $resultado = false;
         return $resultado;
     }
-    $dv = explode('‑', $rut)[1];
+    $dv = explode('-', $rut)[1];
     // revisar dv (digito verificador)
     if  (!is_numeric($dv) && $dv != 'K' && $dv != 'k'){
         $resultado = false;
         return $resultado;
     }
 
-    $rut = explode('.', explode('‑', $rut)[0]); // el resto de numeros menos dv, puntos y guión
+    $rut = explode('.', explode('-', $rut)[0]); // el resto de numeros menos dv, puntos y guión
     if(!is_numeric($rut[0]) || !is_numeric($rut[1]) || !is_numeric($rut[2])){
         $resultado = false;
         return $resultado;
@@ -206,18 +206,19 @@ function revisar_run(string $run): bool{
         return $resultado;
     }
 
-    if (!str_contains($run, '‑')){
+    if (!str_contains($run, '-')){
         $resultado = false;
+        echo 'aqui';
         return $resultado;
     }
 
-    $dv  = explode('‑', $run)[1];
+    $dv  = explode('-', $run)[1];
     if  (!is_numeric($dv) && ($dv != 'K' && $dv != 'k')){
         $resultado = false;
         return $resultado;
     }
 
-    $run = explode('‑', $run)[0];
+    $run = explode('-', $run)[0];
     if (!is_numeric($run[0]) || $run[0] == 0){
         $resultado = false;
         return $resultado;
@@ -421,7 +422,7 @@ function estandarizar_tuplas(array $tuplas, string $csv): array{
                 $correcto = False;
                 $resultadoERR[] = $fila;
             }
-            if($correcto){}
+            if($correcto == true){}
                 $resultado[] = $fila;
             }
 
@@ -464,7 +465,7 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     echo "\n". 'Archivo de Errores escrito con éxito.' . "\n";
 
     escribir_ok_err($tuplas, $csv);
-    escribir_log($csv);
+    // escribir_log($csv);
     echo "\n" .'========================================================';
     echo "\n";
     echo "\n" .'              LIMPIEZA TERMINADA: ' . $csv;
