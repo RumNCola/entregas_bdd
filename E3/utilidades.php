@@ -74,15 +74,17 @@ function escribir_ok_err(array $array, string $csv, string $tipo_archivo="OK"): 
     // csv_limpios/{$csv}{$tipo_archivo}.csv si $tipo_archivo es OK o en csv_errores/{$csv}
     // {$tipo_archivo}.csv si $tipo_archivo es ERR
     //
+    global $carpeta_limpios; 
+    global $carpeta_errores;
 
     $csv_nombre                = explode(".", $csv)[0];
     
     // Definimos la ruta del archivo a escribir segun tipo_archivo
     if($tipo_archivo == "OK"){
-        $ruta_archivo_nuevo    = $carpeta_limpios . $csv_nombre . $tipo_archivo . "csv";
+        $ruta_archivo_nuevo    = $carpeta_limpios . $csv_nombre . $tipo_archivo . ".csv";
     }
     else{
-        $ruta_archivo_nuevo    = $carpeta_errores . $csv_nombre . $tipo_archivo . "csv";
+        $ruta_archivo_nuevo    = $carpeta_errores . $csv_nombre . $tipo_archivo . ".csv";
     }
     
     // Si el archivo de oks no existe, lo creamos y agregamos el header (atributos)
@@ -111,37 +113,54 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
     // funcion que recibe tuplas de una tabla y el nombre de un csv Revisa el cumplimiento
     // de las IC. Si no cumple, la manda a ERR y se printea cual no cumple
     //
+    global $dict_rdi;
+    global $carpeta_errores;
+
+    $cuenta = 0;
     $array_ERR = array();
     $array_OK = array();
     echo ($csv);
     $restricciones = $dict_rdi[$csv];
     foreach($tuplas as $fila){
+        $correcto = True;
+        //Iterar sobre las restricciones de parametros.php
         foreach($restricciones as $i => $attr){
-            $correcto = True;
+            echo gettype($fila[$i]);
+            //Si el atributo es null o '' se skipea (la validaciond de nulls se ve despues)
+            if ($fila[$i] == '' || is_null($fila[$i])){
+                continue;
+            }
+            //Si el la restriccion dice atributo es un string, se revisa que así lo sea.
             if (gettype($attr) == "string"){
-                if (gettype($fila[i]) != $attr){
-                    echo "\nRestriccion de integridad no respetada. Agregando a ERR.\n";
+                if (gettype($fila[$i]) != $attr){
+                    // echo $fila[$i];
+                    // echo $attr . ": string"."\n";
+                    $cuenta += 1;
+                    
                     $array_ERR[] = $fila;
                     $correcto = False;
                     break;
-                }
-            elseif (gettype($attr) == "array"){
-                if(!in_array($fila[i], $attr)){
-                    echo "\nRestriccion de integridad no respetada. Agregando a ERR.\n";
-                    $array_ERR[] = $fila;
-                    $correcto = False;
-                    break;
-
                 }
             }
-        }
+            //Si la restriccion dice que el campo vale algun valor tipo ('administrativo', 'medico') lo revisa
+            elseif (gettype($attr) == "array"){
+                if(!in_array($fila[$i], $attr)){
+                    // echo $fila[$i];
+                    // echo $attr . ": " . $attr ."\n";
+                    $cuenta += 1;
+                    $array_ERR[] = $fila;
+                    $correcto = False;
+                    break;
+                }
+            }
         }
         if ($correcto){
             $array_OK[] = $fila;
         }  
     }
-    escribir_ok_err_log($array_ERR, $csv, "ERR");
-    return array_OK;
+    echo "\n" . $cuenta ." restricciones de integridad no respetada. Agregando a ERR.\n";
+    escribir_ok_err($array_ERR, $csv, "ERR");
+    return $array_OK;
 }
 function revisar_csv(string $csv, string $carpeta_csv): array{
     // 

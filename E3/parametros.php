@@ -141,7 +141,7 @@ $dict_rdi = array(
     "Farmacia.csv"          => $rdi_farmacia,
     "Atencion.csv"          => $rdi_atencion,
     "Arancel fonasa.csv"    => $rdi_arancel_fonasa,
-    "Arancel DCColita de rana.csv"             => $rdi_arancel_DCC
+    "Arancel DCColita de rana.csv"             => $rdi_arancel_DCC,
     "plan"                  => $rdi_plan
 );
 
