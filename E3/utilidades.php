@@ -114,16 +114,22 @@ function revisar_correo(string $correo): bool{
     // Función que recibe un string y revisa si cumple el formato de correo. retorna un
     // booleano según el resultado
     // 
-    $resultado = True;
-    if($enlace == ''){
+    $resultado = true;
+    if($correo == ''){
         return $resultado;
     }
     if (!str_contains($correo, '@')){
-        $resultado = False;
+        $resultado = false;
         return $resultado;
     }
-    if (!str_contains($correo, '.')){
-        $resultado = False;
+    $detalle = explode('@', $correo)[0];
+    if ($detalle = ''){
+        $resultado = false;
+        return $resultado;
+    }
+    $direccion = explode('@', $correo)[1];
+    if (!str_contains($direccion, '.')){
+        $resultado = false;
         return $resultado;
     }
     return $resultado;
@@ -135,7 +141,7 @@ function revisar_rut(string $rut): bool{
     // ESTE ES PARA ISAPRES
     $resultado = True;
     //revisar largo (me ahorro los comentarios apra revisar_run porque son analogos)
-    if (strlen($rut) >= 13 || strlen($rut) <= 11){
+    if (strlen($rut) != 12){
         $resultado = false;
         return $resultado;
     }
@@ -143,7 +149,7 @@ function revisar_rut(string $rut): bool{
     if (!str_contains($rut, '-')){
         $resultado = false;
         return $resultado;
-    
+    }
     $dv = explode('-', $rut)[1];
     // revisar dv (digito verificador)
     if  (!is_numeric($dv) && ($dv != 'K' && $dv != 'k')){
@@ -151,8 +157,8 @@ function revisar_rut(string $rut): bool{
         return $resultado;
     }
 
-    $rut = explode('.', explode('-', $rut)[0]); // el resto de numeros menos dv, puntos y guión
-    if(!is_nueric($rut)){
+    $rut = explode('.', explode('-', $rut)[0])[0]; // el resto de numeros menos dv, puntos y guión
+    if(!is_numeric($rut)){
         $resultado = false;
         return $resultado;
     }
@@ -162,14 +168,14 @@ function revisar_rut(string $rut): bool{
     }
     return $resultado;
 }
-}
+
 
 function revisar_run(string $run): bool{
     // 
     // función que recibe un string $run y retorna un booleano si cumple el formato run
     // ESTE ES PARA PERSONAS
     $resultado = True;
-    if (strlen($run) >= 11 || strlen($run) <= 8){
+    if (strlen($run) != 8){
         $resultado = false;
         return $resultado;
     }
@@ -229,12 +235,21 @@ function revisar_formatos(array $tuplas, string $csv): array{
     //
     global $carpeta_errores;
 
+    $cuenta = 0;
     $resultado = array();
     $resultadoERR = array();
     foreach($tuplas as $fila){
         $estado = true;
         if (str_contains($csv, 'Persona')){
             $estado = revisar_run($fila[1]) && revisar_correo($fila[5]);
+            if(!revisar_run($fila[1])){
+                echo "\n" . 'En persona, fallo el run ' . $fila[1];
+            }
+            if(!revisar_correo($fila[5])){
+                echo "\n". 'En persona, fallo correo' . $fila[5];
+                echo $fila[5];
+                echo '';
+            }
         }
         elseif (str_contains($csv, 'Atencion')){
             $estado = revisar_run($fila[2]) && revisar_run($fila[3]);
@@ -242,13 +257,15 @@ function revisar_formatos(array $tuplas, string $csv): array{
         elseif (str_contains($csv, "Instituciones previsionales de salud")){
             $estado = revisar_rut($fila[3]) && revisar_enlace($fila[4]);
         }
-        if ($estado == False){
+        if ($estado != true){
             $resultadoERR[] = $fila;
+            $cuenta += 1;
         }
         else {
             $resultado[] = $fila;
         }
        }
+    echo "\n". 'Encontré ' . $cuenta .' errores de formato (correo, run/rut y enlace)'. "\n";
     escribir_ok_err($resultadoERR, $csv, "ERR");
     return $resultado;
 }
