@@ -1,5 +1,6 @@
 <?php
 include "parametros.php";
+include "reparaciones.php";
 
 // Funcion copiada de la ayudantía
 function leer_archivo(string $nombreArchivo): array{
@@ -424,6 +425,8 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     echo '\nArchivo de Errores escrito con éxito.\n';
     return $tuplas;
 }
+
+
 
 function reparar_csv(array $tuplas, string $csv): void{
     //

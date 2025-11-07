@@ -28,7 +28,8 @@ Para hacer la revisión de formato de atributos (correos, run, rut, etc), revisi
 
 1. parametros.php -> Módulo donde se definen variables que serán meros parametros: por ejemplo las rutas de los archivos o dominios de los attributos.
 2. utilidades.php -> Módulo que contiene las funciones importantes para hacer la limpeiza de los archivos. Las funciones están **parametrizadas** y **estandarizadas**, es decir, son compatibles con todos los archivos csv y se adaptan a cada uno.
-3. main.php -> Archivo principal que incorpora utilidades y parametros para hacer la limpieza. Aquí se llama a las funciones para crear los log y csvs nuevos.
+3. reparaciones.php -> modulo que tiene las funciones para reparar/corregir attr de tuplas.
+4. main.php -> Archivo principal que incorpora utilidades y parametros para hacer la limpieza. Aquí se llama a las funciones para crear los log y csvs nuevos.
 
 
 
