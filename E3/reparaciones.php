@@ -38,13 +38,19 @@ function reparar_profesion_persona(array $tuplas): array{
 
 function reparar_rol_persona(array $tuplas): array{
     //funcion que recibe un array con las tuplas de persona y repara los atributos 'rol' 
-    // mal escritos y los retorna en un array
+    // mal escritos y los retorna en un array. ADemás revisa y repara las inst. de salud.
     $cuenta = 0;
+    $inst_salud = array('Colmena de avispas S.A.', 'Cruz de Malta S.A.', 'Cruz pal cielo Ltda.', 
+    'Fundación e imperio', 'medibanc', 'Menos vida S.A.', 'salud', 'Vida uno S.A.', ''
+    );
     foreach($tuplas as $i => $fila){
         if($fila[9] == 'Staff médico, Staff médico,paciente'){
             $tuplas[$i][9] = 'Staff médico, paciente';
             $cuenta += 1;
             
+        }
+        if(!in_array($fila[13], $inst_salud)){
+            $tuplas[$i][13] = ''; // asumí que es particular
         }
     }
     echo "\n" . 'Se ha/n reparado ' . $cuenta . ' rol de persona'. "\n" ;

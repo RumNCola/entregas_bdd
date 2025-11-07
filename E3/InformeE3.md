@@ -31,9 +31,13 @@ Para hacer la revisión de formato de atributos (correos, run, rut, etc), revisi
 3. reparaciones.php -> modulo que tiene las funciones para reparar/corregir attr de tuplas.
 4. main.php -> Archivo principal que incorpora utilidades y parametros para hacer la limpieza. Aquí se llama a las funciones para crear los log y csvs nuevos.
 
-### 3. Revisión de las reglas del negocio
+### 3. Revisión de las reglas del negocio EN PHP
 1. 'Una persona puede ser paciente, trabajar en el centro medico o ambos. Los trabajadores se dividen en staff medico o administrativo' se revisa dentro del código PHP, especificamente en corregir_estandariados.
 2. 'Solo los médico/as tienen especialidad y realizan atenciones ḿedicas, emiten recetas y ordenes.' se revisa dentro de corregir_estandarizados en el php.
+3. Los médicos pueden ser pacientes y titulares. Esto se revisa en el php.
+4. En php se revisa que las personas tengan una isapre registrada válida.
+5. La restricción 5 se respeta por definición
+6. Regla de 6 al 10 se revisan en SQL.
 
 
 
