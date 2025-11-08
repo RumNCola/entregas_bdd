@@ -18,34 +18,34 @@ function reparar_profesion_persona(array $tuplas): array{
     foreach($tuplas as $i => $fila){ //nota persoal: indice 10 es profesion
         if($fila[10] == 'kinesiólogo/a'){
             $tuplas[$i][10] = 'Kinesiólogo/a';
-            escribir_log_reparacion("Persona.csv", "Profesion Kine reparada" . "\n");
+            escribir_log_reparacion("Persona.csv", "Profesion Kine reparada :" . implode(';',$fila). "\n");
             $cuenta += 1;
         }
         elseif($fila[10] == 'TENSS'){
             $tuplas[$i][10] = 'TENS';
-            escribir_log_reparacion("Persona.csv", "Profesion TENS reparada" . "\n");
+            escribir_log_reparacion("Persona.csv", "Profesion TENS reparada: " . implode(';',$fila).  "\n");
             $cuenta += 1;
         }
         elseif($fila[10] == 'medico(a)'){
             $tuplas[$i][10] = 'médico/a';
-            escribir_log_reparacion("Persona.csv", "Profesion medico reparada" . "\n");
+            escribir_log_reparacion("Persona.csv", "Profesion medico reparada: " . implode(';',$fila). "\n");
             $cuenta += 1;
         }
 
         // solo los médicos tienen profesion
         if(str_contains($fila[9], 'médico') && $fila[10] == ''){
             $tuplas[$i][10] = 'No Informada';
-            escribir_log_reparacion("Persona.csv", "Profesion declarada como no informada" . "\n");
+            escribir_log_reparacion("Persona.csv", "Profesion declarada como no informada: " . implode(';',$fila). "\n");
         }
         elseif(!str_contains($fila[9], 'médico') && $fila[10] != ''){
-            escribir_log_reparacion("Persona.csv", "Profesion mal declrada borrada para persona en");
+            escribir_log_reparacion("Persona.csv", "Profesion mal declrada borrada para persona en: " . implode(';',$fila));
             $tuplas[$i][10] = '';
         }
         // los medicos/admins son titulares
         if(str_contains($fila[10], 'médico') || str_contains($fila[10], 'admin')){
             if($fila[8] != $fila[1]){
                 $tuplas[$i][8] = $fila[1]; //si no es titular, se le hace titular
-                escribir_log_reparacion("Persona.csv", "Profesional declarado como beneficiario corregido en");
+                escribir_log_reparacion("Persona.csv", "Profesional declarado como beneficiario corregido en: " . implode(';',$fila) . "\n");
             }
         }
     }
@@ -64,11 +64,11 @@ function reparar_rol_persona(array $tuplas): array{
         if($fila[9] == 'Staff médico, Staff médico,paciente'){
             $tuplas[$i][9] = 'Staff médico, paciente';
             $cuenta += 1;
-            escribir_log_reparacion("Persona.csv", "Rol persona corregido" . "\n");
+            escribir_log_reparacion("Persona.csv", "Rol persona corregido: " . implode(';',$fila) . "\n");
         }
         if(!in_array($fila[13], $inst_salud)){
             $tuplas[$i][13] = ''; // asumí que es particular
-            escribir_log_reparacion("Persona.csv", "ProfesInstdeSalud reparada" . "\n");
+            escribir_log_reparacion("Persona.csv", "ProfesInstdeSalud reparada: " . implode(';',$fila) . "\n");
         }
     }
     echo "\n" . 'Se ha/n reparado ' . $cuenta . ' rol de persona'. "\n" ;
@@ -84,7 +84,7 @@ function reparar_tipo_inst(array $tuplas): array{
         if ($fila[2] != 'abierta' && $fila[2] != 'cerrada'){
             $tuplas[$i][2] = 'cerrada';
             $cuenta += 1;
-            escribir_log_reparacion("Instituciones previsionales de salud.csv", "Estado reparado" . "\n");
+            escribir_log_reparacion("Instituciones previsionales de salud.csv", "Estado reparado: " . implode(';',$fila) . "\n");
         }  
     }
     echo "\n" . 'Se ham reparado '. $cuenta .' "tipo" de institucion'. "\n" ;
@@ -99,7 +99,7 @@ function reparar_enlace(array $tuplas): array{
         if($fila[4] != '' && !str_contains($fila[4], 'http')){
             $tuplas[$i][4] = 'https://' . $tuplas[$i][4];
             $cuenta += 1;
-            escribir_log_reparacion("Instituciones previsionales de salud.csv", "Enlace reparado" . "\n");
+            escribir_log_reparacion("Instituciones previsionales de salud.csv", "Enlace reparado: " . implode(';',$fila) . "\n");
         }
     }
     echo "\n" . 'Se ha reparado '. $cuenta. ' enlaces de institución de salud'. "\n" ;
@@ -117,7 +117,7 @@ function reparar_tipo_farmacia(array $tuplas): array{
         'Fármacos', 'insumos', 'psicotrópicos', 'Refrigerados', 'Sueros'))){
             $tuplas[$i][3] = 'No Informado';
             $cuenta += 1;
-            escribir_log_reparacion("Farmacia.csv", "Tipo farmacia reparado" . "\n");
+            escribir_log_reparacion("Farmacia.csv", "Tipo farmacia reparado: " . implode(';',$fila) . "\n");
             
         }
     }
@@ -142,7 +142,7 @@ function reparar_estado_farmacia(array $tuplas): array{
                 $tuplas[$i][7] = 'activo';
                 $cuenta += 1;
             }
-            escribir_log_reparacion("Farmacia.csv", "estado farmacia reparado" . "\n");
+            escribir_log_reparacion("Farmacia.csv", "estado farmacia reparado: " . implode(';',$fila) . "\n");
         }
     }
     echo "\n" . $cuenta .' correcciones en estado farmacia realizada (inactivo corregido)';
@@ -154,11 +154,11 @@ function reparar_esencial_farmacia(array $tuplas): array{
     //funcion que repara esencial de farmacia. Si no se sabe, se asume que no es esecnial
     // returna las tuplas editadas
     $cuenta = 0;
-    foreach($tuplas as $i => $filas){
-        if (!in_array($filas[8], array('0', '1', 0, 1))){
+    foreach($tuplas as $i => $fila){
+        if (!in_array($fila[8], array('0', '1', 0, 1))){
             $tuplas[$i][8] = '0';
             $cuenta += 1;
-            escribir_log_reparacion("Farmacia.csv", "esencial farmacia reparado" . "\n");
+            escribir_log_reparacion("Farmacia.csv", "esencial farmacia reparado: " . implode(';',$fila) . "\n");
         }
     }
     echo "\n" . $cuenta.  ' correcciones esencial en farmacia realizada'. "\n" ;
@@ -176,14 +176,14 @@ function corregir_efectuada_atencion(array $tuplas): array{
             if($fila[3] != ''){
                 $tuplas[$i][3] = '';
                 $cuenta += 1;
-                escribir_log_reparacion("Atencion.csv", "Inconsistencia efecuada reparado" . "\n");
+                escribir_log_reparacion("Atencion.csv", "Inconsistencia efecuada reparado: " . implode(';',$fila) . "\n");
                 
             }
         elseif($fila[4] == TRUE){
             if($fila[3] == '' || $fila[3] == Null){
                 $tuplas[$i][3] = 'Diagnóstico realizado pero no informado';
                 $cuenta += 1;
-                escribir_log_reparacion("Atencion.csv", "Inconsistencia Diagnostico reparado" . "\n");
+                escribir_log_reparacion("Atencion.csv", "Inconsistencia Diagnostico reparado: " . implode(';',$fila) . "\n");
                 
             }
         }

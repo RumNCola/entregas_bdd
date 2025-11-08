@@ -265,7 +265,7 @@ function revisar_formatos(array $tuplas, string $csv): array{
             }
             if(!revisar_correo($fila[5])){
                 $tuplas[$i][5] = '';
-                escribir_log_reparacion("Persona.csv", "Persona: Correo reparado");
+                escribir_log_reparacion("Persona.csv", "Persona: Correo reparado" . implode(';',$fila) ."\n");
                 echo "\nreparacion de correo realizada\n";
             }
         }
@@ -315,7 +315,7 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
                 if ($attr == 'integer' or $attr == 'float'){
                     //sacarle los puntos/comas
                     $tuplas[$j][$i] = str_replace(',','', str_replace('.', '', $fila[$i]));
-                    escribir_log_reparacion($csv, "Numero reparado (se le quitan los .) ");
+                    escribir_log_reparacion($csv, "Numero reparado (se le quitan los .) : " . implode(';',$fila));
                     if (!is_numeric($tuplas[$j][$i])){
                         $cuenta += 1;
                         $array_ERR[] = $fila;
