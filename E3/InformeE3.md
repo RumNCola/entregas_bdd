@@ -77,6 +77,13 @@ Regla de 6 al 10 se revisan en SQL.
 
 Una vez realizado la anterior, se encuentran disponibles los archivos apra ser cargados a la base de datos, además de los LOGS y ERRores, que fueron minimizados gracias a las reparaciones.
 
+### Tuplas desechadas irreparables:
+Dentro de lo slogs, se adjuntan las tuplas reparadas y deshechadas, donde se especifica la tabla y, el error y que se hizo. Todas las entradas son solucinoadas por PHP. Estos documentos son demasiado grandes para colocarlos dentro del informe, por lo que serán accesibles una vez se corra main.php.
+
+## Carga de la BDD con carga.sql
+En base al dump entregado durante la E2, se creo el documento carga.sql que crea las tablas siguiendo la estructura análoga de la E2, pero reinstaurando bcnf. Además, se estableecn restricciones que permiten verificar las siguientes reglas del negocio:
+9. Las ordenes pueden contener muchos exámenes y procedimientos
+10. Las recetas de medicamentos no psicotrópicos pueden tener muchos medicamentos, no así los psicotrópicos.
 
 
 
@@ -96,3 +103,4 @@ Observación: Las fuentes se usaron para entender como funcionan ciertos comando
 10. Uso de substrings, para los ruts https://www.php.net/manual/es/function.substr.php 
 11. Usé trim para eliminar las tuplas vacías https://www.php.net/manual/es/function.trim.php 
 12. Como en las descripciones de los csv habían ; que no eran separadores, tuve que buscar esto para bypassearlos. https://www.php.net/manual/es/function.fgetcsv.php
+13. Para crear carga.sql, se reusó y se programó sobre le DUMP.sql entregado en la E2.
