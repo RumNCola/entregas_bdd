@@ -38,7 +38,7 @@ Esta versión del esquema tiene una sección que rompe con 3NF;
 Para Transformar el esquema a BCNF, debemos quitar CodOnu y ClasONU de la tabla farmacia y crear una nueva tabla que guarde este valor, de la forma:
 -- FarmaciaONU(CodONU SERIAL PK, ClasONU VARCHAR NOT NULL) --
 2. Dentro de los csvs, hay parametros que no cumplen la primera forma normal, entre ellos el rol de persona, es decir, si es paciente, staff o admin. Esto se resuelve mediante `carga.sql`.
-
+3. La tabla Grupo ya no sirve, pues no se tiene descripciones de las instituciones de salud.
 #### Homologar Atributos y Restricciones de Integridad
 Por otro lado, los archivos excel tienen distintos nobmres para los atributos de la entrega pasada, además hay restricciones de integridad que cambia (por ejemplo, en el esquema E2 hay parametros que son BOOL que en los csv son INT). Para esto, los nombres de los atributos serán dictados por los csvs de esta entrega y no los de la pasada. Adicionalmente, algunas tablas ocupan distintos atributos como llave, como Atencion que en veaz de usar idpaciente/idmedico usan su rut. Estos cambios son contemplados en el cambio de esquema.
 
