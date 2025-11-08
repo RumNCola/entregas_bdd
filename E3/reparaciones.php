@@ -95,7 +95,7 @@ function reparar_tipo_farmacia(array $tuplas): array{
     foreach($tuplas as $i => $fila){ //indice 4
         if(!in_array($fila[3], array('Alimentos', 'Equipamiento', 
         'Fármacos', 'insumos', 'psicotrópicos', 'Refrigerados', 'Sueros'))){
-            $tuplas[$i][3] = '';
+            $tuplas[$i][3] = 'No Informado';
             $cuenta += 1;
             
         }

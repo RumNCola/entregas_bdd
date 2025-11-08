@@ -11,22 +11,12 @@ function leer_archivo(string $nombreArchivo): array{
     $arreglo    = array();
     $archivo    = fopen($nombreArchivo, "r");
     $header     = fgets($archivo); // sacar encabezado
+    
     while (!feof($archivo)) {
-        $linea = fgets($archivo);
-        
-        $vacio = true;
-        //para no leer las tuplas vacias
-        for($i=0; $i < strlen($linea); $i++){
-            if($linea[$i] != '' && $linea[$i] != ';'){
-                $vacio = false;
-            }
-        }
-        if(!$vacio){
+        $linea = fgetcsv($archivo, 0, ";", '"', '"');
         if ($linea !== false && $linea != "") {
-            if($linea != $vacio){
-            $arreglo[] = explode(";", $linea);
-            }
-        }}
+            $arreglo[] = $linea;
+        }
     }
     fclose($archivo);
     return $arreglo;
@@ -121,8 +111,9 @@ function escribir_ok_err(array $array, string $csv, string $tipo_archivo="OK"): 
 
     // Escribimos los datos correctos de $array y cerramos el archivo.
     foreach ($array as $fila) {
-        fwrite($archivo, implode(';', $fila));
+        fwrite($archivo, implode(';', $fila) . "\n");
     }
+    
     fclose($archivo);
 
     // Agregué este print pa depurar.
@@ -314,7 +305,7 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
     $array_OK = array();
     $header     = leer_encabezado('csv_originales/' .$csv);
     $restricciones = $dict_rdi[$csv];
-    foreach($tuplas as $fila){
+    foreach($tuplas as $j => $fila){
         $correcto = True;
         //Iterar sobre las restricciones de parametros.php
         foreach($restricciones as $i => $attr){
@@ -325,13 +316,14 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
             }
             //Si el la restriccion dice atributo es un string, se revisa que así lo sea.
             if (gettype($attr) == "string"){
-                if ($attr == 'integer' or $attr == 'float')
-                {
-                    if (!is_numeric($fila[$i])){
+                if ($attr == 'integer' or $attr == 'float'){
+                    //sacarle los puntos/comas
+                    $tuplas[$j][$i] = str_replace(',','', str_replace('.', '', $fila[$i]));
+                    if (!is_numeric($tuplas[$j][$i])){
                         $cuenta += 1;
                         $array_ERR[] = $fila;
                         $correcto = False;
-                        echo 'falla de la tupla ' . var_dump($fila[$i]) . ' en ' . $header[$i];
+                        echo 'falla de la tupla ' . ($fila[$i]) . ' en ' . $header[$i]. "\n";
                         break;
                     }
                 }
@@ -340,7 +332,7 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
                         $cuenta += 1;
                         $array_ERR[] = $fila;
                         $correcto = False;
-                        echo 'falla de la tupla ' . $fila . ' en ' . $header[$i];
+                        echo 'falla de la tupla ' . $fila . ' no ' . $header[$i];
                         break;
                 }
             }
@@ -371,7 +363,7 @@ function estandarizar_tuplas(array $tuplas, string $csv): array{
     $resultado = array();
     $resultadoERR = array();
     $cuenta = 0;
-    foreach($tuplas as $fila){
+    foreach($tuplas as $i => $fila){
         if ($csv == "Persona.csv"){ //7 -> tipo, 9 -> rol, 10 -> profesion
             $correcto = True;
             if(!in_array($fila[7], array('beneficiario', 'titular', ''))){
@@ -407,7 +399,7 @@ function estandarizar_tuplas(array $tuplas, string $csv): array{
         elseif($csv == "Farmacia.csv"){
             $correcto = True;
             if(!in_array($fila[3], array('Alimentos', 'Equipamiento', 
-            'Fármacos', 'insumos', 'psicotrópicos', 'Refrigerados', 'Sueros'))){
+            'Fármacos', 'insumos', 'psicotrópicos', 'Refrigerados', 'Sueros', 'No Informado'))){
                 $cuenta += 1;
                 $correcto = False;
                 $resultadoERR[] = $fila;
@@ -425,8 +417,10 @@ function estandarizar_tuplas(array $tuplas, string $csv): array{
             if($correcto == true){}
                 $resultado[] = $fila;
             }
-
         
+        else{
+            $resultado = $tuplas;
+        }
     }
     echo "\n". 'Encontré ' . $cuenta .' errores de estandarizacion en '. $csv . "\n";
     echo "\n";
