@@ -5,7 +5,31 @@
 |---------------------|----------------------|----------------------|
 | Jara García         | Fernando Martín      | 2420286J             |
 
-### 1. Esquema Relacional
+## INSTRUCCIONES DE EJECUCIÓN:
+Para ejecutar el programa, es necesario conocer los archivos **de código** importantes.
+1. `parametros.php` -> Módulo donde se definen variables que serán meros parametros: por ejemplo las rutas de los archivos o dominios de los attributos.
+2. `utilidades.php` -> Módulo que contiene las funciones importantes para hacer la limpeiza de los archivos. Las funciones están **parametrizadas** y **estandarizadas**, es decir, son compatibles con todos los archivos csv y se adaptan a cada uno.
+3. `reparaciones.php` -> modulo que tiene las funciones para reparar/corregir attr de tuplas.
+4. `main.php` -> Archivo principal que incorpora utilidades y parametros para hacer la limpieza. Aquí se llama a las funciones para crear los log y csvs nuevos.
+5. `carga.sql` -> Archivo que carga los resultados de `main.php` a la BDD.
+
+Por otro lado, están las carpetas importantes y **necesarias para la ejecución**:
+1. `csv_limpios` -> carpeta donde se guardan los CsvOK.
+2. `csv_errores` -> carpeta donde se guardan los csvERR.
+3. `csv_logs`    -> carpeta donde se guardan los LOGS.
+4. `csv_originales` -> carpeta donde se guardan los csv originales.
+
+Entonces, para ejecutar los programas, es necesario correr en la terminal, situado en la carpeta base, es decir, donde están los archivos php y las carpetas:
+
+`php main.php`
+
+**IMPORTANTE** CADA VEZ QUE SE CORRA EL PROGRAMA, SE DEBE BORRAR LOS CSVS GENERADOS; PUES TRAS CADA EJECUCIÖN SE ESCRIBIRA SOBRE ELLOS, SIN BORRAR EL CONTENIDO ANTERIOR.
+
+Con esto, se crearán los csv necesarios para importar a la bdd. Posteriormente, desde PGadmin psql se debe ejecutar el archivo carga para cargarlo a la BDD deseada. Personalmente, lo cargo directamente desde la interfaz de PGadmin, donde pide cargar un DUMP.
+
+Observación; Los archivos php ya están calibrados para entregar los resultados en **una sola ejecución**.
+
+## Esquema Relacional y Modificaciones
 El esquema relacional de la **ENTREGA PASDADA es:**
 ![Esquema relacional](esquema.png)
 #### Restaurar BCNF
@@ -13,31 +37,45 @@ Esta versión del esquema tiene una sección que rompe con 3NF;
 1. Farmacia (CodONU -> ClasONU rome 3NF)
 Para Transformar el esquema a BCNF, debemos quitar CodOnu y ClasONU de la tabla farmacia y crear una nueva tabla que guarde este valor, de la forma:
 -- FarmaciaONU(CodONU SERIAL PK, ClasONU VARCHAR NOT NULL) --
-2. Dentro de los csvs, hay parametros que no cumplen la primera forma normal, entre ellos el rol de persona, es decir, si es paciente, staff o admin.
+2. Dentro de los csvs, hay parametros que no cumplen la primera forma normal, entre ellos el rol de persona, es decir, si es paciente, staff o admin. Esto se resuelve mediante `carga.sql`.
 
 #### Homologar Atributos y Restricciones de Integridad
-Por otro lado, los archivos excel tienen distintos nobmres para los atributos de la entrega pasada, además hay restricciones de integridad que cambia (por ejemplo, en el esquema E2 hay parametros que son BOOL que en los csv son INT). Para esto, actualizaremos las siguientes tablas:
-- Persona()
-
-
+Por otro lado, los archivos excel tienen distintos nobmres para los atributos de la entrega pasada, además hay restricciones de integridad que cambia (por ejemplo, en el esquema E2 hay parametros que son BOOL que en los csv son INT). Para esto, los nombres de los atributos serán dictados por los csvs de esta entrega y no los de la pasada. Adicionalmente, algunas tablas ocupan distintos atributos como llave, como Atencion que en veaz de usar idpaciente/idmedico usan su rut. Estos cambios son contemplados en el cambio de esquema.
 
 ![Esquema relacional BCNF](esquema_nuevo.png)
 
-### 2. Revisión PHP
-Para hacer la revisión de formato de atributos (correos, run, rut, etc), revisión superficial de restricciones de integridad, eliminación de tuplas duplicadas y revisar/corregir datos estandarizados (como persona que puede ser paciente, Staff, admin o una combinación) se crearon los siguientes módulos de php, enfocados en el orden y pep8.
+## Revisión con PHP y modificaciones a archivos
+(acciones realizadas a los CSV)
+A través de PHP , se revisa lo siguiente:
+1. Eliminar tuplas duplicadas
+2. Corregir datos estandarizados, tipo {activo, inactivo}
+3. Revisar, superficialmente, restricciones de integridad
+4. revisar y corregir datos fuera de formato
+5. Estandarizar tuplas
 
-1. parametros.php -> Módulo donde se definen variables que serán meros parametros: por ejemplo las rutas de los archivos o dominios de los attributos.
-2. utilidades.php -> Módulo que contiene las funciones importantes para hacer la limpeiza de los archivos. Las funciones están **parametrizadas** y **estandarizadas**, es decir, son compatibles con todos los archivos csv y se adaptan a cada uno.
-3. reparaciones.php -> modulo que tiene las funciones para reparar/corregir attr de tuplas.
-4. main.php -> Archivo principal que incorpora utilidades y parametros para hacer la limpieza. Aquí se llama a las funciones para crear los log y csvs nuevos.
+Especificamente, en `reparaciones.php` se repara lo siguiente:
+1. Profesiones de persona adecuadas/bien escritas/correctas
+2. Roles de persona bien escritos
+3. Tipo de institución sea abierta o cerrada
+4. Los enlaces deben tener la estructura de uno (https://)
+5. Los tipos de la farmacia deben respetar sus posibles valores
+6. El estado de la farmacia es 'activo' o 'inactivo'
+7. esencial de la farmacia se repara en caso de ser incorrecto. Si es nulo se asume que es inactivo.
+8. se asegura la consistencia de una atencion efectuada o no.
 
-### 3. Revisión de las reglas del negocio EN PHP
+Además, hay diversos prints en la terminal que permiten visualizar como es el progreso de limpieza en cada archivo, en cada tramo del cleansing.
+
+Además, en el php se revisan las siguientes reglas del negocio:
+
 1. 'Una persona puede ser paciente, trabajar en el centro medico o ambos. Los trabajadores se dividen en staff medico o administrativo' se revisa dentro del código PHP, especificamente en corregir_estandariados.
 2. 'Solo los médico/as tienen especialidad y realizan atenciones ḿedicas, emiten recetas y ordenes.' se revisa dentro de corregir_estandarizados en el php.
 3. Los médicos pueden ser pacientes y titulares. Esto se revisa en el php.
 4. En php se revisa que las personas tengan una isapre registrada válida.
 5. La restricción 5 se respeta por definición
-6. Regla de 6 al 10 se revisan en SQL.
+
+Regla de 6 al 10 se revisan en SQL.
+
+Una vez realizado la anterior, se encuentran disponibles los archivos apra ser cargados a la base de datos, además de los LOGS y ERRores, que fueron minimizados gracias a las reparaciones.
 
 
 
