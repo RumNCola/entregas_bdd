@@ -69,7 +69,7 @@ function escribir_log(string $csv_nombre): void{
 
     $array    = leer_archivo($carpeta_errores . explode('.', $csv_nombre)[0] . 'ERR.csv');
     $ruta_log       = $carpeta_logs . explode(".", $csv_nombre)[0] . "LOG.txt";
-    $archivo_log    = fopen($ruta_log, "w");
+    $archivo_log    = fopen($ruta_log, "a");
     foreach($array as $fila){
         fwrite($archivo_log, 'Se declara irreparable: '. implode(";", $fila) . "\n");
         #Printeo para depurar e identificar el error
@@ -240,8 +240,6 @@ function revisar_enlace(string $enlace): bool{
     $prefijo = explode('//', $enlace)[0];
 
     if( $prefijo != 'http:' && $prefijo != 'https:' ){
-        echo 'aqui' . "\n";
-        echo $prefijo ."\n";
         $resultado = False;
         return $resultado;
     }
@@ -266,10 +264,8 @@ function revisar_formatos(array $tuplas, string $csv): array{
                 echo "\n" . 'En persona, fallo el run ' . $fila[1];
             }
             if(!revisar_correo($fila[5])){
-                echo "\n". 'En persona, fallo correo' . $fila[5];
-                echo $fila[5];
-                echo '';
                 $tuplas[$i][5] = '';
+                escribir_log_reparacion("Persona.csv", "Persona: Correo reparado");
                 echo "\nreparacion de correo realizada\n";
             }
         }
@@ -319,6 +315,7 @@ function revisar_restriccion_integridad(array $tuplas, string $csv): array {
                 if ($attr == 'integer' or $attr == 'float'){
                     //sacarle los puntos/comas
                     $tuplas[$j][$i] = str_replace(',','', str_replace('.', '', $fila[$i]));
+                    escribir_log_reparacion($csv, "Numero reparado (se le quitan los .) ");
                     if (!is_numeric($tuplas[$j][$i])){
                         $cuenta += 1;
                         $array_ERR[] = $fila;
@@ -459,7 +456,7 @@ function revisar_csv(string $csv, string $carpeta_csv): array{
     echo "\n". 'Archivo de Errores escrito con éxito.' . "\n";
 
     escribir_ok_err($tuplas, $csv);
-    // escribir_log($csv);
+    escribir_log($csv);
     echo "\n" .'========================================================';
     echo "\n";
     echo "\n" .'              LIMPIEZA TERMINADA: ' . $csv;
