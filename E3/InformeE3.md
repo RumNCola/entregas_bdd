@@ -5,6 +5,9 @@
 |---------------------|----------------------|----------------------|
 | Jara García         | Fernando Martín      | 2420286J             |
 
+
+**IMPORTANTE** SI SE QUIERE OBTENER LOS ARCHIVOS DENUEVO; ES **OBLIGATORIO** BORRAR LOS ARCHIVOS ACTUALES; PORQUE SINO SE ESCRIBIRÁ DENTRO DE ELLOS.
+
 ## INSTRUCCIONES DE EJECUCIÓN:
 Para ejecutar el programa, es necesario conocer los archivos **de código** importantes.
 1. `parametros.php` -> Módulo donde se definen variables que serán meros parametros: por ejemplo las rutas de los archivos o dominios de los attributos.

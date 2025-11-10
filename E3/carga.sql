@@ -43,10 +43,10 @@ CREATE TABLE public."FarmaciaONU"(
 
 CREATE TABLE public."InstituciondeSalud" (
     "codigo" integer NOT NULL UNIQUE,
-    "RUT" text NOT NULL UNIQUE,
-    "Codigo" integer NOT NULL,
     "nombre" varchar(30) NOT NULL,
     "tipo" char(7) NOT NULL,
+    "RUT" text NOT NULL UNIQUE,
+    "Codigo" integer NOT NULL,
     "enlace" text,
     PRIMARY KEY ("codigo")
 );
@@ -153,4 +153,19 @@ ALTER TABLE ONLY public.medicamentos
 ALTER TABLE ONLY public.beneficiario
     ADD CONSTRAINT titular FOREIGN KEY ("titular") REFERENCES public."Persona"("RUN") NOT VALID;
 
---COPY public."Arancel" ("ID", "Codigo", "Codigo_a", "ConsAtMedica", "ValorFonasa", "ValorColita", "Grupo", "Tipo") FROM stdin;
+-- carga de los archivos
+--me quedué sin tiempo aca asi que quedo incompleto hasta aqui :c
+COPY public."Arancel" ("codF", "codA", "atencion", "ValorFonasa", "ValorColita", "grupo", "tipo") FROM 'csv_limpios/Arancel fonasaOK.csv' DELIMITER ';' CSV HEADER;
+COPY public."Atencion" ("ID", "runpaciente", "runmedico", "diagnostico", "efectuada") FROM 'csv_limpios/AtencionOK.csv' DELIMITER ';' CSV HEADER;
+COPY public."Farmacia" ("cod", "nombre", "descripcion", "tipo", "CodONU", "clasificacion", "estado", "esencial", "precio") FROM 'csv_limpios/FarmaciaOK.csv' DELIMITER ';' CSV HEADER;
+COPY public."FarmaciaONU" ("CodONU", "ClasONU") FROM 'csv_limpios/FarmaciaOK.csv' DELIMITER ';' CSV HEADER;
+COPY public."InstituciondeSalud" ("codigo", "nombre", "tipo", "RUT", "enlace") FROM 'csv_limpios/Instituciones previsionales de saludOK.csv' DELIMITER ';' CSV HEADER;
+COPY public."Orden" ("IDAtencion", "IDArancel", "consulta") FROM 'csv_limpios/OrdenOK.csv' DELIMITER ';' CSV HEADER;
+COPY public."Persona" ("ID", "RUN", "nombre", "apellido", "direccion", "correo", "telefono", "InsSalPrev", "medico") FROM 'csv_limpios/PersonaOK.csv' DELIMITER ';' CSV HEADER;
+COPY public."Rol" ("IDPersona", "rol") FROM 'csv_limpios/PersonaOK.csv' DELIMITER ';' CSV HEADER;
+COPY public.medicamentos ("IDAtencion", "nombre", "Posologia", "Psicotropico") FROM 'csv_limpios/MedicamentoOK.csv' DELIMITER ';' CSV HEADER;
+COPY public.profesion ("ID", "firma", "profesion") FROM 'csv_limpios/PersonaOK.csv' DELIMITER ';' CSV HEADER;
+
+
+
+
