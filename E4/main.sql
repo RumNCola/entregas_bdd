@@ -108,14 +108,21 @@ CREATE OR REPLACE FUNCTION emitir_documentos(id_paciente integer)
 RETURNS TABLE(Documentos_consulta text) AS $$
 BEGIN 
     RETURN QUERY
-    SELECT 'Recetas: ' || E'\n' ||  COALESCE(R.Receta, 'No hay recetas') || E'\n' || E'\n' || E'\n'|| 
+    SELECT ('Recetas: ' || E'\n' ||  COALESCE(R.Receta, 'No hay recetas') || E'\n' || E'\n' || E'\n'|| 
 	   'Recetas Psic: ' ||  E'\n' || COALESCE(RP.Receta_psicotropica, 'No hay recetas psic.') || E'\n' || E'\n' || E'\n'|| 
-	   'Ordenes de examen: ' ||  E'\n' || COALESCE(O.Ordenes_de_examen, 'No hay ordenes de examen') AS Documentos_consulta
-    FROM emitir_receta(id_paciente) AS R, emitir_receta_psicotropica(id_paciente) AS RP, emitir_orden(id_paciente) AS O
+	   'Ordenes de examen: ' ||  E'\n' || COALESCE(O.Ordenes_de_examen, 'No hay ordenes de examen')) AS Documentos_consulta
+    FROM emitir_receta(id_paciente) AS R, emitir_receta_psicotropica(id_paciente) AS RP, emitir_orden(id_paciente) AS O;
 END;
 $$ LANGUAGE plpgsql;
 
 --1.e. Trigger al SP
+CREATE TRIGGER activar_emitir_documentos AFTER UPDATE ON public."Atencion"."Efectuada"
+FOR EACH ROW
+BEGIN
+    @id_paciente = NEW."IDPaciente";
+    SELECT * FROM emitir_orden(id_paciente);
+END;
+$$ LANGUAGE plpgsql;
 
 --1.f. Vista Ficha 
 -- ACTUALIZAR CUANDO ME RESPONDAN LA ISSUE DE ESPECIALDIAD DEL MEDICO

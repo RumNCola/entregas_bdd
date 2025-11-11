@@ -23,7 +23,7 @@ Para la generación de recetas se consultó:
 2. https://www.geeksforgeeks.org/sql-server/how-to-use-string_agg-to-concatenate-strings-in-sql-server Para usar string_agg
 3. https://stackoverflow.com/questions/36028908/postgresql-newline-character Para hacer los newlines (Me costó harto encontrar uno que funcionara)
 Para los StoredProcedure/Functions de la emisión de recetas se consultó:
-1. https://www.c-sharpcorner.com/blogs/call-a-function-in-stored-procedure1 Para llamar las funciones (que por alguna razon no es igual que con los SP)
+1. https://www.w3schools.com/sql/func_sqlserver_coalesce.asp COALESCE util como siempre para manejar los nulls en la consulta de recetas (hay muchas consultas que no tienen receta psicotropica y al ser null rompian la consulta).
 
 
 
