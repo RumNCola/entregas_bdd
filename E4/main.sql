@@ -7,7 +7,6 @@ CREATE INDEX indice_agenda ON public."Agenda"("ID", "Fecha", "Hora");
 --1.c. Creación de transacciones
 
 --1.d. Stored Procedure
-
 -- Emisión de receta no psic
 CREATE OR REPLACE FUNCTION emitir_receta(id_paciente integer)
 RETURNS TABLE (Receta text) AS $$

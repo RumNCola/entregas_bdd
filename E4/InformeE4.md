@@ -15,6 +15,17 @@ Cómo rescatas los datos de la base para desplegarlo en los formularios hy vicev
 Debemos generar un índice sobre todas las tablas y consultas que utilizen **RUN**. Notamos que este atributo está contenido unicamente en la tabla Persona.
 #### Parte 1.b)
 Tras una breve Query en Agenda, notamos que su llave primaria es sus tres atributos juntos (ID, Fecha, Hora), por lo que para crear un indice en su PK, debemos crear un índice sobre los tres attributos. 
+#### Parte 1.c)
+
+#### Parte 1.d) 
+Para generar los tres tipos de documentos asociados a una atención, se crea una función para cada tipo de documento. Por último, se crea una cuarta función que llama las tres funciones anteriores y retorna todas las recetas de una atención.
+
+#### Parte 1.e)
+
+#### Parte 1.f)
+Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VIEW Ficha AS (...).
+
+#### Parte 1.g)
 
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
