@@ -8,6 +8,84 @@ CREATE INDEX indice_agenda ON public."Agenda"("ID", "Fecha", "Hora");
 
 --1.d. Stored Procedure
 
+--consulta receta
+SELECT ('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apelllido || E'\n' ||
+	   'RUN: ' || personas.paciente_RUN || E'\n' ||
+	   'Diagnóstico: ' || personas.diagnostico || E'\n' ||
+	    string_agg(meds."Medicamento" || ' - ' || meds."Posologia", E'\n' ORDER BY meds."Medicamento")
+		|| E'\n' || E'\n' ||
+		'Fecha: ' || personas.fecha
+		|| E'\n' ||
+		'Dr: ' || personas.apellido_doctor || E'\n' ||
+		personas."firma") AS Recet
+FROM 
+	public."medicamentos" AS meds LEFT JOIN
+	public."Farmacia" AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
+		SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
+			paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
+			atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
+		FROM public."Atencion" AS atencion LEFT JOIN public."Persona" AS paciente ON atencion."IDPaciente" = paciente."ID"
+			LEFT JOIN public."Persona" AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN public."profesion" AS profesion ON
+			profesion."ID" = doctor."ID"
+		WHERE atencion."Efectuada" = True AND atencion."ID" = 1
+	) AS personas ON meds."IDAtencion" = personas."ID"
+WHERE meds."Psicotropico" = False 
+GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
+	personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico
+LIMIT 1;
+
+--consulta receta psicotrópica
+SELECT ('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apelllido || E'\n' ||
+	   'RUN: ' || personas.paciente_RUN || E'\n' ||
+	   'Diagnóstico: ' || personas.diagnostico || E'\n' ||
+	    string_agg(meds."Medicamento" || ' - ' || meds."Posologia", E'\n' ORDER BY meds."Medicamento")
+		|| E'\n' || E'\n' ||
+		'Fecha: ' || personas.fecha
+		|| E'\n' ||
+		'Dr: ' || personas.apellido_doctor || E'\n' ||
+		personas."firma") AS Recet
+FROM 
+	public."medicamentos" AS meds LEFT JOIN
+	public."Farmacia" AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
+		SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
+			paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
+			atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
+		FROM public."Atencion" AS atencion LEFT JOIN public."Persona" AS paciente ON atencion."IDPaciente" = paciente."ID"
+			LEFT JOIN public."Persona" AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN public."profesion" AS profesion ON
+			profesion."ID" = doctor."ID"
+		WHERE atencion."Efectuada" = True AND atencion."ID" = 1
+	) AS personas ON meds."IDAtencion" = personas."ID"
+WHERE meds."Psicotropico" = True 
+GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
+	personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico
+LIMIT 1;
+
+-- consulta orden
+SELECT 
+	('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apelllido || E'\n' ||
+ 	'RUN: ' || personas.paciente_RUN || E'\n' ||
+ 	'Diagnóstico: ' || personas.diagnostico || E'\n' ||
+  	string_agg(ara."ConsAtMedica", ' ' ORDER BY ara."ID") || E'\n' || E'\n' ||
+	'Fecha: ' || personas.fecha
+	|| E'\n' ||
+	'Dr: ' || personas.apellido_doctor || E'\n' ||
+	personas."firma")
+	AS Ordenes_de_examen
+FROM public."Orden" AS ord LEFT JOIN public."Arancel" AS ara ON ord."IDArancel" = ara."ID"
+LEFT JOIN (
+		SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
+			paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
+			atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
+		FROM public."Atencion" AS atencion LEFT JOIN public."Persona" AS paciente ON atencion."IDPaciente" = paciente."ID"
+			LEFT JOIN public."Persona" AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN public."profesion" AS profesion ON
+			profesion."ID" = doctor."ID"
+		WHERE atencion."Efectuada" = True AND atencion."ID" = 1
+	) AS personas ON personas."ID" = ord."IDAtencion"
+GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
+	personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico
+LIMIT 1;
+
+
 --1.e. Trigger al SP
 
 --1.f. Vista Ficha 

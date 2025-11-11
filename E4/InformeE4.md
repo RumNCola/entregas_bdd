@@ -18,6 +18,10 @@ Tras una breve Query en Agenda, notamos que su llave primaria es sus tres atribu
 
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
+Para la generación de recetas se consultó:
+1. Mi consulta entregada en la E2
+2. https://www.geeksforgeeks.org/sql-server/how-to-use-string_agg-to-concatenate-strings-in-sql-server Para usar string_agg
+3. https://stackoverflow.com/questions/36028908/postgresql-newline-character Para hacer los newlines (Me costó harto encontrar uno que funcionara)
 
 
 ### 3. Instrucciones de ejecución de Entrega
