@@ -2,6 +2,8 @@
 CREATE INDEX indice_run ON public."Persona"("RUN");
 
 --1.b. Creación del Índice en Agenda
+ALTER TABLE public."Agenda"
+ADD CONSTRAINT PK_Agenda PRIMARY KEY ("ID", "Fecha", "Hora");
 CREATE INDEX indice_agenda ON public."Agenda"("ID", "Fecha", "Hora");
 
 --1.c. Creación de transacciones
@@ -115,17 +117,31 @@ END;
 $$ LANGUAGE plpgsql;
 
 --1.e. Trigger al SP
-CREATE TRIGGER activar_emitir_documentos AFTER UPDATE ON public."Atencion"."Efectuada"
+CREATE OR REPLACE FUNCTION atencion_terminada(id_atencion integer)
+RETURNS boolean AS $$
+BEGIN
+    IF (SELECT COALESCE(public."Atencion"."Efectuada", FALSE) AND COALESCE(public."Atencion"."Diagnostico", False)
+    FROM public."Atencion" WHERE public."Atencion"."ID" = id_atencion) THEN
+        RETURN True;
+    ELSE
+        RETURN False;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER activar_emitir_documentos AFTER UPDATE OF "Efectuada" 
+ON public."Atencion"
 FOR EACH ROW
 BEGIN
-    @id_paciente = NEW."IDPaciente";
-    SELECT * FROM emitir_orden(id_paciente);
+    IF NEW."Efectuada" = True THEN
+        SELECT * FROM emitir_orden(NEW."IDPaciente");
+    END IF;
 END;
 $$ LANGUAGE plpgsql;
 
 --1.f. Vista Ficha 
 -- ACTUALIZAR CUANDO ME RESPONDAN LA ISSUE DE ESPECIALDIAD DEL MEDICO
-
 CREATE VIEW Ficha AS (
 SELECT P."ID", P."Nombres" AS nombre_paciente, P."Apellidos" AS apellido_paciente,
 A."fecha", A."Diagnostico", medico."Nombres" AS medico_nombre, medico."Apellidos" AS medico_apellido, 

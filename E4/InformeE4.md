@@ -29,6 +29,7 @@ Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VI
 
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
+1. Para agregarle la PK a la tabla Agenda, se consulto: https://www.w3schools.com/sql/sql_primarykey.ASP 
 Para la generación de recetas se consultó:
 1. Mi consulta entregada en la E2
 2. https://www.geeksforgeeks.org/sql-server/how-to-use-string_agg-to-concatenate-strings-in-sql-server Para usar string_agg
@@ -36,9 +37,8 @@ Para la generación de recetas se consultó:
 Para los StoredProcedure/Functions de la emisión de recetas se consultó:
 1. https://www.w3schools.com/sql/func_sqlserver_coalesce.asp COALESCE util como siempre para manejar los nulls en la consulta de recetas (hay muchas consultas que no tienen receta psicotropica y al ser null rompian la consulta).
 
-
-
 ### 3. Instrucciones de ejecución de Entrega
 <!-- Indica las instrucciones para ejecutar la aplicación web adicionales al URL -->
+
 
 ### 4. Observaciones adicionales
