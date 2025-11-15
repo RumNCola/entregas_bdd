@@ -27,6 +27,8 @@ Para generar los tres tipos de documentos asociados a una atención, se crea una
 #### Parte 1.e)
 Tras detecetar que una atención ha sido efectuada y se ha ingresado diagnóstico/recetas/ordenes, se gatilla el trigger creado para esta seccion que llama la función de 1.d.
 
+Esta parte fue complicada y cree dos funciones y tres vistas auxiliares que permiten asegurar el funcionamiento correcto del trigger.
+
 #### Parte 1.f)
 Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VIEW Ficha AS (...).
 
@@ -42,6 +44,8 @@ Para la generación de recetas se consultó:
 3. https://stackoverflow.com/questions/36028908/postgresql-newline-character Para hacer los newlines (Me costó harto encontrar uno que funcionara)
 Para los StoredProcedure/Functions de la emisión de recetas se consultó:
 1. https://www.w3schools.com/sql/func_sqlserver_coalesce.asp COALESCE util como siempre para manejar los nulls en la consulta de recetas (hay muchas consultas que no tienen receta psicotropica y al ser null rompian la consulta).
+Para agregar el rigger de 1.e, tuve que consultar:
+1. https://stackoverflow.com/questions/42920998/pl-pgsql-perform-vs-execute porque no me estaba funcionando el llamado de las funciones en el trigger y funciones. No sabía que se hacian de distinta forma (perform/execute) según el caso.
 
 ### 3. Instrucciones de ejecución de Entrega
 <!-- Indica las instrucciones para ejecutar la aplicación web adicionales al URL -->

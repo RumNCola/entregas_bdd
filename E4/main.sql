@@ -117,66 +117,106 @@ END;
 $$ LANGUAGE plpgsql;
 
 --1.e. Trigger al SP
--- Tuve que crear estas dos vistas porque sino el código de atencion_terminada quedaba gigante y feo.
-CREATE VIEW hay_ordenes AS (
-    
-)
+-- Tuve que crear estas tres vistas porque sino el código de atencion_terminada quedaba gigante y feo.
+CREATE OR REPLACE VIEW hay_recetas AS (
+    SELECT public."medicamentos"."IDAtencion" as "IDAtencion", 
+    COUNT(public."medicamentos"."IDAtencion") as "cuenta"
+    FROM public."medicamentos"
+    GROUP BY public."medicamentos"."IDAtencion" 
+);
 
+CREATE OR REPLACE VIEW hay_ordenes AS (
+    SELECT public."Orden"."IDAtencion" as "IDAtencion", 
+    COUNT(public."Orden"."IDAtencion") as "cuenta"
+    FROM public."Orden"
+    GROUP BY public."Orden"."IDAtencion"
+);
 
--- Primero, creamos una función para saber si la atención terminó y tiene algún documento (receta/orden)
--- Emitido. para esto, vemos efectuada =True y que exista almenos una orden o medicamento asociado.
+CREATE OR REPLACE VIEW diagnosticadas_efectuadas AS (
+    SELECT public."Atencion"."ID" as "ID", (COALESCE(public."Atencion"."Efectuada", FALSE)) 
+    AND (public."Atencion"."Diagnostico" IS NOT NULL) AS "diagnosticadas_efectuada"
+    FROM public."Atencion"
+);
+
+-- Esta función la cree para saber si la atención terminó y tiene algún documento (receta y/o orden)
+-- emitido. para esto, vemos efectuada =True y que exista almenos una orden o medicamento asociado.
+-- Para ahorrar el código, usé las tres vistas anteriores.
 CREATE OR REPLACE FUNCTION atencion_terminada(id_atencion integer)
 RETURNS boolean AS $$
 DECLARE
     criterio_atencion boolean;
+    
+    auxiliar_orden int;
     criterio_orden boolean;
+
+    auxiliar_medicamento int;
     criterio_medicamento boolean;
+     
 BEGIN
-    criterio_atencion = (
-        SELECT COALESCE(public."Atencion"."Efectuada", FALSE) AND public."Atencion"."Diagnostico" IS NOT NULL
-        AS resultado
-        FROM public."Atencion" WHERE public."Atencion"."ID" = id_atencion
+    criterio_atencion := (
+        SELECT diagnosticadas_efectuadas."diagnosticadas_efectuada"
+        FROM diagnosticadas_efectuadas
+        WHERE diagnosticadas_efectuadas."ID" = id_atencion
         );
-    IF 
-    criterio_medicamento = (
-        SELECT COUNT(public."medicamentos"."IDAtencion")
-        FROM public."medicamentos" 
-        WHERE public."medicamentos"."IDAtencion" = id_atencion
-        );
-    criterio_orden = (
-        SELECT COUNT(public."Orden"."IDAtencion")
-        FROM public."Orden"
-        WHERE publci."Orden"."IDAtencion" = id_atencion
+
+    auxiliar_orden := (
+        SELECT COALESCE(hay_ordenes."cuenta", 0)
+        FROM hay_ordenes
+        WHERE hay_ordenes."IDAtencion" = id_atencion
     );
-    IF criterio_medicamento IS NOT NULL THEN
-        criterio_medicamento = TRUE;
+
+    auxiliar_medicamento := (
+        SELECT COALESCE(hay_recetas."cuenta", 0)
+        FROM hay_recetas
+        WHERE hay_recetas."IDAtencion" = id_atencion
+    );
+
+    IF (auxiliar_medicamento IS NULL) THEN
+        criterio_medicamento := FALSE;
+    ELSIF auxiliar_medicamento > 0 THEN
+        criterio_medicamento := TRUE;
     ELSE
-        criterio_medicamento = FALSE;
+        criterio_medicamento := FALSE;
     END IF;
-    IF criterio_orden IS NOT NULL THEN
-        criterio_orden = TRUE;
+
+    IF (auxiliar_orden IS NULL) THEN
+        criterio_orden := FALSE;
+    ELSIF auxiliar_orden > 0 THEN
+        criterio_orden := TRUE;
     ELSE
-        criterio_orden = FALSE;
+        criterio_orden := FALSE;
     END IF;
 
     IF (criterio_orden OR criterio_medicamento) AND criterio_atencion THEN
-        RETURN True;
+        RETURN TRUE;
     ELSE
-        RETURN False;
+        RETURN FALSE;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
 
-
-CREATE TRIGGER activar_emitir_documentos AFTER UPDATE OF "Efectuada" 
-ON public."Atencion"
-FOR EACH ROW
+-- Esta función es para que funcione el trigger
+CREATE OR REPLACE FUNCTION func_trigger_documentos()
+RETURNS trigger AS $$
+DECLARE
+    realizada boolean;
 BEGIN
-    IF NEW."Efectuada" = True THEN
-        SELECT * FROM emitir_orden(NEW."IDPaciente");
+    IF NEW."Efectuada" = TRUE AND (OLD."Efectuada" = FALSE OR OLD."Efectuada" IS NULL) THEN
+        realizada := atencion_terminada(NEW."ID");
+    
+        IF realizada THEN
+            PERFORM emitir_documentos(NEW."IDPaciente");
+        END IF;
     END IF;
+    RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+-- el triggerr
+CREATE OR REPLACE TRIGGER trigger_documentos 
+AFTER UPDATE ON public."Atencion"
+FOR EACH ROW
+EXECUTE FUNCTION func_trigger_documentos();
 
 --1.f. Vista Ficha 
 -- ACTUALIZAR CUANDO ME RESPONDAN LA ISSUE DE ESPECIALDIAD DEL MEDICO
