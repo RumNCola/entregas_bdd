@@ -25,7 +25,7 @@ Dado que en la pregunta 1 no se ingresa, modifica o eliminan datos de la base, n
 Para generar los tres tipos de documentos asociados a una atención, se crea una función para cada tipo de documento. Por último, se crea una cuarta función que llama las tres funciones anteriores y retorna todas las recetas de una atención.
 
 #### Parte 1.e)
-Tras detecetar que una atención ha sido efectuada y se ha ingresado diagnóstico/recetas/ordenes, se gatilla el trigger creado para esta seccion que llama la función de 1.d
+Tras detecetar que una atención ha sido efectuada y se ha ingresado diagnóstico/recetas/ordenes, se gatilla el trigger creado para esta seccion que llama la función de 1.d.
 
 #### Parte 1.f)
 Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VIEW Ficha AS (...).

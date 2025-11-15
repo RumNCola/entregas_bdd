@@ -117,11 +117,49 @@ END;
 $$ LANGUAGE plpgsql;
 
 --1.e. Trigger al SP
+-- Tuve que crear estas dos vistas porque sino el código de atencion_terminada quedaba gigante y feo.
+CREATE VIEW hay_ordenes AS (
+    
+)
+
+
+-- Primero, creamos una función para saber si la atención terminó y tiene algún documento (receta/orden)
+-- Emitido. para esto, vemos efectuada =True y que exista almenos una orden o medicamento asociado.
 CREATE OR REPLACE FUNCTION atencion_terminada(id_atencion integer)
 RETURNS boolean AS $$
+DECLARE
+    criterio_atencion boolean;
+    criterio_orden boolean;
+    criterio_medicamento boolean;
 BEGIN
-    IF (SELECT COALESCE(public."Atencion"."Efectuada", FALSE) AND COALESCE(public."Atencion"."Diagnostico", False)
-    FROM public."Atencion" WHERE public."Atencion"."ID" = id_atencion) THEN
+    criterio_atencion = (
+        SELECT COALESCE(public."Atencion"."Efectuada", FALSE) AND public."Atencion"."Diagnostico" IS NOT NULL
+        AS resultado
+        FROM public."Atencion" WHERE public."Atencion"."ID" = id_atencion
+        );
+    IF 
+    criterio_medicamento = (
+        SELECT COUNT(public."medicamentos"."IDAtencion")
+        FROM public."medicamentos" 
+        WHERE public."medicamentos"."IDAtencion" = id_atencion
+        );
+    criterio_orden = (
+        SELECT COUNT(public."Orden"."IDAtencion")
+        FROM public."Orden"
+        WHERE publci."Orden"."IDAtencion" = id_atencion
+    );
+    IF criterio_medicamento IS NOT NULL THEN
+        criterio_medicamento = TRUE;
+    ELSE
+        criterio_medicamento = FALSE;
+    END IF;
+    IF criterio_orden IS NOT NULL THEN
+        criterio_orden = TRUE;
+    ELSE
+        criterio_orden = FALSE;
+    END IF;
+
+    IF (criterio_orden OR criterio_medicamento) AND criterio_atencion THEN
         RETURN True;
     ELSE
         RETURN False;
