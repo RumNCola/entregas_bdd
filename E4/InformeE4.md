@@ -48,7 +48,7 @@ Para agregar el rigger de 1.e, tuve que consultar:
 1. https://stackoverflow.com/questions/42920998/pl-pgsql-perform-vs-execute porque no me estaba funcionando el llamado de las funciones en el trigger y funciones. No sabía que se hacian de distinta forma (perform/execute) según el caso.
 Para crear la vista, fue necesario manejar el string de ConsAtMedica, para esto use repalce y substring.
 1. https://stackoverflow.com/questions/14319141/remove-certain-characters-from-a-string Replace
-2. 
+2. https://www.w3schools.com/sql/func_sqlserver_substring.asp substring
 
 ### 3. Instrucciones de ejecución de Entrega
 <!-- Indica las instrucciones para ejecutar la aplicación web adicionales al URL -->
