@@ -46,6 +46,9 @@ Para los StoredProcedure/Functions de la emisión de recetas se consultó:
 1. https://www.w3schools.com/sql/func_sqlserver_coalesce.asp COALESCE util como siempre para manejar los nulls en la consulta de recetas (hay muchas consultas que no tienen receta psicotropica y al ser null rompian la consulta).
 Para agregar el rigger de 1.e, tuve que consultar:
 1. https://stackoverflow.com/questions/42920998/pl-pgsql-perform-vs-execute porque no me estaba funcionando el llamado de las funciones en el trigger y funciones. No sabía que se hacian de distinta forma (perform/execute) según el caso.
+Para crear la vista, fue necesario manejar el string de ConsAtMedica, para esto use repalce y substring.
+1. https://stackoverflow.com/questions/14319141/remove-certain-characters-from-a-string Replace
+2. 
 
 ### 3. Instrucciones de ejecución de Entrega
 <!-- Indica las instrucciones para ejecutar la aplicación web adicionales al URL -->

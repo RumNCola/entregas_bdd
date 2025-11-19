@@ -220,15 +220,22 @@ EXECUTE FUNCTION func_trigger_documentos();
 
 --1.f. Vista Ficha 
 -- ACTUALIZAR CUANDO ME RESPONDAN LA ISSUE DE ESPECIALDIAD DEL MEDICO
-CREATE VIEW Ficha AS (
+CREATE OR REPLACE VIEW Ficha AS (
 SELECT P."ID", P."Nombres" AS nombre_paciente, P."Apellidos" AS apellido_paciente,
 A."fecha", A."Diagnostico", medico."Nombres" AS medico_nombre, medico."Apellidos" AS medico_apellido, 
-medico."profesion" AS medico_especialidad
+ARA."Especialidad" AS medico_especialidad
 FROM public."Atencion" AS A LEFT JOIN public."Persona" AS P ON A."IDPaciente" = P."ID"
 LEFT JOIN (
 	SELECT persona."ID", persona."Nombres", persona."Apellidos", profesion."profesion"
 	FROM public."Persona" AS persona LEFT JOIN public."profesion" AS profesion ON profesion."ID" = persona."ID"
-) AS medico ON medico."ID" = A."IDMedico"
+) AS medico ON medico."ID" = A."IDMedico" LEFT JOIN public."Orden" AS orden ON orden."IDAtencion" = A."ID"
+LEFT JOIN (
+    SELECT public."Arancel"."ID" as "ID", public."Arancel"."ConsAtMedica" as "ConsAtMedica",
+		       REPLACE(SUBSTRING(public."Arancel"."ConsAtMedica", 35, 1000000000), 'd en ', '') as "Especialidad"
+	FROM   public."Arancel" 
+	WHERE  public."Arancel"."ConsAtMedica" ILIKE '%consulta médica de especialidad en%' OR
+		       public."Arancel"."ConsAtMedica" ILIKE '%consulta medica de especialidad en%'
+    ) as ARA ON ARA."ID" = orden."IDArancel" 
 WHERE A."Efectuada" = True
 ORDER BY P."ID" ASC, A."fecha" DESC
 );
