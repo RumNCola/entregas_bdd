@@ -36,6 +36,7 @@ ADD CONSTRAINT PK_Agenda PRIMARY KEY ("ID", "Fecha", "Hora");
 CREATE INDEX indice_agenda ON agenda("ID", "Fecha", "Hora");
 
 --1.c. Creación de transacciones
+-- Esto se ve en la pregunta 2.
 
 --1.d. Stored Procedure
 -- Emisión de receta no psic
@@ -52,12 +53,13 @@ BEGIN
             'Fecha: ' || personas.fecha
             || E'\n' ||
             'Dr: ' || personas.apellido_doctor || E'\n' ||
-            personas."firma") AS Receta
+            personas."firma" || E'\n' ||
+			'RUN: ' || personas.doctor_run) AS Receta
     FROM 
         medicamentos AS meds LEFT JOIN
         farmacia AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
             SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
-                paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
+                paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN" AS doctor_run, profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
                 LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
@@ -66,7 +68,7 @@ BEGIN
         ) AS personas ON meds."IDAtencion" = personas."ID"
     WHERE meds."Psicotropico" = False 
     GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
-        personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico
+        personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico, personas.doctor_run
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -84,12 +86,13 @@ BEGIN
             'Fecha: ' || personas.fecha
             || E'\n' ||
             'Dr: ' || personas.apellido_doctor || E'\n' ||
-            personas."firma") AS Receta_psicotropica
+            personas."firma" || E'\n' ||
+            'RUN: ' || personas.doc_run) AS Receta_psicotropica
     FROM 
         medicamentos AS meds LEFT JOIN
         farmacia AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
             SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
-                paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
+                paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN" AS doc_run, profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
                 LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
@@ -98,7 +101,7 @@ BEGIN
         ) AS personas ON meds."IDAtencion" = personas."ID"
     WHERE meds."Psicotropico" = True 
     GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
-        personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico
+        personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico, personas.doc_run
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
@@ -116,12 +119,13 @@ BEGIN
         'Fecha: ' || personas.fecha
         || E'\n' ||
         'Dr: ' || personas.apellido_doctor || E'\n' ||
-        personas."firma")
+        personas."firma" || E'\n' ||
+        'RUN: ' || personas.doc_run)
         AS Ordenes_de_examen
     FROM orden AS ord LEFT JOIN arancel AS ara ON ord."IDArancel" = ara."ID"
     LEFT JOIN (
             SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
-                paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
+                paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN" as doc_run, profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
                 LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
@@ -129,7 +133,7 @@ BEGIN
             WHERE atencion."Efectuada" = True AND atencion."ID" = 1
         ) AS personas ON personas."ID" = ord."IDAtencion"
     GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
-        personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico
+        personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico, personas.doc_run
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
