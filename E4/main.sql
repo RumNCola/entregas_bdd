@@ -166,8 +166,8 @@ CREATE OR REPLACE VIEW hay_ordenes AS (
 );
 
 CREATE OR REPLACE VIEW diagnosticadas_efectuadas AS (
-    SELECT atencion."ID" as "ID", (COALESCE(atencion."Efectuada", FALSE)) 
-    AND (atencion."Diagnostico" IS NOT NULL) AS "diagnosticadas_efectuada"
+    SELECT atencion."ID" as "ID", ((COALESCE(atencion."Efectuada", FALSE)) 
+    AND (atencion."Diagnostico" IS NOT NULL)) AS "diagnosticadas_efectuada"
     FROM atencion
 );
 
