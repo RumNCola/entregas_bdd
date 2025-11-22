@@ -1,8 +1,8 @@
 --
--- PostgreSQL database dump
+-- current_userQL database dump
 --
 
--- Dumped from database version 17.5 (Postgres.app)
+-- Dumped from database version 17.5 (current_user.app)
 -- Dumped by pg_dump version 17.5
 
 -- Started on 2025-11-08 20:00:15 -03
@@ -25,7 +25,7 @@ SET default_table_access_method = heap;
 
 --
 -- TOC entry 229 (class 1259 OID 26085)
--- Name: Agenda; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Agenda; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Agenda" (
@@ -35,11 +35,11 @@ CREATE TABLE public."Agenda" (
 );
 
 
-ALTER TABLE public."Agenda" OWNER TO postgres;
+ALTER TABLE public."Agenda" OWNER TO current_user;
 
 --
 -- TOC entry 217 (class 1259 OID 25921)
--- Name: Arancel; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Arancel; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Arancel" (
@@ -54,11 +54,11 @@ CREATE TABLE public."Arancel" (
 );
 
 
-ALTER TABLE public."Arancel" OWNER TO postgres;
+ALTER TABLE public."Arancel" OWNER TO current_user;
 
 --
 -- TOC entry 218 (class 1259 OID 25926)
--- Name: Atencion; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Atencion; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Atencion" (
@@ -72,11 +72,11 @@ CREATE TABLE public."Atencion" (
 );
 
 
-ALTER TABLE public."Atencion" OWNER TO postgres;
+ALTER TABLE public."Atencion" OWNER TO current_user;
 
 --
 -- TOC entry 219 (class 1259 OID 25932)
--- Name: Farmacia; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Farmacia; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Farmacia" (
@@ -93,11 +93,11 @@ CREATE TABLE public."Farmacia" (
 );
 
 
-ALTER TABLE public."Farmacia" OWNER TO postgres;
+ALTER TABLE public."Farmacia" OWNER TO current_user;
 
 --
 -- TOC entry 220 (class 1259 OID 25937)
--- Name: Grupo; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Grupo; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Grupo" (
@@ -106,11 +106,11 @@ CREATE TABLE public."Grupo" (
 );
 
 
-ALTER TABLE public."Grupo" OWNER TO postgres;
+ALTER TABLE public."Grupo" OWNER TO current_user;
 
 --
 -- TOC entry 221 (class 1259 OID 25942)
--- Name: InstituciondeSalud; Type: TABLE; Schema: public; Owner: postgres
+-- Name: InstituciondeSalud; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."InstituciondeSalud" (
@@ -123,11 +123,11 @@ CREATE TABLE public."InstituciondeSalud" (
 );
 
 
-ALTER TABLE public."InstituciondeSalud" OWNER TO postgres;
+ALTER TABLE public."InstituciondeSalud" OWNER TO current_user;
 
 --
 -- TOC entry 222 (class 1259 OID 25947)
--- Name: Orden; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Orden; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Orden" (
@@ -136,11 +136,11 @@ CREATE TABLE public."Orden" (
 );
 
 
-ALTER TABLE public."Orden" OWNER TO postgres;
+ALTER TABLE public."Orden" OWNER TO current_user;
 
 --
 -- TOC entry 223 (class 1259 OID 25950)
--- Name: Persona; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Persona; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Persona" (
@@ -156,11 +156,11 @@ CREATE TABLE public."Persona" (
 );
 
 
-ALTER TABLE public."Persona" OWNER TO postgres;
+ALTER TABLE public."Persona" OWNER TO current_user;
 
 --
 -- TOC entry 224 (class 1259 OID 25955)
--- Name: Planes; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Planes; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Planes" (
@@ -170,11 +170,11 @@ CREATE TABLE public."Planes" (
 );
 
 
-ALTER TABLE public."Planes" OWNER TO postgres;
+ALTER TABLE public."Planes" OWNER TO current_user;
 
 --
 -- TOC entry 225 (class 1259 OID 25958)
--- Name: Rol; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Rol; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public."Rol" (
@@ -183,11 +183,11 @@ CREATE TABLE public."Rol" (
 );
 
 
-ALTER TABLE public."Rol" OWNER TO postgres;
+ALTER TABLE public."Rol" OWNER TO current_user;
 
 --
 -- TOC entry 226 (class 1259 OID 25963)
--- Name: beneficiario; Type: TABLE; Schema: public; Owner: postgres
+-- Name: beneficiario; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public.beneficiario (
@@ -197,11 +197,11 @@ CREATE TABLE public.beneficiario (
 );
 
 
-ALTER TABLE public.beneficiario OWNER TO postgres;
+ALTER TABLE public.beneficiario OWNER TO current_user;
 
 --
 -- TOC entry 227 (class 1259 OID 25967)
--- Name: medicamentos; Type: TABLE; Schema: public; Owner: postgres
+-- Name: medicamentos; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public.medicamentos (
@@ -212,26 +212,27 @@ CREATE TABLE public.medicamentos (
 );
 
 
-ALTER TABLE public.medicamentos OWNER TO postgres;
+ALTER TABLE public.medicamentos OWNER TO current_user;
 
 --
 -- TOC entry 228 (class 1259 OID 25972)
--- Name: profesion; Type: TABLE; Schema: public; Owner: postgres
+-- Name: profesion; Type: TABLE; Schema: public; Owner: current_user
 --
 
 CREATE TABLE public.profesion (
     "ID" integer NOT NULL,
     firma text,
-    profesion text
+    profesion text,
+    especialidad text
 );
 
 
-ALTER TABLE public.profesion OWNER TO postgres;
+ALTER TABLE public.profesion OWNER TO current_user;
 
 --
 -- TOC entry 3868 (class 0 OID 26085)
 -- Dependencies: 229
--- Data for Name: Agenda; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Agenda; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Agenda" ("ID", "Fecha", "Hora") FROM stdin;
@@ -143592,7 +143593,7 @@ COPY public."Agenda" ("ID", "Fecha", "Hora") FROM stdin;
 --
 -- TOC entry 3856 (class 0 OID 25921)
 -- Dependencies: 217
--- Data for Name: Arancel; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Arancel; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Arancel" ("ID", "Codigo", "Codigo_a", "ConsAtMedica", "ValorFonasa", "ValorColita", "Grupo", "Tipo") FROM stdin;
@@ -146264,7 +146265,7 @@ COPY public."Arancel" ("ID", "Codigo", "Codigo_a", "ConsAtMedica", "ValorFonasa"
 --
 -- TOC entry 3857 (class 0 OID 25926)
 -- Dependencies: 218
--- Data for Name: Atencion; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Atencion; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Atencion" ("ID", fecha, "IDPaciente", "IDMedico", "Diagnostico", "Efectuada", hora) FROM stdin;
@@ -151152,7 +151153,7 @@ COPY public."Atencion" ("ID", fecha, "IDPaciente", "IDMedico", "Diagnostico", "E
 --
 -- TOC entry 3858 (class 0 OID 25932)
 -- Dependencies: 219
--- Data for Name: Farmacia; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Farmacia; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Farmacia" (codigo, "Nombre", descripcion, tipo, "CodONU", "ClasONU", "Clasificacion", "Estado", "canastaEsencial", "Precio") FROM stdin;
@@ -156418,7 +156419,7 @@ COPY public."Farmacia" (codigo, "Nombre", descripcion, tipo, "CodONU", "ClasONU"
 --
 -- TOC entry 3859 (class 0 OID 25937)
 -- Dependencies: 220
--- Data for Name: Grupo; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Grupo; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Grupo" ("ID", "Descripcion") FROM stdin;
@@ -156453,7 +156454,7 @@ COPY public."Grupo" ("ID", "Descripcion") FROM stdin;
 --
 -- TOC entry 3860 (class 0 OID 25942)
 -- Dependencies: 221
--- Data for Name: InstituciondeSalud; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: InstituciondeSalud; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."InstituciondeSalud" ("ID", "RUT", "Codigo", "Nombre", "Tipo", "Enlace") FROM stdin;
@@ -156474,7 +156475,7 @@ COPY public."InstituciondeSalud" ("ID", "RUT", "Codigo", "Nombre", "Tipo", "Enla
 --
 -- TOC entry 3861 (class 0 OID 25947)
 -- Dependencies: 222
--- Data for Name: Orden; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Orden; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Orden" ("IDAtencion", "IDArancel") FROM stdin;
@@ -175976,7 +175977,7 @@ COPY public."Orden" ("IDAtencion", "IDArancel") FROM stdin;
 --
 -- TOC entry 3862 (class 0 OID 25950)
 -- Dependencies: 223
--- Data for Name: Persona; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Persona; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Persona" ("ID", "RUN", "Nombres", "Apellidos", "Direccion", email, telefono, "InstSalud", medico) FROM stdin;
@@ -178986,7 +178987,7 @@ COPY public."Persona" ("ID", "RUN", "Nombres", "Apellidos", "Direccion", email, 
 --
 -- TOC entry 3863 (class 0 OID 25955)
 -- Dependencies: 224
--- Data for Name: Planes; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Planes; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Planes" ("ID", "Grupo", "Bonificacion") FROM stdin;
@@ -179260,7 +179261,7 @@ COPY public."Planes" ("ID", "Grupo", "Bonificacion") FROM stdin;
 --
 -- TOC entry 3864 (class 0 OID 25958)
 -- Dependencies: 225
--- Data for Name: Rol; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: Rol; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public."Rol" ("IDPersona", "Rol") FROM stdin;
@@ -182690,7 +182691,7 @@ COPY public."Rol" ("IDPersona", "Rol") FROM stdin;
 --
 -- TOC entry 3865 (class 0 OID 25963)
 -- Dependencies: 226
--- Data for Name: beneficiario; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: beneficiario; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public.beneficiario ("IDpersona", "Beneficiario", "IDtitular") FROM stdin;
@@ -185700,7 +185701,7 @@ COPY public.beneficiario ("IDpersona", "Beneficiario", "IDtitular") FROM stdin;
 --
 -- TOC entry 3866 (class 0 OID 25967)
 -- Dependencies: 227
--- Data for Name: medicamentos; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: medicamentos; Type: TABLE DATA; Schema: public; Owner: current_user
 --
 
 COPY public.medicamentos ("IDAtencion", "Medicamento", "Posologia", "Psicotropico") FROM stdin;
@@ -189647,470 +189648,11 @@ COPY public.medicamentos ("IDAtencion", "Medicamento", "Posologia", "Psicotropic
 --
 -- TOC entry 3867 (class 0 OID 25972)
 -- Dependencies: 228
--- Data for Name: profesion; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: profesion; Type: TABLE DATA; Schema: public; Owner: current_user
 --
-
-COPY public.profesion ("ID", firma, profesion) FROM stdin;
-62	./firmas/62	medico(a)
-82	./firmas/82	medico(a)
-153	./firmas/153	medico(a)
-160	./firmas/160	medico(a)
-179	./firmas/179	medico(a)
-214	./firmas/214	medico(a)
-233	./firmas/233	medico(a)
-257	./firmas/257	medico(a)
-275	./firmas/275	medico(a)
-347	./firmas/347	medico(a)
-352	./firmas/352	medico(a)
-367	./firmas/367	medico(a)
-390	./firmas/390	medico(a)
-402	./firmas/402	medico(a)
-405	./firmas/405	medico(a)
-418	./firmas/418	medico(a)
-422	./firmas/422	medico(a)
-451	./firmas/451	medico(a)
-512	./firmas/512	medico(a)
-548	./firmas/548	medico(a)
-566	./firmas/566	medico(a)
-586	./firmas/586	medico(a)
-596	./firmas/596	medico(a)
-618	./firmas/618	medico(a)
-633	./firmas/633	medico(a)
-652	./firmas/652	medico(a)
-667	./firmas/667	medico(a)
-728	./firmas/728	medico(a)
-796	./firmas/796	medico(a)
-833	./firmas/833	medico(a)
-863	./firmas/863	medico(a)
-872	./firmas/872	medico(a)
-913	./firmas/913	medico(a)
-950	./firmas/950	medico(a)
-982	./firmas/982	medico(a)
-986	./firmas/986	medico(a)
-1023	./firmas/1023	medico(a)
-1049	./firmas/1049	medico(a)
-1096	./firmas/1096	medico(a)
-1111	./firmas/1111	medico(a)
-1200	./firmas/1200	medico(a)
-1207	./firmas/1207	medico(a)
-1237	./firmas/1237	medico(a)
-1243	./firmas/1243	medico(a)
-1266	./firmas/1266	medico(a)
-1284	./firmas/1284	medico(a)
-1321	./firmas/1321	medico(a)
-1335	./firmas/1335	medico(a)
-1377	./firmas/1377	medico(a)
-1394	./firmas/1394	medico(a)
-1395	./firmas/1395	medico(a)
-1414	./firmas/1414	medico(a)
-1454	./firmas/1454	medico(a)
-1472	./firmas/1472	medico(a)
-1474	./firmas/1474	medico(a)
-1478	./firmas/1478	medico(a)
-1481	./firmas/1481	medico(a)
-1493	./firmas/1493	medico(a)
-1536	./firmas/1536	medico(a)
-1568	./firmas/1568	medico(a)
-1650	./firmas/1650	medico(a)
-1710	./firmas/1710	medico(a)
-1718	./firmas/1718	medico(a)
-1728	./firmas/1728	medico(a)
-1733	./firmas/1733	medico(a)
-1783	./firmas/1783	medico(a)
-1805	./firmas/1805	medico(a)
-1807	./firmas/1807	medico(a)
-1858	./firmas/1858	medico(a)
-1864	./firmas/1864	medico(a)
-1878	./firmas/1878	medico(a)
-1897	./firmas/1897	medico(a)
-1908	./firmas/1908	medico(a)
-1940	./firmas/1940	medico(a)
-1943	./firmas/1943	medico(a)
-1992	./firmas/1992	medico(a)
-2039	./firmas/2039	medico(a)
-2041	./firmas/2041	medico(a)
-2056	./firmas/2056	medico(a)
-2058	./firmas/2058	medico(a)
-2081	./firmas/2081	medico(a)
-2113	./firmas/2113	medico(a)
-2116	./firmas/2116	medico(a)
-2135	./firmas/2135	medico(a)
-2175	./firmas/2175	medico(a)
-2184	./firmas/2184	medico(a)
-2193	./firmas/2193	medico(a)
-2202	./firmas/2202	medico(a)
-2240	./firmas/2240	medico(a)
-2248	./firmas/2248	medico(a)
-2254	./firmas/2254	medico(a)
-2270	./firmas/2270	medico(a)
-2359	./firmas/2359	medico(a)
-2371	./firmas/2371	medico(a)
-2402	./firmas/2402	medico(a)
-2405	./firmas/2405	medico(a)
-2411	./firmas/2411	medico(a)
-2428	./firmas/2428	medico(a)
-2445	./firmas/2445	medico(a)
-2520	./firmas/2520	medico(a)
-2560	./firmas/2560	medico(a)
-2566	./firmas/2566	medico(a)
-2601	./firmas/2601	medico(a)
-2693	./firmas/2693	medico(a)
-2746	./firmas/2746	medico(a)
-2796	./firmas/2796	medico(a)
-2804	./firmas/2804	medico(a)
-2810	./firmas/2810	medico(a)
-2832	./firmas/2832	medico(a)
-2833	./firmas/2833	medico(a)
-2881	./firmas/2881	medico(a)
-2907	./firmas/2907	medico(a)
-16	\N	enfermero/a
-34	\N	enfermero/a
-51	\N	enfermero/a
-58	\N	enfermero/a
-70	\N	enfermero/a
-89	\N	enfermero/a
-92	\N	enfermero/a
-137	\N	enfermero/a
-148	\N	enfermero/a
-213	\N	enfermero/a
-234	\N	enfermero/a
-255	\N	enfermero/a
-266	\N	enfermero/a
-276	\N	enfermero/a
-299	\N	enfermero/a
-307	\N	enfermero/a
-329	\N	enfermero/a
-365	\N	enfermero/a
-387	\N	enfermero/a
-398	\N	enfermero/a
-452	\N	enfermero/a
-454	\N	enfermero/a
-480	\N	enfermero/a
-536	\N	enfermero/a
-552	\N	enfermero/a
-576	\N	enfermero/a
-601	\N	enfermero/a
-625	\N	enfermero/a
-701	\N	enfermero/a
-715	\N	enfermero/a
-721	\N	enfermero/a
-741	\N	enfermero/a
-744	\N	enfermero/a
-832	\N	enfermero/a
-849	\N	enfermero/a
-860	\N	enfermero/a
-864	\N	enfermero/a
-867	\N	enfermero/a
-995	\N	enfermero/a
-1008	\N	enfermero/a
-1054	\N	enfermero/a
-1058	\N	enfermero/a
-1084	\N	enfermero/a
-1117	\N	enfermero/a
-1128	\N	enfermero/a
-1137	\N	enfermero/a
-1155	\N	enfermero/a
-1163	\N	enfermero/a
-1191	\N	enfermero/a
-1212	\N	enfermero/a
-1220	\N	enfermero/a
-1226	\N	enfermero/a
-1276	\N	enfermero/a
-1304	\N	enfermero/a
-1317	\N	enfermero/a
-1378	\N	enfermero/a
-1407	\N	enfermero/a
-1412	\N	enfermero/a
-1416	\N	enfermero/a
-1419	\N	enfermero/a
-1471	\N	enfermero/a
-1494	\N	enfermero/a
-1553	\N	enfermero/a
-1586	\N	enfermero/a
-1683	\N	enfermero/a
-1691	\N	enfermero/a
-1693	\N	enfermero/a
-1713	\N	enfermero/a
-1730	\N	enfermero/a
-1751	\N	enfermero/a
-1765	\N	enfermero/a
-1791	\N	enfermero/a
-1820	\N	enfermero/a
-1853	\N	enfermero/a
-1872	\N	enfermero/a
-1877	\N	enfermero/a
-1927	\N	enfermero/a
-1950	\N	enfermero/a
-1980	\N	enfermero/a
-1982	\N	enfermero/a
-1984	\N	enfermero/a
-1991	\N	enfermero/a
-2010	\N	enfermero/a
-2024	\N	enfermero/a
-2082	\N	enfermero/a
-2086	\N	enfermero/a
-2121	\N	enfermero/a
-2268	\N	enfermero/a
-2269	\N	enfermero/a
-2278	\N	enfermero/a
-2333	\N	enfermero/a
-2467	\N	enfermero/a
-2468	\N	enfermero/a
-2492	\N	enfermero/a
-2510	\N	enfermero/a
-2515	\N	enfermero/a
-2543	\N	enfermero/a
-2565	\N	enfermero/a
-2567	\N	enfermero/a
-2588	\N	enfermero/a
-2594	\N	enfermero/a
-2640	\N	enfermero/a
-2644	\N	enfermero/a
-2658	\N	enfermero/a
-2674	\N	enfermero/a
-2727	\N	enfermero/a
-2735	\N	enfermero/a
-2745	\N	enfermero/a
-2754	\N	enfermero/a
-2915	\N	enfermero/a
-2961	\N	enfermero/a
-2992	\N	enfermero/a
-26	\N	kinesiólogo/a
-40	\N	kinesiólogo/a
-42	\N	kinesiólogo/a
-47	\N	kinesiólogo/a
-71	\N	kinesiólogo/a
-104	\N	kinesiólogo/a
-121	\N	kinesiólogo/a
-129	\N	kinesiólogo/a
-138	\N	kinesiólogo/a
-150	\N	kinesiólogo/a
-154	\N	kinesiólogo/a
-155	\N	kinesiólogo/a
-244	\N	kinesiólogo/a
-252	\N	kinesiólogo/a
-281	\N	kinesiólogo/a
-333	\N	kinesiólogo/a
-369	\N	kinesiólogo/a
-397	\N	kinesiólogo/a
-407	\N	kinesiólogo/a
-417	\N	kinesiólogo/a
-425	\N	kinesiólogo/a
-435	\N	kinesiólogo/a
-437	\N	kinesiólogo/a
-479	\N	kinesiólogo/a
-501	\N	kinesiólogo/a
-520	\N	kinesiólogo/a
-581	\N	kinesiólogo/a
-608	\N	kinesiólogo/a
-640	\N	kinesiólogo/a
-654	\N	kinesiólogo/a
-655	\N	kinesiólogo/a
-656	\N	kinesiólogo/a
-670	\N	kinesiólogo/a
-734	\N	kinesiólogo/a
-794	\N	kinesiólogo/a
-814	\N	kinesiólogo/a
-853	\N	kinesiólogo/a
-861	\N	kinesiólogo/a
-879	\N	kinesiólogo/a
-896	\N	kinesiólogo/a
-929	\N	kinesiólogo/a
-931	\N	kinesiólogo/a
-973	\N	kinesiólogo/a
-992	\N	kinesiólogo/a
-998	\N	kinesiólogo/a
-1010	\N	kinesiólogo/a
-1121	\N	kinesiólogo/a
-1129	\N	kinesiólogo/a
-1130	\N	kinesiólogo/a
-1197	\N	kinesiólogo/a
-1263	\N	kinesiólogo/a
-1381	\N	kinesiólogo/a
-1437	\N	kinesiólogo/a
-1438	\N	kinesiólogo/a
-1480	\N	kinesiólogo/a
-1485	\N	kinesiólogo/a
-1490	\N	kinesiólogo/a
-1505	\N	kinesiólogo/a
-1532	\N	kinesiólogo/a
-1544	\N	kinesiólogo/a
-1555	\N	kinesiólogo/a
-1601	\N	kinesiólogo/a
-1645	\N	kinesiólogo/a
-1659	\N	kinesiólogo/a
-1662	\N	kinesiólogo/a
-1694	\N	kinesiólogo/a
-1703	\N	kinesiólogo/a
-1722	\N	kinesiólogo/a
-1789	\N	kinesiólogo/a
-1800	\N	kinesiólogo/a
-1840	\N	kinesiólogo/a
-1876	\N	kinesiólogo/a
-1879	\N	kinesiólogo/a
-1888	\N	kinesiólogo/a
-1918	\N	kinesiólogo/a
-1928	\N	kinesiólogo/a
-1963	\N	kinesiólogo/a
-1977	\N	kinesiólogo/a
-2009	\N	kinesiólogo/a
-2013	\N	kinesiólogo/a
-2125	\N	kinesiólogo/a
-2192	\N	kinesiólogo/a
-2196	\N	kinesiólogo/a
-2200	\N	kinesiólogo/a
-2225	\N	kinesiólogo/a
-2247	\N	kinesiólogo/a
-2267	\N	kinesiólogo/a
-2272	\N	kinesiólogo/a
-2273	\N	kinesiólogo/a
-2288	\N	kinesiólogo/a
-2323	\N	kinesiólogo/a
-2339	\N	kinesiólogo/a
-2344	\N	kinesiólogo/a
-2355	\N	kinesiólogo/a
-2429	\N	kinesiólogo/a
-2499	\N	kinesiólogo/a
-2568	\N	kinesiólogo/a
-2597	\N	kinesiólogo/a
-2622	\N	kinesiólogo/a
-2647	\N	kinesiólogo/a
-2681	\N	kinesiólogo/a
-2683	\N	kinesiólogo/a
-2718	\N	kinesiólogo/a
-2765	\N	kinesiólogo/a
-2766	\N	kinesiólogo/a
-2776	\N	kinesiólogo/a
-2783	\N	kinesiólogo/a
-2791	\N	kinesiólogo/a
-2817	\N	kinesiólogo/a
-2845	\N	kinesiólogo/a
-2902	\N	kinesiólogo/a
-2908	\N	kinesiólogo/a
-2916	\N	kinesiólogo/a
-2947	\N	kinesiólogo/a
-2970	\N	kinesiólogo/a
-4	\N	TENS
-27	\N	TENS
-79	\N	TENS
-95	\N	TENS
-114	\N	TENS
-134	\N	TENS
-145	\N	TENS
-158	\N	TENS
-184	\N	TENS
-192	\N	TENS
-222	\N	TENS
-268	\N	TENS
-278	\N	TENS
-315	\N	TENS
-374	\N	TENS
-388	\N	TENS
-396	\N	TENS
-439	\N	TENS
-471	\N	TENS
-495	\N	TENS
-534	\N	TENS
-622	\N	TENS
-624	\N	TENS
-674	\N	TENS
-690	\N	TENS
-775	\N	TENS
-783	\N	TENS
-789	\N	TENS
-793	\N	TENS
-803	\N	TENS
-838	\N	TENS
-839	\N	TENS
-843	\N	TENS
-845	\N	TENS
-857	\N	TENS
-859	\N	TENS
-885	\N	TENS
-951	\N	TENS
-966	\N	TENS
-993	\N	TENS
-1027	\N	TENS
-1064	\N	TENS
-1104	\N	TENS
-1126	\N	TENS
-1262	\N	TENS
-1274	\N	TENS
-1287	\N	TENS
-1327	\N	TENS
-1347	\N	TENS
-1360	\N	TENS
-1396	\N	TENS
-1398	\N	TENS
-1401	\N	TENS
-1405	\N	TENS
-1423	\N	TENS
-1440	\N	TENS
-1448	\N	TENS
-1456	\N	TENS
-1461	\N	TENS
-1538	\N	TENS
-1542	\N	TENS
-1573	\N	TENS
-1622	\N	TENS
-1633	\N	TENS
-1671	\N	TENS
-1679	\N	TENS
-1741	\N	TENS
-1752	\N	TENS
-1825	\N	TENS
-1845	\N	TENS
-1854	\N	TENS
-1906	\N	TENS
-1912	\N	TENS
-1920	\N	TENS
-1923	\N	TENS
-1925	\N	TENS
-1939	\N	TENS
-1946	\N	TENS
-1972	\N	TENS
-2046	\N	TENS
-2055	\N	TENS
-2157	\N	TENS
-2164	\N	TENS
-2214	\N	TENS
-2253	\N	TENS
-2283	\N	TENS
-2296	\N	TENS
-2338	\N	TENS
-2366	\N	TENS
-2377	\N	TENS
-2381	\N	TENS
-2382	\N	TENS
-2454	\N	TENS
-2458	\N	TENS
-2465	\N	TENS
-2470	\N	TENS
-2485	\N	TENS
-2548	\N	TENS
-2617	\N	TENS
-2659	\N	TENS
-2664	\N	TENS
-2698	\N	TENS
-2749	\N	TENS
-2759	\N	TENS
-2767	\N	TENS
-2806	\N	TENS
-2851	\N	TENS
-2872	\N	TENS
-2911	\N	TENS
-2948	\N	TENS
-2959	\N	TENS
-2977	\N	TENS
-2993	\N	TENS
-2994	\N	TENS
-2996	\N	TENS
-\.
-
-
 --
 -- TOC entry 3675 (class 2606 OID 25978)
--- Name: Arancel Arancel_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Arancel Arancel_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Arancel"
@@ -190119,7 +189661,7 @@ ALTER TABLE ONLY public."Arancel"
 
 --
 -- TOC entry 3677 (class 2606 OID 25980)
--- Name: Atencion Atencion_ID_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Atencion Atencion_ID_key; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Atencion"
@@ -190128,7 +189670,7 @@ ALTER TABLE ONLY public."Atencion"
 
 --
 -- TOC entry 3679 (class 2606 OID 25982)
--- Name: Atencion Atencion_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Atencion Atencion_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Atencion"
@@ -190137,7 +189679,7 @@ ALTER TABLE ONLY public."Atencion"
 
 --
 -- TOC entry 3681 (class 2606 OID 25984)
--- Name: Farmacia Farmacia_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Farmacia Farmacia_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Farmacia"
@@ -190146,7 +189688,7 @@ ALTER TABLE ONLY public."Farmacia"
 
 --
 -- TOC entry 3685 (class 2606 OID 25986)
--- Name: Grupo Grupo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Grupo Grupo_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Grupo"
@@ -190155,7 +189697,7 @@ ALTER TABLE ONLY public."Grupo"
 
 --
 -- TOC entry 3687 (class 2606 OID 25988)
--- Name: InstituciondeSalud InstituciondeSalud_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: InstituciondeSalud InstituciondeSalud_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."InstituciondeSalud"
@@ -190164,7 +189706,7 @@ ALTER TABLE ONLY public."InstituciondeSalud"
 
 --
 -- TOC entry 3689 (class 2606 OID 25990)
--- Name: Orden Orden_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Orden Orden_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Orden"
@@ -190173,7 +189715,7 @@ ALTER TABLE ONLY public."Orden"
 
 --
 -- TOC entry 3691 (class 2606 OID 25992)
--- Name: Persona Persona_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Persona Persona_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Persona"
@@ -190182,7 +189724,7 @@ ALTER TABLE ONLY public."Persona"
 
 --
 -- TOC entry 3693 (class 2606 OID 25994)
--- Name: beneficiario beneficiario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: beneficiario beneficiario_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public.beneficiario
@@ -190191,7 +189733,7 @@ ALTER TABLE ONLY public.beneficiario
 
 --
 -- TOC entry 3695 (class 2606 OID 25996)
--- Name: medicamentos medicamentos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: medicamentos medicamentos_pkey; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public.medicamentos
@@ -190200,7 +189742,7 @@ ALTER TABLE ONLY public.medicamentos
 
 --
 -- TOC entry 3697 (class 2606 OID 25998)
--- Name: profesion medico-firma; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: profesion medico-firma; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public.profesion
@@ -190209,7 +189751,7 @@ ALTER TABLE ONLY public.profesion
 
 --
 -- TOC entry 3683 (class 2606 OID 26000)
--- Name: Farmacia nombre; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Farmacia nombre; Type: CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Farmacia"
@@ -190218,7 +189760,7 @@ ALTER TABLE ONLY public."Farmacia"
 
 --
 -- TOC entry 3700 (class 2606 OID 26001)
--- Name: Orden arancel; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Orden arancel; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Orden"
@@ -190227,7 +189769,7 @@ ALTER TABLE ONLY public."Orden"
 
 --
 -- TOC entry 3701 (class 2606 OID 26006)
--- Name: Orden atencion; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Orden atencion; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Orden"
@@ -190236,7 +189778,7 @@ ALTER TABLE ONLY public."Orden"
 
 --
 -- TOC entry 3708 (class 2606 OID 26011)
--- Name: medicamentos atencion; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: medicamentos atencion; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public.medicamentos
@@ -190245,7 +189787,7 @@ ALTER TABLE ONLY public.medicamentos
 
 --
 -- TOC entry 3703 (class 2606 OID 26016)
--- Name: Planes grupo-planes; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Planes grupo-planes; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Planes"
@@ -190254,7 +189796,7 @@ ALTER TABLE ONLY public."Planes"
 
 --
 -- TOC entry 3704 (class 2606 OID 26021)
--- Name: Planes isapre-planes; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Planes isapre-planes; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Planes"
@@ -190263,7 +189805,7 @@ ALTER TABLE ONLY public."Planes"
 
 --
 -- TOC entry 3710 (class 2606 OID 26026)
--- Name: profesion medic-firma; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: profesion medic-firma; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public.profesion
@@ -190272,7 +189814,7 @@ ALTER TABLE ONLY public.profesion
 
 --
 -- TOC entry 3698 (class 2606 OID 26031)
--- Name: Atencion medico-atencion; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Atencion medico-atencion; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Atencion"
@@ -190281,7 +189823,7 @@ ALTER TABLE ONLY public."Atencion"
 
 --
 -- TOC entry 3699 (class 2606 OID 26036)
--- Name: Atencion paciente-atencion; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Atencion paciente-atencion; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Atencion"
@@ -190290,7 +189832,7 @@ ALTER TABLE ONLY public."Atencion"
 
 --
 -- TOC entry 3706 (class 2606 OID 26041)
--- Name: beneficiario persona; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: beneficiario persona; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public.beneficiario
@@ -190299,7 +189841,7 @@ ALTER TABLE ONLY public.beneficiario
 
 --
 -- TOC entry 3702 (class 2606 OID 26046)
--- Name: Persona persona-isapre; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Persona persona-isapre; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Persona"
@@ -190308,7 +189850,7 @@ ALTER TABLE ONLY public."Persona"
 
 --
 -- TOC entry 3705 (class 2606 OID 26051)
--- Name: Rol persona-rol; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: Rol persona-rol; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public."Rol"
@@ -190317,7 +189859,7 @@ ALTER TABLE ONLY public."Rol"
 
 --
 -- TOC entry 3709 (class 2606 OID 26056)
--- Name: medicamentos remedio; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: medicamentos remedio; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public.medicamentos
@@ -190326,7 +189868,7 @@ ALTER TABLE ONLY public.medicamentos
 
 --
 -- TOC entry 3707 (class 2606 OID 26061)
--- Name: beneficiario titular; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: beneficiario titular; Type: FK CONSTRAINT; Schema: public; Owner: current_user
 --
 
 ALTER TABLE ONLY public.beneficiario
@@ -190336,6 +189878,6 @@ ALTER TABLE ONLY public.beneficiario
 -- Completed on 2025-11-08 20:00:16 -03
 
 --
--- PostgreSQL database dump complete
+-- current_userQL database dump complete
 --
 

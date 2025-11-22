@@ -1,10 +1,39 @@
+-- Consulta inicial - extraido de mi entrega 2 para facilitar las busquedas
+-- NOTA IMPORTANtE: No estan todas las tablas porque algunas ya son accesibles de la forma 'directa'
+-- como profesion, por ejemplo.
+ALTER TABLE public."Arancel" RENAME TO arancel;
+ALTER TABLE public."Atencion" RENAME TO atencion;
+ALTER TABLE public."Farmacia" RENAME TO farmacia;
+ALTER TABLE public."Grupo" RENAME TO  grupo;
+ALTER TABLE public."InstituciondeSalud" RENAME TO instituciondesalud;
+ALTER TABLE public."Orden" RENAME TO orden;
+ALTER TABLE public."Persona" RENAME TO persona;
+ALTER TABLE public."Planes" RENAME TO planes;
+ALTER TABLE public."Rol" RENAME TO rol;
+ALTER TABLE public."Agenda" RENAME TO agenda;
+
+-- LO USÉ HARTO PARA PROBAR COMO AGREGAR LAS ESpECLAIDADES Y ELIMINAR LOS DUPLICADOS EN AGENDA.
+-- DROP TABLE agenda CASCADE;
+-- DROP TABLE orden CASCADE;
+-- DROP TABLE arancel CASCADE;
+-- DROP TABLE atencion CASCADE;
+-- DROP TABLE farmacia CASCADE;
+-- DROP TABLE grupo CASCADE;
+-- DROP TABLE instituciondesalud CASCADE;
+-- DROP TABLE persona CASCADE;
+-- DROP TABLE planes CASCADE;
+-- DROP TABLE rol CASCADE;
+-- DROP TABLE beneficiario CASCADE;
+-- DROP TABLE medicamentos CASCADE;
+-- DROP TABLE profesion CASCADE;
+
 --1.a. Creación del indice sobre RUN
-CREATE INDEX indice_run ON public."Persona"("RUN");
+CREATE INDEX indice_run ON persona("RUN");
 
 --1.b. Creación del Índice en Agenda
-ALTER TABLE public."Agenda"
+ALTER TABLE agenda
 ADD CONSTRAINT PK_Agenda PRIMARY KEY ("ID", "Fecha", "Hora");
-CREATE INDEX indice_agenda ON public."Agenda"("ID", "Fecha", "Hora");
+CREATE INDEX indice_agenda ON agenda("ID", "Fecha", "Hora");
 
 --1.c. Creación de transacciones
 
@@ -25,13 +54,13 @@ BEGIN
             'Dr: ' || personas.apellido_doctor || E'\n' ||
             personas."firma") AS Receta
     FROM 
-        public."medicamentos" AS meds LEFT JOIN
-        public."Farmacia" AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
+        medicamentos AS meds LEFT JOIN
+        farmacia AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
             SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
                 paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
-            FROM public."Atencion" AS atencion LEFT JOIN public."Persona" AS paciente ON atencion."IDPaciente" = paciente."ID"
-                LEFT JOIN public."Persona" AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN public."profesion" AS profesion ON
+            FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
+                LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
                 profesion."ID" = doctor."ID"
             WHERE atencion."Efectuada" = True AND atencion."ID" = id_paciente
         ) AS personas ON meds."IDAtencion" = personas."ID"
@@ -57,13 +86,13 @@ BEGIN
             'Dr: ' || personas.apellido_doctor || E'\n' ||
             personas."firma") AS Receta_psicotropica
     FROM 
-        public."medicamentos" AS meds LEFT JOIN
-        public."Farmacia" AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
+        medicamentos AS meds LEFT JOIN
+        farmacia AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
             SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
                 paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
-            FROM public."Atencion" AS atencion LEFT JOIN public."Persona" AS paciente ON atencion."IDPaciente" = paciente."ID"
-                LEFT JOIN public."Persona" AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN public."profesion" AS profesion ON
+            FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
+                LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
                 profesion."ID" = doctor."ID"
             WHERE atencion."Efectuada" = True AND atencion."ID" = id_paciente
         ) AS personas ON meds."IDAtencion" = personas."ID"
@@ -89,13 +118,13 @@ BEGIN
         'Dr: ' || personas.apellido_doctor || E'\n' ||
         personas."firma")
         AS Ordenes_de_examen
-    FROM public."Orden" AS ord LEFT JOIN public."Arancel" AS ara ON ord."IDArancel" = ara."ID"
+    FROM orden AS ord LEFT JOIN arancel AS ara ON ord."IDArancel" = ara."ID"
     LEFT JOIN (
             SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
                 paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN", profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
-            FROM public."Atencion" AS atencion LEFT JOIN public."Persona" AS paciente ON atencion."IDPaciente" = paciente."ID"
-                LEFT JOIN public."Persona" AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN public."profesion" AS profesion ON
+            FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
+                LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
                 profesion."ID" = doctor."ID"
             WHERE atencion."Efectuada" = True AND atencion."ID" = 1
         ) AS personas ON personas."ID" = ord."IDAtencion"
@@ -119,23 +148,23 @@ $$ LANGUAGE plpgsql;
 --1.e. Trigger al SP
 -- Tuve que crear estas tres vistas porque sino el código de atencion_terminada quedaba gigante y feo.
 CREATE OR REPLACE VIEW hay_recetas AS (
-    SELECT public."medicamentos"."IDAtencion" as "IDAtencion", 
-    COUNT(public."medicamentos"."IDAtencion") as "cuenta"
-    FROM public."medicamentos"
-    GROUP BY public."medicamentos"."IDAtencion" 
+    SELECT medicamentos."IDAtencion" as "IDAtencion", 
+    COUNT(medicamentos."IDAtencion") as "cuenta"
+    FROM medicamentos
+    GROUP BY medicamentos."IDAtencion" 
 );
 
 CREATE OR REPLACE VIEW hay_ordenes AS (
-    SELECT public."Orden"."IDAtencion" as "IDAtencion", 
-    COUNT(public."Orden"."IDAtencion") as "cuenta"
-    FROM public."Orden"
-    GROUP BY public."Orden"."IDAtencion"
+    SELECT orden."IDAtencion" as "IDAtencion", 
+    COUNT(orden."IDAtencion") as "cuenta"
+    FROM orden
+    GROUP BY orden."IDAtencion"
 );
 
 CREATE OR REPLACE VIEW diagnosticadas_efectuadas AS (
-    SELECT public."Atencion"."ID" as "ID", (COALESCE(public."Atencion"."Efectuada", FALSE)) 
-    AND (public."Atencion"."Diagnostico" IS NOT NULL) AS "diagnosticadas_efectuada"
-    FROM public."Atencion"
+    SELECT atencion."ID" as "ID", (COALESCE(atencion."Efectuada", FALSE)) 
+    AND (atencion."Diagnostico" IS NOT NULL) AS "diagnosticadas_efectuada"
+    FROM atencion
 );
 
 -- Esta función la cree para saber si la atención terminó y tiene algún documento (receta y/o orden)
@@ -214,31 +243,31 @@ $$ LANGUAGE plpgsql;
 
 -- el triggerr
 CREATE OR REPLACE TRIGGER trigger_documentos 
-AFTER UPDATE ON public."Atencion"
+AFTER UPDATE ON atencion
 FOR EACH ROW
 EXECUTE FUNCTION func_trigger_documentos();
 
 --1.f. Vista Ficha 
--- ACTUALIZAR CUANDO ME RESPONDAN LA ISSUE DE ESPECIALDIAD DEL MEDICO
-CREATE OR REPLACE VIEW Ficha AS (
+CREATE OR REPLACE VIEW Ficha AS 
 SELECT P."ID", P."Nombres" AS nombre_paciente, P."Apellidos" AS apellido_paciente,
 A."fecha", A."Diagnostico", medico."Nombres" AS medico_nombre, medico."Apellidos" AS medico_apellido, 
 ARA."Especialidad" AS medico_especialidad
-FROM public."Atencion" AS A LEFT JOIN public."Persona" AS P ON A."IDPaciente" = P."ID"
+FROM atencion AS A LEFT JOIN ppersona AS P ON A."IDPaciente" = P."ID"
 LEFT JOIN (
 	SELECT persona."ID", persona."Nombres", persona."Apellidos", profesion."profesion"
-	FROM public."Persona" AS persona LEFT JOIN public."profesion" AS profesion ON profesion."ID" = persona."ID"
-) AS medico ON medico."ID" = A."IDMedico" LEFT JOIN public."Orden" AS orden ON orden."IDAtencion" = A."ID"
+	FROM persona LEFT JOIN profesion ON profesion."ID" = persona."ID"
+    WHERE profesion."profesion" ILIKE '%médic%' OR profesion."profesion" ILIKE '%medic%' 
+) AS medico ON medico."ID" = A."IDMedico" LEFT JOIN orden ON orden."IDAtencion" = A."ID"
 LEFT JOIN (
-    SELECT public."Arancel"."ID" as "ID", public."Arancel"."ConsAtMedica" as "ConsAtMedica",
-		       REPLACE(SUBSTRING(public."Arancel"."ConsAtMedica", 35, 1000000000), 'd en ', '') as "Especialidad"
-	FROM   public."Arancel" 
-	WHERE  public."Arancel"."ConsAtMedica" ILIKE '%consulta médica de especialidad en%' OR
-		       public."Arancel"."ConsAtMedica" ILIKE '%consulta medica de especialidad en%'
+    SELECT arancel"ID" as "ID", arancel"ConsAtMedica" as "ConsAtMedica",
+		       REPLACE(SUBSTRING(arancel."ConsAtMedica", 35, 1000000000), 'd en ', '') as "Especialidad"
+	FROM   arancel"Arancel" 
+	WHERE  arancel"Arancel"."ConsAtMedica" ILIKE '%consulta médica de especialidad en%' OR
+		       arancel."ConsAtMedica" ILIKE '%consulta medica de especialidad en%'
     ) as ARA ON ARA."ID" = orden."IDArancel" 
 WHERE A."Efectuada" = True
 ORDER BY P."ID" ASC, A."fecha" DESC
-);
+;
 
 --1.e. Validación de Ingreso de datos
 

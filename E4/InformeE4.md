@@ -30,7 +30,7 @@ Tras detecetar que una atención ha sido efectuada y se ha ingresado diagnóstic
 Esta parte fue complicada y cree dos funciones y tres vistas auxiliares que permiten asegurar el funcionamiento correcto del trigger.
 
 #### Parte 1.f)
-Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VIEW Ficha AS (...).
+Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VIEW Ficha AS (...). También, para agregar las especialidades desde el csv, desde el pgadmin usé la opcion de importar data directamente desde el csv. Para esto, dropee la tabla profesiones y la cree denuevo.
 
 #### Parte 1.g)
 Para validar los ingresos de datos a la base -tanto en formato como en contenido- se crean triggers específicos para revisar ambos casos.
