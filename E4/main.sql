@@ -248,26 +248,29 @@ FOR EACH ROW
 EXECUTE FUNCTION func_trigger_documentos();
 
 --1.f. Vista Ficha 
-CREATE OR REPLACE VIEW Ficha AS 
-SELECT P."ID", P."Nombres" AS nombre_paciente, P."Apellidos" AS apellido_paciente,
-A."fecha", A."Diagnostico", medico."Nombres" AS medico_nombre, medico."Apellidos" AS medico_apellido, 
-ARA."Especialidad" AS medico_especialidad
-FROM atencion AS A LEFT JOIN ppersona AS P ON A."IDPaciente" = P."ID"
-LEFT JOIN (
-	SELECT persona."ID", persona."Nombres", persona."Apellidos", profesion."profesion"
-	FROM persona LEFT JOIN profesion ON profesion."ID" = persona."ID"
-    WHERE profesion."profesion" ILIKE '%médic%' OR profesion."profesion" ILIKE '%medic%' 
-) AS medico ON medico."ID" = A."IDMedico" LEFT JOIN orden ON orden."IDAtencion" = A."ID"
-LEFT JOIN (
-    SELECT arancel"ID" as "ID", arancel"ConsAtMedica" as "ConsAtMedica",
-		       REPLACE(SUBSTRING(arancel."ConsAtMedica", 35, 1000000000), 'd en ', '') as "Especialidad"
-	FROM   arancel"Arancel" 
-	WHERE  arancel"Arancel"."ConsAtMedica" ILIKE '%consulta médica de especialidad en%' OR
-		       arancel."ConsAtMedica" ILIKE '%consulta medica de especialidad en%'
-    ) as ARA ON ARA."ID" = orden."IDArancel" 
-WHERE A."Efectuada" = True
-ORDER BY P."ID" ASC, A."fecha" DESC
-;
+-- Notar que les puse más detalles (consatmedica) para corroborar que estuvieran bien. igual aporta
+-- informacion util.
+CREATE VIEW Ficha AS (
+SELECT P."ID" AS id_paciente, P."Nombres", P."Apellidos", A."fecha", A."Diagnostico", doctor.nombre_doc, doctor.apellido_doc, doctor."especialidad", ARA."ConsAtMedica"
+FROM (
+		SELECT arancel."ID" AS id_ARA, arancel."ConsAtMedica"
+		FROM arancel
+		WHERE (arancel."ConsAtMedica" ILIKE '%consulta%' AND
+	arancel."ConsAtMedica" ILIKE '%especialidad%')
+		) AS ARA LEFT JOIN orden AS ORD on ARA.id_ARA = ORD."IDArancel" 
+	LEFT JOIN atencion AS A ON ORD."IDAtencion" = A."ID"
+	LEFT JOIN persona as P ON P."ID" = A."IDPaciente" 
+	LEFT JOIN (
+		SELECT persona."ID" AS doc_id, persona."Nombres" AS nombre_doc, persona."Apellidos" AS apellido_doc, profesion."especialidad"
+		FROM persona LEFT JOIN profesion ON persona."ID" = profesion."ID"
+		WHERE (profesion."profesion" ILIKE '%medic%' OR profesion."profesion" ILIKE '%médic%')
+	) AS doctor ON doctor.doc_id = A."IDMedico"
+WHERE A."Efectuada" = TRUE
+ORDER BY A."fecha" DESC, P."ID" DESC
+);
+
+
+
 
 --1.e. Validación de Ingreso de datos
 
