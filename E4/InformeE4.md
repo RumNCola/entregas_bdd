@@ -37,18 +37,23 @@ Para validar los ingresos de datos a la base -tanto en formato como en contenido
 
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
+#### Para la pregunta 1:
 1. Para agregarle la PK a la tabla Agenda, usando constraint, se consulto: https://www.w3schools.com/sql/sql_primarykey.ASP 
 Para la generación de recetas se consultó:
 1. Mi consulta entregada en la E2
 2. https://www.geeksforgeeks.org/sql-server/how-to-use-string_agg-to-concatenate-strings-in-sql-server Para usar string_agg
 3. https://stackoverflow.com/questions/36028908/postgresql-newline-character Para hacer los newlines (Me costó harto encontrar uno que funcionara)
+
 Para los StoredProcedure/Functions de la emisión de recetas se consultó:
 1. https://www.w3schools.com/sql/func_sqlserver_coalesce.asp COALESCE util como siempre para manejar los nulls en la consulta de recetas (hay muchas consultas que no tienen receta psicotropica y al ser null rompian la consulta).
+
 Para agregar el rigger de 1.e, tuve que consultar:
 1. https://stackoverflow.com/questions/42920998/pl-pgsql-perform-vs-execute porque no me estaba funcionando el llamado de las funciones en el trigger y funciones. No sabía que se hacian de distinta forma (perform/execute) según el caso.
-Para crear la vista, fue necesario manejar el string de ConsAtMedica, para esto use repalce y substring.
-1. https://stackoverflow.com/questions/14319141/remove-certain-characters-from-a-string Replace
-2. https://www.w3schools.com/sql/func_sqlserver_substring.asp substring
+
+En general, volví a usar mis códigos de la E2.
+
+#### Para la pregunta 2. 
+
 
 ### 3. Instrucciones de ejecución de Entrega
 <!-- Indica las instrucciones para ejecutar la aplicación web adicionales al URL -->
