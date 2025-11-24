@@ -19,7 +19,6 @@ if (!isset($_SESSION['usuario'])){
             <input type="text" id="runpaciente" name="runpaciente" required>
             <button type="submit">Mostrar Ficha</button>
         </form>
-
     </div>
 </body>
 </html>
