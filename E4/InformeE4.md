@@ -21,6 +21,8 @@ Adicionalmente, definimos (ID, Fecha, Hora) como llave primaria de la tabla Agen
 #### Parte 1.c)
 Dado que en la pregunta 1 no se ingresa, modifica o eliminan datos de la base, no se agregan transacciones entre la pregunta 1.a hasta la 1.g. Sin embargo, para la pregunta 2 en adelante, se agregarán transacciones para asegurar que no ocurran los problemas discutidos en la I2 (Asegurar ACID y prevenir problemas de lecturas sucias/no repetibles y sobreescrituras).
 
+Las transacciones son manejadas a través del transaction manager de php. Se usarán a través de PHP, según el enlace citado en las fuentes del informe.
+
 #### Parte 1.d) 
 Para generar los tres tipos de documentos asociados a una atención, se crea una función para cada tipo de documento. Por último, se crea una cuarta función que llama las tres funciones anteriores y retorna todas las recetas de una atención.
 
@@ -60,9 +62,10 @@ Para agregar el rigger de 1.e, tuve que consultar:
 
 En general, volví a usar mis códigos de la E2.
 
-#### Para la pregunta 2. 
+#### Para la pregunta 2 y posteriores. 
 1. Se usa gran parte de la ayudantía 12 para elaborar index.php y validar_login.php
 2. En general, se usó código de la entrega 3 del semestre anterior. Esto bajo la issue donde el profesor Bustos autorizó su uso.
+3. Para manejar las transacciones y las excepciones, se consultó esta página https://www.php.net/manual/en/pdo.transactions.php 
 
 
 

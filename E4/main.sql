@@ -295,7 +295,7 @@ CREATE OR REPLACE VIEW datos_medicos AS (
 
 -- Procedure que revisa si una persona es paciente. Si no es paciente, lo convierte en uno. 
 -- LA parte de la transaction se verá despues
-CREATE OR REPLACE PROCEDURE checkear_es_paciente(RUN text)
+CREATE OR REPLACE PROCEDURE actualizar_rol_paciente(RUN text)
 LANGUAGE plpgsql
 AS $$
 BEGIN

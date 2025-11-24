@@ -14,7 +14,7 @@ function conectarBD() {
         echo "Hubo un fallo en la conexión: " . $e->getMessage();
         exit();
     }
-}
+};
 
 function validar_rut(string $rut): bool {
     //funcion que recibe un rut y retorna true si es válido
@@ -52,4 +52,5 @@ function validar_rut(string $rut): bool {
     else {
         return FALSE;
     }
+};
 ?>
