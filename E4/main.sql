@@ -12,7 +12,8 @@ ALTER TABLE public."Planes" RENAME TO planes;
 ALTER TABLE public."Rol" RENAME TO rol;
 ALTER TABLE public."Agenda" RENAME TO agenda;
 
--- LO USÉ HARTO PARA PROBAR COMO AGREGAR LAS ESpECLAIDADES Y ELIMINAR LOS DUPLICADOS EN AGENDA.
+-- LO USÉ HARTO PARA PROBAR COMO AGREGAR LAS ESpECLAIDADES Y ELIMINAR LOS DUPLICADOS EN AGENDA.7
+-- lo dejé comentado para usarlo en caso de necesitarlo.
 -- DROP TABLE agenda CASCADE;
 -- DROP TABLE orden CASCADE;
 -- DROP TABLE arancel CASCADE;
@@ -36,7 +37,7 @@ ADD CONSTRAINT PK_Agenda PRIMARY KEY ("ID", "Fecha", "Hora");
 CREATE INDEX indice_agenda ON agenda("ID", "Fecha", "Hora");
 
 --1.c. Creación de transacciones
--- Esto se ve en la pregunta 2.
+-- Esto se ve en los phps, al igual que la prevencion de injections.
 
 --1.d. Stored Procedure
 -- Emisión de receta no psic
@@ -269,12 +270,84 @@ FROM (
 		FROM persona LEFT JOIN profesion ON persona."ID" = profesion."ID"
 		WHERE (profesion."profesion" ILIKE '%medic%' OR profesion."profesion" ILIKE '%médic%')
 	) AS doctor ON doctor.doc_id = A."IDMedico"
-WHERE A."Efectuada" = TRUE
+-- WHERE A."Efectuada" = TRUE --ESTA CONDICIÓN LA TUVE QUE QUITAR PORQUE EN LA PARTE 2 SE NECESITA ACCEDER A CONSULTAS NO EFECTUADAS
 ORDER BY A."fecha" DESC, P."ID" DESC
 );
 
-
-
-
 --1.e. Validación de Ingreso de datos
+-- Esto se hace en los phps de las siguientes preguntas.
+
+
+-- Utilidades para la pregunta 2 en adelante - no son requisitos de la pregunta 1 pero permitirán
+-- agilizar el código de los phps.
+
+-- Para el menu agendar hora médica
+CREATE OR REPLACE VIEW datos_personas (
+    SELECT * FROM persona LEFT JOIN rol ON persona."ID" = rol."IDPersona"
+        LEFT JOIN beneficiario on beneficiario."IDpersona" = persona."ID" 
+);
+
+CREATE OR REPLACE VIEW datos_medicos (
+    SELECT persona."Nombres", persona."Apellidos", profesion."especialidad" FROM persona LEFT JOIN
+        profesion ON profesion."ID" = persona."ID"
+    WHERE profesion."profesion" ILIKE '%medico%' 
+);
+
+-- Procedure que revisa si una persona es paciente. Si no es paciente, lo convierte en uno. 
+-- LA parte de la transaction se verá despues
+CREATE OR REPLACE PROCEDURE checkear_es_paciente(RUN integer)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF ((SELECT rol."rol" FROM persona LEFT JOIN rol ON persona."ID" = rol."IDPersona" WHERE
+    persona."RUN" = RUN AND rol."rol" ILIKE '%paciente%' LIMIT 1) IS NULL) THEN
+        UPDATE rol
+        SET rol."rol" = 'paciente'
+        WHERE persona."RUN" = RUN;  
+    END IF;
+END;
+$$;
+
+--Funcion que recibe un rut y retorna true si existe dicha persona
+CREATE OR REPLACE FUNCTION existe_persona(RUN integer)
+LANGUAGE plpgsql
+RETURNS boolean AS
+$$
+BEGIN
+    IF (SELECT * FROM persona WHERE persona."RUN" = RUN) IS NULL THEN
+        RETURN FALSE
+    ELSE
+        RETURN TRUE
+    END IF;
+END;
+$$
+
+--SP que ingresa una persona a la tabla personas
+CREATE OR REPLACE PROCEDURE ingresar_persona(RUN integer, Nombres text, Apellidos text, Direccion text
+email text, telefono text, InstSalud integer, medico boolean)
+LANGUAGE plpgsql
+AS $$ 
+BEGIN
+    INSERT INTO personas("RUN", "Nombres", "Apellidos", "Direccion", "email", "telefono", 
+    "InstSalud", "medico") VALUES (RUN, Nombres, Apellidos, Direccion, email, telefono, 
+    InstSalud, medico);
+END;
+$$
+
+--SP que ingresa una persona a la tabla personas
+CREATE OR REPLACE PROCEDURE ingresar_beneficiario(RUN integer, beneficiario boolean, IDtitular integer)
+LANGUAGE plpgsql
+AS $$ 
+DECLARE 
+    @id_persona = integer;
+BEGIN
+    (SELECT @id_persona = persona."ID" FROM persona WHERE persona."RUN" = RUN LIMIT 1);
+    INSERT INTO beneficiario ("IDpersona", "Beneficiario", "IDtitular") VALUES (@id_persona, beneficiario, IDtitular);
+END;
+$$
+
+
+
+
+
 
