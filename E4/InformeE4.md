@@ -35,6 +35,9 @@ Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VI
 #### Parte 1.g)
 Para validar los ingresos de datos a la base -tanto en formato como en contenido- se crean triggers específicos para revisar ambos casos.
 
+### Parte 2
+Para el manejo de usuarios, se crea INDEX.php que crea el cuadro para hacer el login. Este llama a validar_login.php que valida el login y revisa condiciones típicas: El user/contraseña no puedens ser vacios, deben ser numéricos, el usuario debe ser válido y la contraseña correctas. Además, se impide el uso de injections usando el contenido de la ayudantía 12. Por último, se revisa que se tengan las credenciales (ser admin o staff médico) y según el caso se lanza main_medico o main_admin o nada si el usuario no es ninguno.
+
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
 #### Para la pregunta 1:
@@ -53,6 +56,9 @@ Para agregar el rigger de 1.e, tuve que consultar:
 En general, volví a usar mis códigos de la E2.
 
 #### Para la pregunta 2. 
+1. Se usa gran parte de la ayudantía 12 para elaborar index.php y validar_login.php
+2. En general, se usó código de la entrega 3 del semestre anterior. Esto bajo la issue donde el profesor Bustos autorizó su uso.
+
 
 
 ### 3. Instrucciones de ejecución de Entrega
