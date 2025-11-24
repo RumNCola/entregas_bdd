@@ -282,12 +282,12 @@ ORDER BY A."fecha" DESC, P."ID" DESC
 -- agilizar el código de los phps.
 
 -- Para el menu agendar hora médica
-CREATE OR REPLACE VIEW datos_personas (
+CREATE OR REPLACE VIEW datos_personas AS (
     SELECT * FROM persona LEFT JOIN rol ON persona."ID" = rol."IDPersona"
         LEFT JOIN beneficiario on beneficiario."IDpersona" = persona."ID" 
 );
 
-CREATE OR REPLACE VIEW datos_medicos (
+CREATE OR REPLACE VIEW datos_medicos AS (
     SELECT persona."Nombres", persona."Apellidos", profesion."especialidad" FROM persona LEFT JOIN
         profesion ON profesion."ID" = persona."ID"
     WHERE profesion."profesion" ILIKE '%medico%' 
@@ -295,7 +295,7 @@ CREATE OR REPLACE VIEW datos_medicos (
 
 -- Procedure que revisa si una persona es paciente. Si no es paciente, lo convierte en uno. 
 -- LA parte de la transaction se verá despues
-CREATE OR REPLACE PROCEDURE checkear_es_paciente(RUN integer)
+CREATE OR REPLACE PROCEDURE checkear_es_paciente(RUN text)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -309,7 +309,7 @@ END;
 $$;
 
 --Funcion que recibe un rut y retorna true si existe dicha persona
-CREATE OR REPLACE FUNCTION existe_persona(RUN integer)
+CREATE OR REPLACE FUNCTION existe_persona(RUN text)
 LANGUAGE plpgsql
 RETURNS boolean AS
 $$
@@ -320,10 +320,10 @@ BEGIN
         RETURN TRUE
     END IF;
 END;
-$$
+$$;
 
 --SP que ingresa una persona a la tabla personas
-CREATE OR REPLACE PROCEDURE ingresar_persona(RUN integer, Nombres text, Apellidos text, Direccion text
+CREATE OR REPLACE PROCEDURE ingresar_persona(RUN text, Nombres text, Apellidos text, Direccion text
 email text, telefono text, InstSalud integer, medico boolean)
 LANGUAGE plpgsql
 AS $$ 
@@ -332,10 +332,10 @@ BEGIN
     "InstSalud", "medico") VALUES (RUN, Nombres, Apellidos, Direccion, email, telefono, 
     InstSalud, medico);
 END;
-$$
+$$;
 
 --SP que ingresa una persona a la tabla personas
-CREATE OR REPLACE PROCEDURE ingresar_beneficiario(RUN integer, beneficiario boolean, IDtitular integer)
+CREATE OR REPLACE PROCEDURE ingresar_beneficiario(RUN text, beneficiario boolean, IDtitular integer)
 LANGUAGE plpgsql
 AS $$ 
 DECLARE 
@@ -346,10 +346,10 @@ BEGIN
     id_persona := (SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN LIMIT 1);
     INSERT INTO beneficiario ("IDpersona", "Beneficiario", "IDtitular") VALUES (id_persona, beneficiario, IDtitular);
 END;
-$$
+$$;
 
 --SP que ingresa el rol, recibiendo rol y el run. 
-CREATE OR REPLACE PROCEDURE ingresar_rol(RUN integer, Rol text)
+CREATE OR REPLACE PROCEDURE ingresar_rol(RUN text, Rol text)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -358,7 +358,30 @@ BEGIN
     id_persona := (SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN LIMIT 1);
     INSERT INTO Rol("IDPersona", "Rol") VALUES (id_persona, Rol);
 END;
-$$
+$$;
+
+--Vista para ver las horas disponibles de cada doctor. Ahí será util para filtrar por id_doctor
+CREATE OR REPLACE VIEW disponibilidad_doctores AS (
+    SELECT atencion."fecha", atencion."hora", persona."RUN"
+    FROM persona LEFT JOIN rol on rol."IDPersona" = persona."ID" LEFT JOIN profesion ON profesion."ID"
+    = persona."ID" LEFT JOIN atencion ON 
+    atencion."IDMedico" = persona."ID"
+    WHERE persona."medico" = TRUE AND rol."Rol" ILIKE '%taff%'
+);
+
+--Funcion que nos retorna la disponibilidad de un doctor dado su run
+CREATE OR REPLACE FUNCTION disponibilidad_doctor(RUN text)
+RETURNS TABLE("Fecha" date, "Hora" time)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT agenda."Fecha", agenda."Hora" FROM agenda WHERE (agenda."Fecha", agenda."Hora") NOT IN
+    (SELECT dd."fecha", dd."hora" FROM disponibilidad_doctores AS dd WHERE dd."RUN" = RUN);
+END;
+$$;
+
+
 
 
 
