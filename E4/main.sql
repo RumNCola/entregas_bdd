@@ -381,6 +381,15 @@ BEGIN
 END;
 $$;
 
+--Vista para ver doctores. Después la usaré para filtrar por especialidad.
+CREATE OR REPLACE VIEW ver_doctores AS (
+    SELECT p."RUN", p."Nombres", p."Apellidos", prof."especialidad"
+    FROM persona AS p LEFT JOIN profesion AS prof WHERE p."ID" = prof."ID"
+);
+
+
+
+
 
 
 

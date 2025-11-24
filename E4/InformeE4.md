@@ -35,8 +35,11 @@ Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VI
 #### Parte 1.g)
 Para validar los ingresos de datos a la base -tanto en formato como en contenido- se crean triggers específicos para revisar ambos casos.
 
-### Parte 2
+#### Parte 2
 Para el manejo de usuarios, se crea INDEX.php que crea el cuadro para hacer el login. Este llama a validar_login.php que valida el login y revisa condiciones típicas: El user/contraseña no puedens ser vacios, deben ser numéricos, el usuario debe ser válido y la contraseña correctas. Además, se impide el uso de injections usando el contenido de la ayudantía 12. Por último, se revisa que se tengan las credenciales (ser admin o staff médico) y según el caso se lanza main_medico o main_admin o nada si el usuario no es ninguno.
+
+#### Pregunta 3 - Agendamiento de hora médica
+El enunciado es poco claro respecto a como o quien selecciona la hora y el día. Por esto, asume que el usuario ingresará un día y hora, despues se desplegará el formulario donde se solicita la información del paciente, médico etc.
 
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
