@@ -40,6 +40,7 @@ catch (Exception $e) {
 
 //Ahora, se ha verificado la infomración del paciente y existe. Volvemos a agendar_hora.php, mostramos
 //la infomracion de la persona y le desplegamos el formualario para que seleccione un médico.
+
 header('Location: agendar_hora.php?succes=Paciente existe - Seleccione médico y/o especialidad');
 exit();
 ?>
