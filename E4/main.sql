@@ -339,12 +339,27 @@ CREATE OR REPLACE PROCEDURE ingresar_beneficiario(RUN integer, beneficiario bool
 LANGUAGE plpgsql
 AS $$ 
 DECLARE 
-    @id_persona = integer;
+    id_persona = integer;
 BEGIN
-    (SELECT @id_persona = persona."ID" FROM persona WHERE persona."RUN" = RUN LIMIT 1);
-    INSERT INTO beneficiario ("IDpersona", "Beneficiario", "IDtitular") VALUES (@id_persona, beneficiario, IDtitular);
+    -- Como antes voy a correr existe_persona e ingresar_persona (si corresponde), asumo que siempre habrá
+    -- id_persona. Lo mismo en el siguiente SP que puse.
+    id_persona := (SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN LIMIT 1);
+    INSERT INTO beneficiario ("IDpersona", "Beneficiario", "IDtitular") VALUES (id_persona, beneficiario, IDtitular);
 END;
 $$
+
+--SP que ingresa el rol, recibiendo rol y el run. 
+CREATE OR REPLACE PROCEDURE ingresar_rol(RUN integer, Rol text)
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    id_persona = integer;
+BEGIN 
+    id_persona := (SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN LIMIT 1);
+    INSERT INTO Rol("IDPersona", "Rol") VALUES (id_persona, Rol);
+END;
+$$
+
 
 
 
