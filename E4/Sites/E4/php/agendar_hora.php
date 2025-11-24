@@ -13,20 +13,15 @@ if (!isset($_SESSION['usuario'])){
 </head>
 <body>
     <div>
-        <h1>Ingrese fecha y hora para agendar</h1>
-        <form action="" method="POST">
-            <label for="fecha">Fecha:</label>
-            <input type="text" id="fecha" name="fecha" required>
-
-            <label for="hora">Hora:</label>
-            <input type="text" id="hora" name="hora" required>
-        </form>
-        <h2>Ingrese RUN paciente</h2>
-        <form action="" method="POST">
+        <h1>Buscar paciente por RUN</h1>
+        <form action="buscar_paciente.php" method="POST">
             <label for="RUN_paciente">RUN: </label>
             <input type="text" id="RUN_paciente" name="RUN_paciente" required>
-        </form>
+            <button type="submit">Buscar paciente</button>
+        <h3>Ingrese datos del médico</h3>
+            <label for="" > </label>
 
+        </form>
         <?php if ($error): ?>
             <p><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>

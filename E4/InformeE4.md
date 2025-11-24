@@ -38,8 +38,10 @@ Para validar los ingresos de datos a la base -tanto en formato como en contenido
 #### Parte 2
 Para el manejo de usuarios, se crea INDEX.php que crea el cuadro para hacer el login. Este llama a validar_login.php que valida el login y revisa condiciones típicas: El user/contraseña no puedens ser vacios, deben ser numéricos, el usuario debe ser válido y la contraseña correctas. Además, se impide el uso de injections usando el contenido de la ayudantía 12. Por último, se revisa que se tengan las credenciales (ser admin o staff médico) y según el caso se lanza main_medico o main_admin o nada si el usuario no es ninguno.
 
+Tanto para esta parte como para secciones futuras, el usuario debe ingresar RUNS sin puntos y con guión. En general los datos se deben ingresar tal cual comos e encuentran en la bdd o serán reconocidos como erroneos.
+
 #### Pregunta 3 - Agendamiento de hora médica
-El enunciado es poco claro respecto a como o quien selecciona la hora y el día. Por esto, asume que el usuario ingresará un día y hora, despues se desplegará el formulario donde se solicita la información del paciente, médico etc.
+El enunciado es poco claro respecto a como o quien selecciona la hora y el día. Dado que ezste dice que el sistema asigna una hora, a cada agendamiento se le asignará la hora más cercana disponible del doctor seleccionado.
 
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
