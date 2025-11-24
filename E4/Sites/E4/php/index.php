@@ -1,4 +1,5 @@
 <?php
+// código extraido de la ayudantía 12!!!
 session_start();
 $error = $_GET['error'] ?? null;
 ?>
@@ -9,18 +10,21 @@ $error = $_GET['error'] ?? null;
     <title> Inicie sesión </title>
 </head>
 <body>
-    <div class="container">
-        <h1> Ingrese su nombre de usuario (ID) y contraseña </h1>
-        <form action="revisar_login.php" method="POST" class="formulario">
-            <label for="Usuario">Usuario:</label>
+    
+    <div>
+        <h1> Ingrese su nombre de usuario (ID) y contraseña (RUN sin el dv)</h1>
+        <form action="validar_login.php" method="POST">
+            <label for="usuario">Usuario:</label>
             <input type="text" id="usuario" name="usuario" required>
+
             <label for="contrasena">Contrasena:</label>
             <input type="text" id="contrasena" name="contrasena" required>
-            <button type="submit">Iniciar Sesion</button>
+            
+            <button>Iniciar Sesion</button>
         </form>
 
         <?php if ($error): ?>
-            <p class="error"><?= htmlspecialchars($error) ?></p>
+            <p><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
     </div>
 </body>
