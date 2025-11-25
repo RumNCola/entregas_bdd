@@ -139,6 +139,55 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION emitir_bono(paciente_id integer, atencion_id integer, medico_id integer)
+RETURNS TABLE(bono text) AS $$
+DECLARE
+        es_fonasa boolean;
+        es_particular boolean;
+        bonificacion float;
+        copago integer;
+        valor integer;
+        cam text; --abreviacion de consatmedica
+        grupo integer;
+BEGIN
+    --notar que puse varios coalesce por si habian prolbemas como los de la E2 donde habian consultas sin valor
+    -- registrado, asi que en caos de nulos, se asume 50.000 de valor igual que en la E2 y bonificacion de 0.
+    cam := (SELECT "ConsAtMedica" FROM Ficha WHERE Ficha."id_atencion" = atencion_id AND Ficha."id_paciente" = paciente_id);
+    grupo := (SELECT "Grupo" FROM arancel WHERE arancel."ConsAtMedica" = cam);
+    valor := COALESCE((SELECT "ValorColita" FROM arancel WHERE arancel."ConsAtMedica" = cam), 50000); --El valor es fijo, no importa la prevension
+
+    IF ((SELECT "InstSalud" FROM persona WHERE persona."ID" = paciente_id) = 1) THEN
+        es_fonasa := TRUE;
+        es_particular := FALSE;
+        copago := COALESCE((SELECT "ValorFonasa" FROM arancel WHERE arancel."ConsAtMedica" = cam), 0);
+        bonificacion := (valor - copago) / valor; 
+        
+    ELSIF ((SELECT "InstSalud" FROM persona WHERE persona."ID" = paciente_id) IS NULL) THEN
+        es_fonasa := FALSE;
+        es_particular := TRUE;
+        bonificacion := 0;
+        copago := valor;
+        
+    ELSE 
+        es_fonasa := FALSE;
+        es_particular := FALSE;
+        bonificacion := COALESCE((SELECT planes."Bonificacion" FROM planes LEFT JOIN persona ON persona."InstSalud"
+        = planes."ID" WHERE persona."ID" = paciente_id AND planes."Grupo" = grupo), 0);
+        copago := (1 - bonificacion) * valor;
+    END IF;
+
+    RETURN QUERY
+    SELECT ('Bono de Atención Médica' || E'\n' || 'Datos del beneficiario: ' || Ficha."Nombres" || 
+    ' ' || Ficha."Apellidos" || E'\n' || 'RUN: ' || Ficha."RUN" || E'\n' || 
+    'Datos del prestador: '  || Ficha.nombre_doc ||' ' || Ficha.apellido_doc || E'\n' ||
+     'RUN: ' || Ficha.doc_run || E'\n' || 'código  Atención Valor Bonificación Copago' || E'\n' ||
+    Ficha.id_atencion || ' ' ||  Ficha."especialidad" || valor || ' ' || bonificacion || ' '
+    || copago) AS bono_atencion
+    FROM Ficha LEFT JOIN arancel ON arancel."ConsAtMedica" = Ficha."ConsAtMedica"
+    WHERE Ficha."id_paciente" = paciente_id AND Ficha."id_atencion" = atencion_id AND Ficha."doc_id" = medico_id;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION emitir_documentos(id_paciente integer)
 RETURNS TABLE(Documentos_consulta text) AS $$
 BEGIN 
@@ -167,8 +216,7 @@ CREATE OR REPLACE VIEW hay_ordenes AS (
 );
 
 CREATE OR REPLACE VIEW diagnosticadas_efectuadas AS (
-    SELECT atencion."ID" as "ID", ((COALESCE(atencion."Efectuada", FALSE)) 
-    AND (atencion."Diagnostico" IS NOT NULL)) AS "diagnosticadas_efectuada"
+    SELECT atencion."ID" as "ID", (atencion."Diagnostico" IS NOT NULL) AS "diagnosticadas_efectuada"
     FROM atencion
 );
 
@@ -235,7 +283,7 @@ RETURNS trigger AS $$
 DECLARE
     realizada boolean;
 BEGIN
-    IF NEW."Efectuada" = TRUE AND (OLD."Efectuada" = FALSE OR OLD."Efectuada" IS NULL) THEN
+    IF NEW."Efectuada" = TRUE THEN
         realizada := atencion_terminada(NEW."ID");
     
         IF realizada THEN
@@ -257,14 +305,15 @@ EXECUTE FUNCTION func_trigger_documentos();
 -- informacion util.
 DROP VIEW IF EXISTS Ficha; --la tuve que recrear o cambiar muchas veces asi que ageregue esta linea para faciltiarme las cosas.
 CREATE VIEW Ficha AS (
-SELECT DISTINCT A."ID" AS id_atencion, P."ID" AS id_paciente, P."RUN", P."Nombres", P."Apellidos", A."fecha", A."Diagnostico", A."Efectuada", doctor.doc_id, doctor.doc_RUN, doctor.nombre_doc, doctor.apellido_doc, doctor."especialidad"
-FROM (
+SELECT DISTINCT A."ID" AS id_atencion, P."ID" AS id_paciente, P."RUN", P."Nombres", P."Apellidos", A."fecha", A."Diagnostico", ARA."ConsAtMedica", A."Efectuada", doctor.doc_id, doctor.doc_RUN, doctor.nombre_doc, doctor.apellido_doc, doctor."especialidad"
+FROM atencion AS A LEFT JOIN orden AS ORD on ORD."IDAtencion" = A."ID"
+    LEFT JOIN
+    (
 		SELECT arancel."ID" AS id_ARA, arancel."ConsAtMedica"
 		FROM arancel
 		WHERE (arancel."ConsAtMedica" ILIKE '%consulta%' AND
 	arancel."ConsAtMedica" ILIKE '%especialidad%')
-		) AS ARA LEFT JOIN orden AS ORD on ARA.id_ARA = ORD."IDArancel" 
-	LEFT JOIN atencion AS A ON ORD."IDAtencion" = A."ID"
+		) AS ARA on ARA.id_ARA = ORD."IDArancel" 
 	LEFT JOIN persona as P ON P."ID" = A."IDPaciente" 
 	LEFT JOIN (
 		SELECT persona."ID" AS doc_id, persona."RUN" AS doc_RUN, persona."Nombres" AS nombre_doc, persona."Apellidos" AS apellido_doc, profesion."especialidad"
@@ -393,30 +442,3 @@ CREATE OR REPLACE VIEW ver_doctores AS (
     SELECT p."RUN", p."Nombres", p."Apellidos", prof."especialidad"
     FROM persona AS p LEFT JOIN profesion AS prof ON p."ID" = prof."ID"
 );
-
---valor atencion, extraido de mi entrega 2:
-SELECT a."ID", a."Diagnostico", p."Nombres", p."Apellidos", COALESCE(vc."ValorColita", 50000) AS valor_consulta, COALESCE(o.valor_ordenes, 0) 
-AS valor_ordenes, COALESCE(med.valor_medicamentos, 0) AS valor_medicamentos, COALESCE(vc."ValorColita", 50000) + COALESCE(o.valor_ordenes, 0)
-+ COALESCE(med.valor_medicamentos, 0) AS valor_atencion
-FROM atencion AS a LEFT JOIN persona AS p ON p."ID" = a."IDPaciente" LEFT JOIN (
-  SELECT ord."IDAtencion" AS "IDAtencion",
-         SUM(ar."ValorColita") AS valor_ordenes
-  FROM orden AS ord
-  JOIN arancel AS ar ON ar."ID" = ord."IDArancel"
-  WHERE ar."ConsAtMedica" IS NULL OR ar."ConsAtMedica" NOT ILIKE '%consulta%'
-  GROUP BY ord."IDAtencion"
-) AS o ON o."IDAtencion" = a."ID" LEFT JOIN (
-  SELECT m."IDAtencion" AS "IDAtencion",
-         SUM(f."Precio") AS valor_medicamentos
-  FROM medicamentos AS m
-  LEFT JOIN farmacia AS f ON f."Nombre" = m."Medicamento"
-  GROUP BY m."IDAtencion"
-) AS med ON med."IDAtencion" = a."ID" LEFT JOIN (
-  SELECT ord."IDAtencion" AS "IDAtencion",
-         SUM(aranc."ValorColita") AS "ValorColita"
-  FROM orden AS ord
-  JOIN arancel AS aranc ON aranc."ID" = ord."IDArancel"
-  WHERE aranc."ConsAtMedica" ILIKE '%consulta%'
-  GROUP BY ord."IDAtencion"
-) AS vc ON vc."IDAtencion" = a."ID"
---WHERE a."Efectuada" = True

@@ -50,7 +50,17 @@ Además, no importa si el nombre o apellido está completo, por ejemplo, ingresa
 
 Si se busca al doctor por especialidad, se seleccina al primero que aparece.
 
-#### Pregunta 4 no respondida
+#### Pregunta 4
+Aquí se despliega un menu donde se tiene que ingresar el run del paciente que se verifica, en caso de estar correcto se muestra la informacion solicitada en pantalla. Dado que esta es la recepción del paciente, es decir, todavía no se le atiende ni se le generan ordenes ni recetas, tuve que ajustar el trigger para que no dependa del cambio de efectuada y cuando se emite el bono solo se considera el valor de la atencion, no de ordenes ni de medicamentos, pues no tendría sentido.
+
+En el bono de atencion médica del enunciado no se especifica que es "Atención", por lo que se asume que es la especialidad, pues el "código" solcitado anteriormente ya muestra información de la atención.
+
+Para ver el bono me informe y considero lo siguiente:
+1. El valor es valorColita, cuanto vale en si la consulta independiente de la prevension.
+2. La bonificacion es el porcentaje que cubre la prevension. Si es particular, este valor es 0.
+3. Copago es lo que paga finalmente el cliente, sería valorColita * bonificador para los isapre y valorfonasa para los fonasa.
+
+De acuerdo a lo que busqué en google, el copago de alguien con isapre es valor * (1 - bonificacion). Al igual que en la E2, en caso de que una consulta médica no tenga valor definido, se asume que valdrá 50.000 y si la bonificacion no está definida, asume que será 0.
 
 #### Pregunta 5:
 Se implementa un menú simpel donde se ingresa el run del paciente. El sistema busca y printea sus atenciones,

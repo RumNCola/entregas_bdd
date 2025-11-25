@@ -14,7 +14,7 @@ if (!isset($_SESSION['usuario'])){
 <body>
     <div>
         <?php 
-        if (!isset($_SESSION['RUN_Paciente']) && !isset($_SESSION['fallo_paciente'])): ?>
+        if (!isset($_SESSION['RUN_paciente']) && !isset($_SESSION['fallo_paciente'])): ?>
             <h1>Buscar paciente por RUN</h1>
             <form action="buscar_paciente.php" method="POST">
                 <label for="RUN_paciente">RUN: </label>

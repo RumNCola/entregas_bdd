@@ -14,16 +14,15 @@ if (!isset($_SESSION['usuario'])){
 <body>
     <div>
         <?php 
-        if (!isset($_SESSION['RUN_Paciente']) && !isset($_SESSION['fallo_paciente'])): ?>
-            <h1>Buscar paciente por RUN</h1>
-            <form action="buscar_paciente.php" method="POST">
+        if (!isset($_SESSION['RUN_paciente'])): ?>
+            <h1>Buscar paciente por RUN: </h1>
+            <form action="buscar_paciente_atencion.php" method="POST">
                 <label for="RUN_paciente">RUN: </label>
                 <input type="text" id="RUN_paciente" name="RUN_paciente" required>
                 <button type="submit">Buscar paciente</button>
             </form>
-        <!-- Si buscar_paciente.php  dice que el paciente no existe, desplegamos el 
-         formulario para ingresar los datos del paciente y crearlo -->
-        <?php elseif (isset($_GET['fallo_paciente'])): ?>
+
+        <?php elseif (isset($_GET['RUN_paciente'])): ?>
         <h2>Paciente no encontrado. Ingreselo!</h2>
         <form action="crear_paciente.php" method="POST">
 
