@@ -50,7 +50,11 @@ Además, no importa si el nombre o apellido está completo, por ejemplo, ingresa
 
 Si se busca al doctor por especialidad, se seleccina al primero que aparece.
 
-#### Pregunta 4 y 5 no respondidas
+#### Pregunta 4 no respondida
+
+#### Pregunta 5:
+Se implementa un menú simpel donde se ingresa el run del paciente. El sistema busca y printea sus atenciones,
+se selecciona un id de la atencion que se desee cancelar (la elimina de la tabla).
 
 #### Pregunta 6
 Esta pregunta la dejé a la mitad. El médico ingresa el run del usuario y el diagnostico y se hacen las revisiones pertinentes para ingresar el diagnostico en caso de ser válido.

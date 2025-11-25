@@ -20,7 +20,7 @@ try {
     $stmt->bindParam(':id_hora_cancelar', $id_hora_cancelar, PDO::PARAM_INT);
     $stmt->execute();
     $bdd->commit();
-    header('Location: main_admin.php?succes=Atencion cancelada!');
+    header('Location: main_admin.php?success=Atencion cancelada!');
     exit();
 }
 catch (Exception $e) {

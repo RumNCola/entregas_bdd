@@ -29,6 +29,6 @@ if (!$paciente) {
 $_SESSION['RUN_paciente'] = $run_paciente;
 $_SESSION['ID_paciente'] = $paciente['ID'];
 $_SESSION['atenciones'] =  $stmt->fetchAll(PDO:: FETCH_ASSOC);
-header('Location: cancelar_atencion.php?succes=Paciente existe - Seleccione médico y/o especialidad');
+header('Location: cancelar_atencion.php?success=Paciente existe - Seleccione médico y/o especialidad');
 exit();
 ?>

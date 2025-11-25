@@ -14,7 +14,7 @@ if (!isset($_SESSION['usuario'])){
 <body>
     <div>
         <?php 
-        if (!isset($_SESSION['RUN_Paciente'])): ?>
+        if (!isset($_SESSION['RUN_paciente'])): ?>
             <h1>Buscar paciente por RUN</h1>
             <form action="buscar_paciente_cancelar.php" method="POST">
                 <label for="RUN_paciente">RUN: </label>
@@ -23,7 +23,7 @@ if (!isset($_SESSION['usuario'])){
             </form>
         <!-- Si buscar_paciente.php  dice que el paciente no existe, desplegamos el 
          formulario para ingresar los datos del paciente y crearlo -->
-        <?php elseif (isset($_SESSION['RUN_Paciente'])) :?>
+        <?php elseif (isset($_SESSION['RUN_paciente'])) :?>
             <!-- (isset($_GET['RUN_paciente'])) al final me quede con else, guardo esto aqui por si me arrepiento. -->
             <h2> Paciente encontrado! Seleccione un ID de atencion para cancelar</h2> 
             <?php print_r($_SESSION['atenciones']); ?>
