@@ -1,7 +1,8 @@
 <?php
 // Código extraido de la ayudantía 12
 function conectarBD() {
-    $host = 'stonebraker.ing.uc.cl';
+    // $host = 'stonebraker.ing.uc.cl';
+    $host = 'localhost';
     $dbname = 'jara.fernando.e4';
     $usuario = 'jara.fernando.e4';
     $clave = '2420286J';

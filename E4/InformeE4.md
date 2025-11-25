@@ -35,7 +35,7 @@ Esta parte fue complicada y cree dos funciones y tres vistas auxiliares que perm
 Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VIEW Ficha AS (...). También, para agregar las especialidades desde el csv, desde el pgadmin usé la opcion de importar data directamente desde el csv. Para esto, dropee la tabla profesiones y la cree denuevo.
 
 #### Parte 1.g)
-Para validar los ingresos de datos a la base -tanto en formato como en contenido- se crean triggers específicos para revisar ambos casos.
+Para validar los ingresos de datos a la base -tanto en formato como en contenido- se jhace una validación a través de php y las restricciones de integridad de las funciones de php definidas. Además, se hace una validación exhaustiva de los ruts a traves de validar_rut de utils.php
 
 #### Parte 2
 Para el manejo de usuarios, se crea INDEX.php que crea el cuadro para hacer el login. Este llama a validar_login.php que valida el login y revisa condiciones típicas: El user/contraseña no puedens ser vacios, deben ser numéricos, el usuario debe ser válido y la contraseña correctas. Además, se impide el uso de injections usando el contenido de la ayudantía 12. Por último, se revisa que se tengan las credenciales (ser admin o staff médico) y según el caso se lanza main_medico o main_admin o nada si el usuario no es ninguno.
@@ -49,6 +49,11 @@ Para buscar un doctor por nombre, se debe ingresar su primer o segundo nombre y 
 Además, no importa si el nombre o apellido está completo, por ejemplo, ingresar histian varez permitirá identificar al doctor christian alvarez. una limitación es que se deben ingresar dos palabras y la primera debe corresponder a algun nombre y la segunda a algun apellido si o si.
 
 Si se busca al doctor por especialidad, se seleccina al primero que aparece.
+
+#### Pregunta 4 y 5 no respondidas
+
+#### Pregunta 6
+Esta pregunta la dejé a la mitad. El médico ingresa el run del usuario y el diagnostico y se hacen las revisiones pertinentes para ingresar el diagnostico en caso de ser válido.
 
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
@@ -65,7 +70,7 @@ Para los StoredProcedure/Functions de la emisión de recetas se consultó:
 Para agregar el rigger de 1.e, tuve que consultar:
 1. https://stackoverflow.com/questions/42920998/pl-pgsql-perform-vs-execute porque no me estaba funcionando el llamado de las funciones en el trigger y funciones. No sabía que se hacian de distinta forma (perform/execute) según el caso.
 
-En general, volví a usar mis códigos de la E2.
+En general, volví a usar mis códigos de la E2/E3, asi que todo lo citado en esa entrega se aplica también a esta.
 
 #### Para la pregunta 2 y posteriores. 
 1. Se usa gran parte de la ayudantía 12 para elaborar index.php y validar_login.php
@@ -73,9 +78,11 @@ En general, volví a usar mis códigos de la E2.
 3. Para manejar las transacciones y las excepciones, se consultó esta página https://www.php.net/manual/en/pdo.transactions.php 
 
 
-
 ### 3. Instrucciones de ejecución de Entrega
 <!-- Indica las instrucciones para ejecutar la aplicación web adicionales al URL -->
+Para ejecutar la entrega se debe hacer lo siguiente:
+1. La base de datos ya está configurada, pero si se deseara hacer desde cero se debería ejecutar el main.sql,
+cada linea por separado de preferencia. despues se ha de truncar la tabla profesion y se le agrega la columna especialidad. Por último, las especialidades se cargan desde la funcionalidad de importar de pgadmin. COn esto la base queda lista. 
+Para esto, tqambipen incluí el dumpe4actualizado que permite acelerar este proceso en caso de querer hacerlo desde cero.
+2. Es necesario acceder a stonebraker.ing.uc.cl/jara.fernando.e4/E4 para acceder a la página.
 
-
-### 4. Observaciones adicionales

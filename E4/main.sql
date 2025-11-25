@@ -46,7 +46,7 @@ RETURNS TABLE (Receta text) AS $$
 BEGIN
     RETURN QUERY
     --consulta receta
-    SELECT ('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apelllido || E'\n' ||
+    SELECT ('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apellido || E'\n' ||
         'RUN: ' || personas.paciente_RUN || E'\n' ||
         'Diagnóstico: ' || personas.diagnostico || E'\n' ||
             string_agg(meds."Medicamento" || ' - ' || meds."Posologia", E'\n' ORDER BY meds."Medicamento")
@@ -59,7 +59,7 @@ BEGIN
     FROM 
         medicamentos AS meds LEFT JOIN
         farmacia AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
-            SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
+            SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apellido,
                 paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN" AS doctor_run, profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
@@ -68,7 +68,7 @@ BEGIN
             WHERE atencion."Efectuada" = True AND atencion."ID" = id_paciente
         ) AS personas ON meds."IDAtencion" = personas."ID"
     WHERE meds."Psicotropico" = False 
-    GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
+    GROUP BY personas.paciente_nombre, personas.paciente_apellido, personas.paciente_RUN,
         personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico, personas.doctor_run
     LIMIT 1;
 END;
@@ -79,7 +79,7 @@ CREATE OR REPLACE FUNCTION emitir_receta_psicotropica(id_paciente integer)
 RETURNS TABLE (Receta_psicotropica text) AS $$
 BEGIN
     RETURN QUERY
-    SELECT ('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apelllido || E'\n' ||
+    SELECT ('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apellido || E'\n' ||
         'RUN: ' || personas.paciente_RUN || E'\n' ||
         'Diagnóstico: ' || personas.diagnostico || E'\n' ||
             string_agg(meds."Medicamento" || ' - ' || meds."Posologia", E'\n' ORDER BY meds."Medicamento")
@@ -92,7 +92,7 @@ BEGIN
     FROM 
         medicamentos AS meds LEFT JOIN
         farmacia AS farm ON farm."Nombre" = meds."Medicamento" LEFT JOIN (
-            SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
+            SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apellido,
                 paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN" AS doc_run, profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
@@ -101,7 +101,7 @@ BEGIN
             WHERE atencion."Efectuada" = True AND atencion."ID" = id_paciente
         ) AS personas ON meds."IDAtencion" = personas."ID"
     WHERE meds."Psicotropico" = True 
-    GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
+    GROUP BY personas.paciente_nombre, personas.paciente_apellido, personas.paciente_RUN,
         personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico, personas.doc_run
     LIMIT 1;
 END;
@@ -113,7 +113,7 @@ RETURNS TABLE(Ordenes_de_examen text) AS $$
 BEGIN
     RETURN QUERY
     SELECT 
-        ('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apelllido || E'\n' ||
+        ('Paciente: ' || personas.paciente_nombre ||' ' || personas.paciente_apellido || E'\n' ||
         'RUN: ' || personas.paciente_RUN || E'\n' ||
         'Diagnóstico: ' || personas.diagnostico || E'\n' ||
         string_agg(ara."ConsAtMedica", ' ' ORDER BY ara."ID") || E'\n' || E'\n' ||
@@ -125,15 +125,15 @@ BEGIN
         AS Ordenes_de_examen
     FROM orden AS ord LEFT JOIN arancel AS ara ON ord."IDArancel" = ara."ID"
     LEFT JOIN (
-            SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apelllido,
+            SELECT atencion."ID" AS "ID", paciente."Nombres" AS paciente_nombre, paciente."Apellidos" AS paciente_apellido,
                 paciente."RUN" AS paciente_RUN, doctor."Apellidos" AS apellido_doctor, doctor."RUN" as doc_run, profesion."firma", 
                 atencion."Diagnostico" AS diagnostico, atencion."fecha" AS fecha
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
                 LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
                 profesion."ID" = doctor."ID"
-            WHERE atencion."Efectuada" = True AND atencion."ID" = 1
+            WHERE atencion."Efectuada" = True AND atencion."ID" = id_paciente
         ) AS personas ON personas."ID" = ord."IDAtencion"
-    GROUP BY personas.paciente_nombre, personas.paciente_apelllido, personas.paciente_RUN,
+    GROUP BY personas.paciente_nombre, personas.paciente_apellido, personas.paciente_RUN,
         personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico, personas.doc_run
     LIMIT 1;
 END;
@@ -298,12 +298,15 @@ CREATE OR REPLACE VIEW datos_medicos AS (
 CREATE OR REPLACE PROCEDURE actualizar_rol_paciente(RUN text)
 LANGUAGE plpgsql
 AS $$
+DECLARE
+    id_persona integer;
 BEGIN
-    IF ((SELECT rol."rol" FROM persona LEFT JOIN rol ON persona."ID" = rol."IDPersona" WHERE
-    persona."RUN" = RUN AND rol."rol" ILIKE '%paciente%' LIMIT 1) IS NULL) THEN
+    id_persona := SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN;
+    IF ((SELECT rol."Rol" FROM persona LEFT JOIN rol ON persona."ID" = rol."IDPersona" WHERE
+    persona."RUN" = RUN AND rol."Rol" ILIKE '%paciente%' LIMIT 1) IS NULL) THEN
         UPDATE rol
-        SET rol."rol" = 'paciente'
-        WHERE persona."RUN" = RUN;  
+        SET rol."Rol" = 'paciente'
+        WHERE rol."IDPersona" = id_persona;  
     END IF;
 END;
 $$;
@@ -313,22 +316,25 @@ CREATE OR REPLACE FUNCTION existe_persona(RUN text)
 LANGUAGE plpgsql
 RETURNS boolean AS
 $$
+DECLARE
+    consulta integer;
 BEGIN
-    IF (SELECT * FROM persona WHERE persona."RUN" = RUN) IS NULL THEN
-        RETURN FALSE
+    consulta := (SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN);
+    IF consulta IS NULL THEN
+        RETURN FALSE;
     ELSE
-        RETURN TRUE
+        RETURN TRUE;
     END IF;
 END;
 $$;
 
 --SP que ingresa una persona a la tabla personas
-CREATE OR REPLACE PROCEDURE ingresar_persona(RUN text, Nombres text, Apellidos text, Direccion text
+CREATE OR REPLACE PROCEDURE ingresar_persona(RUN text, Nombres text, Apellidos text, Direccion text,
 email text, telefono text, InstSalud integer, medico boolean)
 LANGUAGE plpgsql
 AS $$ 
 BEGIN
-    INSERT INTO personas("RUN", "Nombres", "Apellidos", "Direccion", "email", "telefono", 
+    INSERT INTO persona("RUN", "Nombres", "Apellidos", "Direccion", "email", "telefono", 
     "InstSalud", "medico") VALUES (RUN, Nombres, Apellidos, Direccion, email, telefono, 
     InstSalud, medico);
 END;
@@ -339,7 +345,7 @@ CREATE OR REPLACE PROCEDURE ingresar_beneficiario(RUN text, beneficiario boolean
 LANGUAGE plpgsql
 AS $$ 
 DECLARE 
-    id_persona = integer;
+    id_persona integer;
 BEGIN
     -- Como antes voy a correr existe_persona e ingresar_persona (si corresponde), asumo que siempre habrá
     -- id_persona. Lo mismo en el siguiente SP que puse.
@@ -353,7 +359,7 @@ CREATE OR REPLACE PROCEDURE ingresar_rol(RUN text, Rol text)
 LANGUAGE plpgsql
 AS $$
 DECLARE
-    id_persona = integer;
+    id_persona integer;
 BEGIN 
     id_persona := (SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN LIMIT 1);
     INSERT INTO Rol("IDPersona", "Rol") VALUES (id_persona, Rol);
@@ -362,14 +368,14 @@ $$;
 
 --Vista para ver las horas disponibles de cada doctor. Ahí será util para filtrar por id_doctor
 CREATE OR REPLACE VIEW disponibilidad_doctores AS (
-    SELECT atencion."fecha", atencion."hora", persona."RUN"
+    SELECT atencion."fecha", atencion."hora", persona."ID"
     FROM persona LEFT JOIN rol on rol."IDPersona" = persona."ID" LEFT JOIN profesion ON profesion."ID"
     = persona."ID" LEFT JOIN atencion ON 
     atencion."IDMedico" = persona."ID"
     WHERE persona."medico" = TRUE AND rol."Rol" ILIKE '%taff%'
 );
 
---Funcion que nos retorna la disponibilidad de un doctor dado su run
+--Funcion que nos retorna la disponibilidad de un doctor dado su id
 CREATE OR REPLACE FUNCTION disponibilidad_doctor(id_doctor integer)
 RETURNS TABLE("Fecha" date, "Hora" time)
 LANGUAGE plpgsql
@@ -384,17 +390,5 @@ $$;
 --Vista para ver doctores. Después la usaré para filtrar por especialidad.
 CREATE OR REPLACE VIEW ver_doctores AS (
     SELECT p."RUN", p."Nombres", p."Apellidos", prof."especialidad"
-    FROM persona AS p LEFT JOIN profesion AS prof WHERE p."ID" = prof."ID"
+    FROM persona AS p LEFT JOIN profesion AS prof ON p."ID" = prof."ID"
 );
-
-
-
-
-
-
-
-
-
-
-
-

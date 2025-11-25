@@ -38,9 +38,6 @@ catch (Exception $e) {
     exit();
 }
 
-
-
-
 //Ahora, se ha verificado la infomración del paciente y existe. Volvemos a agendar_hora.php, mostramos
 //la infomracion de la persona y le desplegamos el formualario para que seleccione un médico.
 $_SESSION['RUN_paciente'] = $run_paciente;
