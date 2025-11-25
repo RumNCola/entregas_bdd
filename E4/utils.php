@@ -2,9 +2,9 @@
 // Código extraido de la ayudantía 12
 function conectarBD() {
     // $host = 'stonebraker.ing.uc.cl';
-    $host = 'localhost';
+    $host = 'stonebraker.ing.uc.cl';
     $dbname = 'jara.fernando.e4';
-    $usuario = 'jara.fernando.e4';
+    $usuario = 'jara.fernando';
     $clave = '2420286J';
 
     try{
@@ -12,7 +12,7 @@ function conectarBD() {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $db;
     } catch (PDOException $e) {
-        echo "Hubo un fallo en la conexión: " . $e->getMessage();
+        echo "Hubo un fallo en la conexión a la BASE DE DATOS EN SMOKEBLUNTER (stonebraker): " . $e->getMessage();
         exit();
     }
 };

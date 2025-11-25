@@ -76,6 +76,7 @@ En general, volví a usar mis códigos de la E2/E3, asi que todo lo citado en es
 1. Se usa gran parte de la ayudantía 12 para elaborar index.php y validar_login.php
 2. En general, se usó código de la entrega 3 del semestre anterior. Esto bajo la issue donde el profesor Bustos autorizó su uso.
 3. Para manejar las transacciones y las excepciones, se consultó esta página https://www.php.net/manual/en/pdo.transactions.php 
+4. https://www.php.net/manual/en/pdostatement.fetch.php Para recibir las querys como arrays y mostrarlas
 
 
 ### 3. Instrucciones de ejecución de Entrega

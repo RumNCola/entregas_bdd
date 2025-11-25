@@ -255,8 +255,9 @@ EXECUTE FUNCTION func_trigger_documentos();
 --1.f. Vista Ficha 
 -- Notar que les puse más detalles (consatmedica) para corroborar que estuvieran bien. igual aporta
 -- informacion util.
+DROP VIEW IF EXISTS Ficha; --la tuve que recrear o cambiar muchas veces asi que ageregue esta linea para faciltiarme las cosas.
 CREATE VIEW Ficha AS (
-SELECT P."ID" AS id_paciente, P."RUN", P."Nombres", P."Apellidos", A."fecha", A."Diagnostico", A."Efectuada", doctor.doc_id, doctor.doc_RUN, doctor.nombre_doc, doctor.apellido_doc, doctor."especialidad"
+SELECT DISTINCT A."ID" AS id_atencion, P."ID" AS id_paciente, P."RUN", P."Nombres", P."Apellidos", A."fecha", A."Diagnostico", A."Efectuada", doctor.doc_id, doctor.doc_RUN, doctor.nombre_doc, doctor.apellido_doc, doctor."especialidad"
 FROM (
 		SELECT arancel."ID" AS id_ARA, arancel."ConsAtMedica"
 		FROM arancel
