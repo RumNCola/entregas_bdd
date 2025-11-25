@@ -256,7 +256,7 @@ EXECUTE FUNCTION func_trigger_documentos();
 -- Notar que les puse más detalles (consatmedica) para corroborar que estuvieran bien. igual aporta
 -- informacion util.
 CREATE VIEW Ficha AS (
-SELECT P."ID" AS id_paciente, P."Nombres", P."Apellidos", A."fecha", A."Diagnostico", doctor.nombre_doc, doctor.apellido_doc, doctor."especialidad", ARA."ConsAtMedica"
+SELECT P."ID" AS id_paciente, P."RUN", P."Nombres", P."Apellidos", A."fecha", A."Diagnostico", A."Efectuada", doctor.doc_id, doctor.doc_RUN, doctor.nombre_doc, doctor.apellido_doc, doctor."especialidad"
 FROM (
 		SELECT arancel."ID" AS id_ARA, arancel."ConsAtMedica"
 		FROM arancel
@@ -266,7 +266,7 @@ FROM (
 	LEFT JOIN atencion AS A ON ORD."IDAtencion" = A."ID"
 	LEFT JOIN persona as P ON P."ID" = A."IDPaciente" 
 	LEFT JOIN (
-		SELECT persona."ID" AS doc_id, persona."Nombres" AS nombre_doc, persona."Apellidos" AS apellido_doc, profesion."especialidad"
+		SELECT persona."ID" AS doc_id, persona."RUN" AS doc_RUN, persona."Nombres" AS nombre_doc, persona."Apellidos" AS apellido_doc, profesion."especialidad"
 		FROM persona LEFT JOIN profesion ON persona."ID" = profesion."ID"
 		WHERE (profesion."profesion" ILIKE '%medic%' OR profesion."profesion" ILIKE '%médic%')
 	) AS doctor ON doctor.doc_id = A."IDMedico"

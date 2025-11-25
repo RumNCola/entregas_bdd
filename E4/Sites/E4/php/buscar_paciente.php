@@ -1,4 +1,3 @@
-<!-- Codigo iniciado tras buscar paciente en agendar_hora.php -->
 <?php
 session_start();
 require_once 'utils.php';

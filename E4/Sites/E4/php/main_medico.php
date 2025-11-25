@@ -14,10 +14,15 @@ if (!isset($_SESSION['usuario'])){
 </head>
 <body>
     <div>
-        <h1>Ingrese RUN paciente para acceder a su ficha: </h1>
+        <h1>Ingrese RUN paciente para acceder a su ficha y su diagnostico: </h1>
         <form action="ficha_paciente.php" method="POST">
+            <label for="RUN_paciente">RUN: </label>
             <input type="text" id="RUN_paciente" name="RUN_paciente" required>
-            <button type="submit">Mostrar Ficha</button>
+
+            <label for="diagnostico">Diagnostico: </label>
+            <input type="text" id="diagnostico" name="diagnostico" required>
+            
+            <button type="submit">Ingresar Diagnostico</button>
         </form>
     </div>
 </body>

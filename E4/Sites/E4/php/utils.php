@@ -16,6 +16,8 @@ function conectarBD() {
     }
 };
 
+//nota personal/para corrección: me equivoque y le puse validar ruT con T en vez de N. Me di cuenta muy tarde
+// asi que lo dejé asi nomas.
 function validar_rut(string $rut): bool {
     //funcion que recibe un rut y retorna true si es válido
     //Dejé bien comentada esta función para que se entienda. TUve que volver a leerla varias veces
