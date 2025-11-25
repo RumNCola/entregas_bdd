@@ -1,11 +1,12 @@
 <?php
 session_start();
 require_once 'utils.php';
+require_once 'funciones.php';
 
 $run_paciente = $_POST['RUN_paciente'] ?? '';
 $diagnostico = $_POST['diagnostico'] ?? '';
 
-if (!validar_rut($run_paciente)) {
+if (!validar_run($run_paciente)) {
     header('Location: main_medico.php?error=RUN invalido');
     exit();
 }

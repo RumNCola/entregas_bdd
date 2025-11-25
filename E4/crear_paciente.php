@@ -1,15 +1,17 @@
 <?php
 include_once 'utils.php';
+include_once 'funciones.php';
 session_start();
 if (!isset($_SESSION['usuario'])){
     header('Location: index.php?error=No se ha iniciado sesion');
     exit();
 }
 $run_paciente = $_POST['RUN_paciente'] ?? '';
-if (!validar_rut($run_paciente)) {
+if (!validar_run($run_paciente)) {
     header('Location: agendar_hora.php?error=RUN invalido de nuevo paciente');
     exit();
 }
+
 $nombres = $_POST['nombres'] ?? '';
 $apellidos = $_POST['apellidos'] ?? '';
 $direccion = $_POST['direccion'] ?? '';

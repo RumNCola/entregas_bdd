@@ -301,7 +301,7 @@ AS $$
 DECLARE
     id_persona integer;
 BEGIN
-    id_persona := SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN;
+    id_persona := (SELECT persona."ID" FROM persona WHERE persona."RUN" = RUN);
     IF ((SELECT rol."Rol" FROM persona LEFT JOIN rol ON persona."ID" = rol."IDPersona" WHERE
     persona."RUN" = RUN AND rol."Rol" ILIKE '%paciente%' LIMIT 1) IS NULL) THEN
         UPDATE rol

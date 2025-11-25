@@ -1,11 +1,12 @@
 <?php
 session_start();
 require_once 'utils.php';
+require_once 'funciones.php';
 
 $run_paciente = $_POST['RUN_paciente'] ?? '';
 
 // Primero a validar el rut.
-if (!validar_rut($run_paciente)) {
+if (!validar_run($run_paciente)) {
     header('Location: agendar_hora.php?error=RUN de paciente no tiene formato válido');
     exit();
 }
