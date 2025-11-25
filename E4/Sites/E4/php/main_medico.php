@@ -24,6 +24,10 @@ if (!isset($_SESSION['usuario'])){
             
             <button type="submit">Ingresar Diagnostico</button>
         </form>
+        <?php if (isset($_SESSION['diagnosticado'])): ?>
+            <h1> Ingrese medicamentos a ingresar </h1>
+            <form action="ingresar_medicamentos_ordenes.php" method="POST">
+                <
     </div>
 </body>
 </html>

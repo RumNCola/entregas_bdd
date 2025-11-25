@@ -34,11 +34,11 @@ function validar_rut(string $rut): bool {
             return FALSE;
         }
         
-        if (str_length($partes[1]) != 1) {
+        if (strlen($partes[1]) != 1) {
             return FALSE;
         }
         
-        if (str_length($partes[0]) > 8 || str_length($partes[0]) < 7) {
+        if (strlen($partes[0]) > 8 || strlen($partes[0]) < 7) {
             return FALSE;
         }
         

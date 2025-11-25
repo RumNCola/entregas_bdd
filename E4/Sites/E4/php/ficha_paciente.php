@@ -42,6 +42,7 @@ try {
     $bdd->commit();
     $_SESSION['diagnosticado'] = TRUE;
     header('Location: main_medico.php?success=Diagnosticado');
+    exit();
 } 
 catch (Exception $e) {
     $bdd->rollBack();

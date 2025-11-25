@@ -24,7 +24,7 @@ if ($especialidad != ''){
     $stmt = $bdd->prepare($query_esp);
     $stmt->bindParam(':especialidad', "%{$especialidad}%", PDO::PARAM_STR);
     $stmt ->execute();
-    $esp = $stmt.fetch();
+    $esp = $stmt->fetch();
 
     if (!$esp){
         header('Location: agendar_hora.php?error=Especialidad no válida');
@@ -43,7 +43,7 @@ elseif($nombre_medico != ''){
         exit();
     }
     $query_doc = 'SELECT persona."ID" FROM persona WHERE (persona."Nombres" ILIKE :nombre 
-    AND persona."Apellidos" ILIKE :apellido LIMIT 1) AND persona."medico" = TRUE';
+    AND persona."Apellidos" ILIKE :apellido) AND persona."medico" = TRUE LIMIT 1';
     $stmt = $bdd->prepare($query_doc);
     $stmt->bindParam(':nombre', "%{$nombre[0]}%", PDO::PARAM_STR);
     $stmt->bindParam(':apellido', "%{nombre[1]}%", PDO::PARAM_STR);

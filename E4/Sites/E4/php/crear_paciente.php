@@ -7,7 +7,7 @@ if (!isset($_SESSION['usuario'])){
 }
 $run_paciente = $_POST['RUN_paciente'] ?? '';
 if (!validar_rut($run_paciente)) {
-    header('Locationo: agendar_hora.php?error=RUN invalido de nuevo paciente');
+    header('Location: agendar_hora.php?error=RUN invalido de nuevo paciente');
     exit();
 }
 $nombres = $_POST['nombres'] ?? '';
@@ -49,7 +49,7 @@ try {
     $bdd->commit();
     
 
-    $query_id = 'SELECT persona."ID" FROM presona WHERE persona."RUN ILIKE :run_paciente';
+    $query_id = 'SELECT persona."ID" FROM persona WHERE persona."RUN" ILIKE :run_paciente';
     $stmt = $bdd->prepare($query_id);
     $stmt->bindParam(':run_paciente', $run_paciente);
     $stmt->execute();
@@ -65,8 +65,4 @@ catch (Exception $e) {
     header('Location: main_admin.php?error=Error al crear paciente');
     exit();
 }
-
-
-
-
 ?>
