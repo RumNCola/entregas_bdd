@@ -57,6 +57,9 @@ if (!isset($_SESSION['usuario'])){
 
             <button type="submit">Crear Paciente</button>
         </form>
+        <?php elseif (isset($_SESSION['RUN_paciente'])) :?>
+        <h2> Paciente existe, Su información: </h2> 
+            <?php print_r($_SESSION['datos_paciente']); ?>
         <?php else: ?> 
             <!-- (isset($_GET['RUN_paciente'])) al final me quede con else, guardo esto aqui por si me arrepiento. -->
             <h2> Paciente encontrado! Seleccione doctor o especialidad </h2> 

@@ -56,9 +56,17 @@ try {
     $stmt->bindParam(':run_paciente', $run_paciente);
     $stmt->execute();
     $id_paciente = $stmt->fetch()['ID'];
+
+    $query = 'SELECT * FROM persona LEFT JOIN rol ON rol."IDPersona" = persona."ID" LEFT JOIN beneficiario
+    ON beneficiario."IDpersona" = persona."ID" WHERE persona."RUN" ILIKE :run_paciente';
+    $stmt = $bdd->prepare($query);
+    $stmt->bindParam(':run_paciente', $run_paciente, PDO::PARAM_STR);
+    $stmt -> execute();
+    $paciente = $stmt->fetch(PDO::FETCH_ASSOC);
     
     $_SESSION['RUN_paciente'] = $run_paciente;
     $_SESSION['ID_paciente'] = $id_paciente;
+    $_SESSION['datos_paciente'] = $paciente;
     header('Location: agendar_hora.php?succes=Paciente creado');
     exit();
 }

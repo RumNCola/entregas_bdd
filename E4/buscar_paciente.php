@@ -14,11 +14,12 @@ if (!validar_run($run_paciente)) {
 $bdd = conectarBD();
 
 // A ver si existe el paciente
-$query = 'SELECT * FROM persona WHERE persona."RUN" ILIKE :run_paciente';
+$query = 'SELECT * FROM persona LEFT JOIN rol ON rol."IDPersona" = persona."ID" LEFT JOIN beneficiario
+ON beneficiario."IDpersona" = persona."ID" WHERE persona."RUN" ILIKE :run_paciente';
 $stmt = $bdd->prepare($query);
 $stmt->bindParam(':run_paciente', $run_paciente, PDO::PARAM_STR);
 $stmt -> execute();
-$paciente = $stmt->fetch();
+$paciente = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$paciente) {
     $_SESSION['fallo_paciente'] = true;
@@ -43,6 +44,7 @@ catch (Exception $e) {
 //la infomracion de la persona y le desplegamos el formualario para que seleccione un médico.
 $_SESSION['RUN_paciente'] = $run_paciente;
 $_SESSION['ID_paciente'] = $paciente['ID'];
+$_SESSION['datos_paciente'] = $paciente;
 header('Location: agendar_hora.php?succes=Paciente existe - Seleccione médico y/o especialidad');
 exit();
 ?>
