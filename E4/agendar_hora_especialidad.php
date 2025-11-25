@@ -46,7 +46,7 @@ elseif($nombre_medico != ''){
     AND persona."Apellidos" ILIKE :apellido) AND persona."medico" = TRUE LIMIT 1';
     $stmt = $bdd->prepare($query_doc);
     $stmt->bindParam(':nombre', "%{$nombre[0]}%", PDO::PARAM_STR);
-    $stmt->bindParam(':apellido', "%{nombre[1]}%", PDO::PARAM_STR);
+    $stmt->bindParam(':apellido', "%{$nombre[1]}%", PDO::PARAM_STR);
     $stmt ->execute();
     $doc_id = $stmt->fetch();   
     if (!$doc_id){
