@@ -45,6 +45,11 @@ Tanto para esta parte como para secciones futuras, el usuario debe ingresar RUNS
 #### Pregunta 3 - Agendamiento de hora médica
 El enunciado es poco claro respecto a como o quien selecciona la hora y el día. Dado que ezste dice que el sistema asigna una hora, a cada agendamiento se le asignará la hora más cercana disponible del doctor seleccionado.
 
+Para buscar un doctor por nombre, se debe ingresar su primer o segundo nombre y su primer o segundo apellido.
+Además, no importa si el nombre o apellido está completo, por ejemplo, ingresar histian varez permitirá identificar al doctor christian alvarez. una limitación es que se deben ingresar dos palabras y la primera debe corresponder a algun nombre y la segunda a algun apellido si o si.
+
+Si se busca al doctor por especialidad, se seleccina al primero que aparece.
+
 ### 2. Referencias a documentación externa válida
 <!-- Registra aquí fuentes externas de información utilizada (manuales, videos, etc. -->
 #### Para la pregunta 1:

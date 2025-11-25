@@ -1,0 +1,64 @@
+<?php
+include_once 'utils.php';
+session_start();
+if (!isset($_SESSION['usuario'])){
+    header('Location: index.php?error=No se ha iniciado sesion');
+    exit();
+}
+
+$bdd = conectarBD();
+
+$nombre_medico = $_POST['nombre_medico'] ?? '';
+$especialidad = $_POST['especialidad'] ?? '';
+
+//si no hay nombre ni especialidad, volvemos a agendar_hora.php
+if ($nombre_medico == '' && $especialidad == ''){
+    header('Location: agendar_hora.php?error=Debe ingresar nombre médico o especialidad');
+    exit();
+}
+
+if ($especialidad != ''){
+    // a revisar que la especialidad sea válida Notar que saca el primer doctor nomas.
+    $query_esp = 'SELECT persona."ID" FROM persona LEFT JOIN profesion ON profesion."ID" = persona."ID"
+    WHERE profesion."especialidad" ILIKE :especialidad AND persona."medico" = TRUE LIMIT 1';
+    $stmt = $bdd->prepare($query_esp);
+    $stmt->bindParam(':especialidad', "%{$especialidad}%", PDO::PARAM_STR);
+    $stmt ->execute();
+    $esp = $stmt.fetch();
+
+    if (!$esp){
+        header('Location: agendar_hora.php?error=Especialidad no válida');
+        exit();
+    }
+    else{
+        $_SESSION['ID_medico'] = $esp['ID'];
+        header('Location: agendar_hora.php?succes=Médico encontrado por especialidad');
+        exit();
+    }
+
+}
+elseif($nombre_medico != ''){
+    // a revisar que exista un doctor con ese nombre.
+    $nombre = explode(' ', $nombre_medico);
+    if (count($nombre) != 2){
+        header('Location: agendar_hora.php?error=Debe ingresar nombre y apellido del médico');
+        exit();
+    }
+    $query_doc = 'SELECT persona."ID" FROM persona WHERE (persona."Nombres" ILIKE :nombre 
+    AND persona."Apellidos" ILIKE :apellido LIMIT 1) AND persona."medico" = TRUE';
+    $stmt = $bdd->prepare($query_doc);
+    $stmt->bindParam(':nombre', "%{$nombre[0]}%", PDO::PARAM_STR);
+    $stmt->bindParam(':apellido', "%{nombre[1]}%", PDO::PARAM_STR);
+    $stmt ->execute();
+    $doc_id = $stmt->fetch();   
+    if (!$doc_id){
+        header('Location: agendar_hora.php?error=Médico no encontrado (nombre/apellido)');
+        exit();
+    }
+    else{
+        $_SESSION['ID_medico'] = $doc_id['ID'];
+        header('Location: agendar_hora.php?succes=Médico encontrado');
+        exit();
+    }
+}
+?>
