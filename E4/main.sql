@@ -370,14 +370,14 @@ CREATE OR REPLACE VIEW disponibilidad_doctores AS (
 );
 
 --Funcion que nos retorna la disponibilidad de un doctor dado su run
-CREATE OR REPLACE FUNCTION disponibilidad_doctor(RUN text)
+CREATE OR REPLACE FUNCTION disponibilidad_doctor(id_doctor integer)
 RETURNS TABLE("Fecha" date, "Hora" time)
 LANGUAGE plpgsql
 AS $$
 BEGIN
     RETURN QUERY
     SELECT agenda."Fecha", agenda."Hora" FROM agenda WHERE (agenda."Fecha", agenda."Hora") NOT IN
-    (SELECT dd."fecha", dd."hora" FROM disponibilidad_doctores AS dd WHERE dd."RUN" = RUN);
+    (SELECT dd."fecha", dd."hora" FROM disponibilidad_doctores AS dd WHERE dd."ID" = id_doctor);
 END;
 $$;
 

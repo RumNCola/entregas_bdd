@@ -25,7 +25,7 @@ if (!isset($_SESSION['usuario'])){
          formulario para ingresar los datos del paciente y crearlo -->
         <?php elseif (isset($_GET['fallo_paciente'])): ?>
         <h2>Paciente no encontrado. Ingreselo!</h2>
-        <form action="buscar_paciente.php" method="POST">
+        <form action="crear_paciente.php" method="POST">
 
             <label for="RUN_paciente">RUN: </label>
             <input type="text" id="RUN_paciente" name="RUN_paciente" required>
@@ -48,20 +48,18 @@ if (!isset($_SESSION['usuario'])){
             <label type="text" id="IDtitular" name="IDtitular">ID Titular: </label>
             <input type="text" id="IDtitular" name="IDtitular" required>
 
-            <label type="text" id="beneficiario?" name="beneficiario?">Es beneficiario? (1=si, 0=no): </label>
+            <label type="text" id="beneficiario?" name="beneficiario?">Es beneficiario? (TRUE o FALSE): </label>
             <input type="text" id="beneficiario?" name="beneficiario?" required>
 
-            <label type="text" id="firma" name="firma">Firma: </label>
-            <input type="text" id="firma" name="firma" required>
-
-            <label type="text" id="profesion" name="profesion">Profesion: </label>
-            <input type="text" id="profesion" name="profesion" required>
+            <label type="text" id="rol" name="rol">Rol: </label>
+            <input type="text" id="rol" name="rol" required>
 
 
             <button type="submit">Crear Paciente</button>
         </form>
-        <?php elseif (isset($_GET['RUN_paciente'])): ?>
-            <h2> Paciente encontrado! Seleccione doctor o especialidad </h2>
+        <?php else: ?> 
+            <!-- (isset($_GET['RUN_paciente'])) al final me quede con else, guardo esto aqui por si me arrepiento. -->
+            <h2> Paciente encontrado! Seleccione doctor o especialidad </h2> 
             <form action="agendar_hora_especialidad.php" method="POST">
                 <label for="doctor">Doctor deseado: </label>
                 <input type="text" id="doctor" name="doctor">
@@ -71,10 +69,7 @@ if (!isset($_SESSION['usuario'])){
 
                 <button type="submit">Confirmar especialista</button>
             </form>
-        <?php elseif (): ?>
-
         <?php endif; ?>
-
         <?php if ($error): ?>
             <p><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>

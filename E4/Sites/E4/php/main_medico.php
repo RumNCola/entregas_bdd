@@ -15,8 +15,8 @@ if (!isset($_SESSION['usuario'])){
 <body>
     <div>
         <h1>Ingrese RUN paciente para acceder a su ficha: </h1>
-        <form action="" method="POST">
-            <input type="text" id="runpaciente" name="runpaciente" required>
+        <form action="ficha_paciente.php" method="POST">
+            <input type="text" id="RUN_paciente" name="RUN_paciente" required>
             <button type="submit">Mostrar Ficha</button>
         </form>
     </div>

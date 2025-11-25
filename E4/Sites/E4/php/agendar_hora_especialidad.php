@@ -32,8 +32,6 @@ if ($especialidad != ''){
     }
     else{
         $_SESSION['ID_medico'] = $esp['ID'];
-        header('Location: agendar_hora.php?succes=Médico encontrado por especialidad');
-        exit();
     }
 
 }
@@ -57,7 +55,38 @@ elseif($nombre_medico != ''){
     }
     else{
         $_SESSION['ID_medico'] = $doc_id['ID'];
-        header('Location: agendar_hora.php?succes=Médico encontrado');
+    }
+}
+
+//si hay médico, creamos la hora.
+if (isset($_SESSION['ID_medico'])){
+    $disponibilidad_query = 'SELECT * FROM disponibilidad_doctor(:id_medico) ORDER BY "Fecha" ASC, "Hora" ASC LIMIT 1';
+    $stmt = $bdd->prepare($disponibilidad_query);
+    $stmt->bindParam(':id_medico', $_SESSION['ID_medico'], PDO::PARAM_INT);
+    $stmt -> execute();
+    $agenda = $stmt->fetch();
+    if (!$agenda){
+        header('Location: agendar_hora.php?error=El medico no tiene hora');
+        exit();
+    }
+    //crear la hora
+    try {
+        $bdd->beginTransaction();
+        $crear_hora_query = 'INSERT INTO atencion("fecha", "IDPaciente", "IDMedico", "Diagnostico", "Efectuada", "hora")
+        VALUES (:fecha, :id_paciente, :id_medico, NULL, FALSE, :hora)';
+        $stmt = $bdd->prepare($crear_hora_query);
+        $stmt->bindParam(':fecha', $agenda['Fecha']);
+        $stmt->bindParam(':hora', $agenda['Hora']);
+        $stmt->bindParam(':id_paciente', $_SESSION['ID_paciente'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_medico', $_SESSION['ID_medico'], PDO::PARAM_INT);
+        $stmt -> execute();
+        $bdd->commit();
+        header('Location: main_admin.php?succes=Hora agendada');
+        exit();
+    }
+    catch (Exception $e) {
+        $bdd->rollBack();
+        header('Location: main_admin.php?error=Fallo al agendar hora');
         exit();
     }
 }
