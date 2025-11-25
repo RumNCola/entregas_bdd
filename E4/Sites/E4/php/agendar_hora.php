@@ -13,17 +13,20 @@ if (!isset($_SESSION['usuario'])){
 </head>
 <body>
     <div>
-        <h1>Buscar paciente por RUN</h1>
-        <form action="buscar_paciente.php" method="POST">
-            <label for="RUN_paciente">RUN: </label>
-            <input type="text" id="RUN_paciente" name="RUN_paciente" required>
-            <button type="submit">Buscar paciente</button>
-        </form>
+        <?php 
+        if (!isset($_GET['RUN_Paciente']) && !isset($_GET['fallo_paciente'])): ?>
+            <h1>Buscar paciente por RUN</h1>
+            <form action="buscar_paciente.php" method="POST">
+                <label for="RUN_paciente">RUN: </label>
+                <input type="text" id="RUN_paciente" name="RUN_paciente" required>
+                <button type="submit">Buscar paciente</button>
+            </form>
         <!-- Si buscar_paciente.php  dice que el paciente no existe, desplegamos el 
          formulario para ingresar los datos del paciente y crearlo -->
-        <h2>Paciente no existe? Ingreselo!</h2>
+        <?php elseif (isset($_GET['fallo_paciente'])): ?>
+        <h2>Paciente no encontrado. Ingreselo!</h2>
         <form action="buscar_paciente.php" method="POST">
-            
+
             <label for="RUN_paciente">RUN: </label>
             <input type="text" id="RUN_paciente" name="RUN_paciente" required>
 
@@ -57,7 +60,20 @@ if (!isset($_SESSION['usuario'])){
 
             <button type="submit">Crear Paciente</button>
         </form>
+        <?php elseif (isset($_GET['RUN_paciente'])): ?>
+            <h2> Paciente encontrado! Seleccione doctor o especialidad </h2>
+            <form action="agendar_hora_especialidad.php" method="POST">
+                <label for="doctor">Doctor deseado: </label>
+                <input type="text" id="doctor" name="doctor">
 
+                <label for="especialidad">Especialidad deseada: </label>
+                <input type="text" id="especialidad" name="especialidad">
+
+                <button type="submit">Confirmar especialista</button>
+            </form>
+        <?php elseif (): ?>
+
+        <?php endif; ?>
 
         <?php if ($error): ?>
             <p><?= htmlspecialchars($error) ?></p>

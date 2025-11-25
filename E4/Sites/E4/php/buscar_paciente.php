@@ -21,6 +21,7 @@ $stmt -> execute();
 $paciente = $stmt->fetch();
 
 if (!$paciente) {
+    $_SESSION['fallo_paciente'] = true;
     header('Location: agendar_hora.php?error=No existe paciente con RUN - Se desplega formuario para ingresar nuevo paciente');
     exit();
 }
@@ -40,7 +41,7 @@ catch (Exception $e) {
 
 //Ahora, se ha verificado la infomración del paciente y existe. Volvemos a agendar_hora.php, mostramos
 //la infomracion de la persona y le desplegamos el formualario para que seleccione un médico.
-
+$_SESSION['RUN_paciente'] = $run_paciente;
 header('Location: agendar_hora.php?succes=Paciente existe - Seleccione médico y/o especialidad');
 exit();
 ?>
