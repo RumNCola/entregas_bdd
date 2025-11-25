@@ -25,9 +25,13 @@ if (!isset($_SESSION['usuario'])){
             <button type="submit">Ingresar Diagnostico</button>
         </form>
         <?php if (isset($_SESSION['diagnosticado'])): ?>
-            <h1> Ingrese medicamentos a ingresar </h1>
+            <h1> Ingrese medicamentos (no psicotropicos) a ingresar </h1>
             <form action="ingresar_medicamentos_ordenes.php" method="POST">
                 <
+            <h2> Ingrese psicotrópicos a ingresar </h2>
+
+            <h3> Ingrese Ordenes a ingresar </h3>
+        <?php endif; ?>
     </div>
 </body>
 </html>
