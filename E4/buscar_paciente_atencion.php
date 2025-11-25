@@ -23,6 +23,10 @@ $stmt->bindParam(':run_paciente', $run_paciente, PDO::PARAM_STR);
 $stmt -> execute();
 $paciente = $stmt->fetch(PDO::FETCH_ASSOC);
 
+if (!$paciente) {
+    header('Location: atencion_medica.php?error=No existen atenciones para ese RUN');
+    exit();
+}
 $id_atencion = $paciente['id_atencion'];
 $id_doctor = $paciente['doc_id'];
 $id_paciente = $paciente['id_paciente'];
@@ -65,15 +69,4 @@ catch (Exception $e) {
     exit();
 }
 
-if (!$paciente) {
-    header('Location: atencion_medica.php?error=No existen atenciones para ese RUN');
-    exit();
-}
-//Ahora, se ha verificado la infomración del paciente y existe. Volvemos a cancelar_atencion.php, mostramos
-//la infomracion de la persona y le desplegamos el formualario para que seleccione un médico.
-$_SESSION['RUN_paciente'] = $run_paciente;
-$_SESSION['ID_paciente'] = $paciente['ID'];
-$_SESSION['atencion'] =  $paciente; 
-header('Location: main_admin.php?success=Bono y efectuada registrada en atencion!');
-exit();
 ?>

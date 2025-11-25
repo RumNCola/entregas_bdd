@@ -23,7 +23,7 @@ if (!isset($_SESSION['usuario'])){
             </form>
         <!-- Si buscar_paciente.php  dice que el paciente no existe, desplegamos el 
          formulario para ingresar los datos del paciente y crearlo -->
-        <?php elseif (isset($_GET['fallo_paciente'])): ?>
+        <?php elseif (isset($_SESSION['fallo_paciente'])): ?>
         <h2>Paciente no encontrado. Ingreselo!</h2>
         <form action="crear_paciente.php" method="POST">
 
