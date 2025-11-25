@@ -29,7 +29,6 @@ if (!isset($_SESSION['usuario'])){
             <form action="ingresar_medicamentos_ordenes.php" method="POST">
                 <
             <h2> Ingrese psicotrópicos a ingresar </h2>
-
             <h3> Ingrese Ordenes a ingresar </h3>
         <?php endif; ?>
     </div>
