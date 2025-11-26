@@ -41,7 +41,7 @@ CREATE INDEX indice_agenda ON agenda("ID", "Fecha", "Hora");
 
 --1.d. Stored Procedure
 -- Emisión de receta no psic
-CREATE OR REPLACE FUNCTION emitir_receta(id_paciente integer)
+CREATE OR REPLACE FUNCTION emitir_receta(paciente_id integer, atencion_id integer, doctor_id integer)
 RETURNS TABLE (Receta text) AS $$
 BEGIN
     RETURN QUERY
@@ -65,7 +65,8 @@ BEGIN
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
                 LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
                 profesion."ID" = doctor."ID"
-            WHERE atencion."Efectuada" = True AND atencion."ID" = id_paciente
+            WHERE atencion."Efectuada" = True AND atencion."IDPaciente" = paciente_id AND
+            atencion."ID" = atencion_id AND atencion."IDMedico" = doctor_id
         ) AS personas ON meds."IDAtencion" = personas."ID"
     WHERE meds."Psicotropico" = False 
     GROUP BY personas.paciente_nombre, personas.paciente_apellido, personas.paciente_RUN,
@@ -75,7 +76,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Emisión de receta Psicotrópica
-CREATE OR REPLACE FUNCTION emitir_receta_psicotropica(id_paciente integer)
+CREATE OR REPLACE FUNCTION emitir_receta_psicotropica(paciente_id integer, atencion_id integer, doctor_id integer)
 RETURNS TABLE (Receta_psicotropica text) AS $$
 BEGIN
     RETURN QUERY
@@ -98,7 +99,8 @@ BEGIN
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
                 LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
                 profesion."ID" = doctor."ID"
-            WHERE atencion."Efectuada" = True AND atencion."ID" = id_paciente
+            WHERE atencion."Efectuada" = True AND atencion."IDPaciente" = paciente_id AND 
+            atencion."ID" = atencion_id AND atencion."IDMedico" = doctor_id
         ) AS personas ON meds."IDAtencion" = personas."ID"
     WHERE meds."Psicotropico" = True 
     GROUP BY personas.paciente_nombre, personas.paciente_apellido, personas.paciente_RUN,
@@ -108,7 +110,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- emision de ordenes
-CREATE OR REPLACE FUNCTION emitir_orden(id_paciente integer)
+CREATE OR REPLACE FUNCTION emitir_orden(paciente_id integer, atencion_id integer, doctor_id integer)
 RETURNS TABLE(Ordenes_de_examen text) AS $$
 BEGIN
     RETURN QUERY
@@ -131,7 +133,8 @@ BEGIN
             FROM atencion LEFT JOIN persona AS paciente ON atencion."IDPaciente" = paciente."ID"
                 LEFT JOIN persona AS doctor ON doctor."ID" = atencion."IDMedico" LEFT JOIN profesion ON
                 profesion."ID" = doctor."ID"
-            WHERE atencion."Efectuada" = True AND atencion."ID" = id_paciente
+            WHERE atencion."Efectuada" = True AND atencion."IDPaciente" = paciente_id AND atencion."ID"
+            = atencion_id AND atencion."IDMedico" = doctor_id
         ) AS personas ON personas."ID" = ord."IDAtencion"
     GROUP BY personas.paciente_nombre, personas.paciente_apellido, personas.paciente_RUN,
         personas.fecha, personas.apellido_doctor, personas."firma", personas.diagnostico, personas.doc_run
@@ -188,14 +191,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION emitir_documentos(id_paciente integer)
+CREATE OR REPLACE FUNCTION emitir_documentos(paciente_id integer, atencion_id integer, doctor_id integer)
 RETURNS TABLE(Documentos_consulta text) AS $$
 BEGIN 
     RETURN QUERY
     SELECT ('Recetas: ' || E'\n' ||  COALESCE(R.Receta, 'No hay recetas') || E'\n' || E'\n' || E'\n'|| 
 	   'Recetas Psic: ' ||  E'\n' || COALESCE(RP.Receta_psicotropica, 'No hay recetas psic.') || E'\n' || E'\n' || E'\n'|| 
 	   'Ordenes de examen: ' ||  E'\n' || COALESCE(O.Ordenes_de_examen, 'No hay ordenes de examen')) AS Documentos_consulta
-    FROM emitir_receta(id_paciente) AS R, emitir_receta_psicotropica(id_paciente) AS RP, emitir_orden(id_paciente) AS O;
+    FROM emitir_receta(paciente_id, atencion_id, doctor_id) AS R, 
+    emitir_receta_psicotropica(paciente_id, atencion_id, doctor_id) AS RP, emitir_orden(paciente_id,
+    atencion_id, doctor_id) AS O;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -276,6 +281,13 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+
+--funcion trigger para las ordenes
+CREATE TRIGGER trigger_ordenes
+AFTER INSERT ON orden
+FOR EACH ROW
+EXECUTE FUNCTION emitir_orden();
 
 -- Esta función es para que funcione el trigger
 CREATE OR REPLACE FUNCTION func_trigger_documentos()
