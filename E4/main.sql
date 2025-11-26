@@ -283,34 +283,72 @@ END;
 $$ LANGUAGE plpgsql;
 
 
---funcion trigger para las ordenes
-CREATE TRIGGER trigger_ordenes
-AFTER INSERT ON orden
-FOR EACH ROW
-EXECUTE FUNCTION emitir_orden();
-
--- Esta función es para que funcione el trigger
-CREATE OR REPLACE FUNCTION func_trigger_documentos()
+-- Esta función es para que funcione el trigger de ordenes
+CREATE OR REPLACE FUNCTION func_trigger_ordenes()
 RETURNS trigger AS $$
 DECLARE
-    realizada boolean;
+    paciente integer;
+    atencion integer;
+    doctor integer;
 BEGIN
-    IF NEW."Efectuada" = TRUE AND NEW."Diagnostico" IS NOT NULL AND OLD."Diagnostico" IS NULL THEN
-        realizada := atencion_terminada(NEW."ID");
-    
-        IF realizada THEN
-            PERFORM emitir_documentos(NEW."IDPaciente");
-        END IF;
-    END IF;
+    paciente := (SELECT atencion."IDPaciente" FROM atencion WHERE atencion."ID" = NEW."IDAtencion");
+    atencion := NEW."IDAtencion";
+    doctor := (SELECT atencion."IDMedico" FROM atencion WHERE atencion."ID" = NEW."IDAtencion");
+    PERFORM emitir_documentos(paciente, atencion, doctor);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
--- el triggerr
-CREATE OR REPLACE TRIGGER trigger_documentos 
-AFTER UPDATE ON atencion
+--funcion trigger para las ordenes
+CREATE TRIGGER trigger_ordenes
+AFTER INSERT ON orden
 FOR EACH ROW
-EXECUTE FUNCTION func_trigger_documentos();
+EXECUTE FUNCTION func_trigger_ordenes();
+
+-- Esta función es para que funcione el trigger de recetas no psic
+CREATE OR REPLACE FUNCTION func_trigger_receta()
+RETURNS trigger AS $$
+DECLARE
+    paciente integer;
+    atencion integer;
+    doctor integer;
+BEGIN
+    paciente := (SELECT atencion."IDPaciente" FROM atencion WHERE atencion."ID" = NEW."IDAtencion");
+    atencion := NEW."IDAtencion";
+    doctor := (SELECT atencion."IDMedico" FROM atencion WHERE atencion."ID" = NEW."IDAtencion");
+    PERFORM emitir_receta(paciente, atencion, doctor);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+--funcion trigger para las recetas no psic
+CREATE TRIGGER trigger_receta
+AFTER INSERT ON medicamentos
+FOR EACH ROW
+EXECUTE FUNCTION func_trigger_receta();
+
+
+-- Esta función es para que funcione el trigger de recetas psic
+CREATE OR REPLACE FUNCTION func_trigger_receta_psic()
+RETURNS trigger AS $$
+DECLARE
+    paciente integer;
+    atencion integer;
+    doctor integer;
+BEGIN
+    paciente := (SELECT atencion."IDPaciente" FROM atencion WHERE atencion."ID" = NEW."IDAtencion");
+    atencion := NEW."IDAtencion";
+    doctor := (SELECT atencion."IDMedico" FROM atencion WHERE atencion."ID" = NEW."IDAtencion");
+    PERFORM emitir_receta_psicotropica(paciente, atencion, doctor);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+--funcion trigger para las recetas psic
+CREATE TRIGGER trigger_receta_psic
+AFTER INSERT ON medicamentos
+FOR EACH ROW
+EXECUTE FUNCTION func_trigger_receta_psic();
 
 --1.f. Vista Ficha 
 -- Notar que les puse más detalles (consatmedica) para corroborar que estuvieran bien. igual aporta
