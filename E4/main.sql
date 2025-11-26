@@ -283,7 +283,7 @@ RETURNS trigger AS $$
 DECLARE
     realizada boolean;
 BEGIN
-    IF NEW."Efectuada" = TRUE THEN
+    IF NEW."Efectuada" = TRUE AND NEW."Diagnostico" IS NOT NULL AND OLD."Diagnostico" IS NULL THEN
         realizada := atencion_terminada(NEW."ID");
     
         IF realizada THEN

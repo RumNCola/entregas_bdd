@@ -27,9 +27,9 @@ Las transacciones son manejadas a través del transaction manager de php. Se usa
 Para generar los tres tipos de documentos asociados a una atención, se crea una función para cada tipo de documento. Por último, se crea una cuarta función que llama las tres funciones anteriores y retorna todas las recetas de una atención.
 
 #### Parte 1.e)
-Tras detecetar que una atención ha sido efectuada y se ha ingresado diagnóstico/recetas/ordenes, se gatilla el trigger creado para esta seccion que llama la función de 1.d.
+En el enunciado se habla de que el trigger se debe gatillar al terminar la atención (se declara como efectuada), sin embargo las siguientes preguntas solicitan que las ordenes y recetas sean ingresadas despues de que la orden sea declarada como efectuada. De esta manera, para implementar un trigger realmente funcional, este debe depender de las inserciones en la tabla ordenes, y medicamentos, pues ahí realmente ocurre la acción que debe gatillar lo solicitado en el enunciado.
 
-Esta parte fue complicada y cree dos funciones y tres vistas auxiliares que permiten asegurar el funcionamiento correcto del trigger.
+De esta manera, para se crea un trigger para la tabla orden y otro para medicamentos, que tras una inserción de datos generan la receta.
 
 #### Parte 1.f)
 Para crear la vista, simplemente creé la query aosciada y agregué el CREATE VIEW Ficha AS (...). También, para agregar las especialidades desde el csv, desde el pgadmin usé la opcion de importar data directamente desde el csv. Para esto, dropee la tabla profesiones y la cree denuevo.
@@ -101,3 +101,7 @@ cada linea por separado de preferencia. despues se ha de truncar la tabla profes
 Para esto, tqambipen incluí el dumpe4actualizado que permite acelerar este proceso en caso de querer hacerlo desde cero.
 2. Es necesario acceder a stonebraker.ing.uc.cl/jara.fernando.e4/E4 para acceder a la página.
 
+### 4. Observaciones importantes
+1. En las Issues se menciona que para presentar las recetas o documentos se pueden descargar los archivos o presentarlos en pantalla. En mi tarea escogí mostrarlos en pantalla.
+2. Dado que no es requisito de la tarea y no tengo conocimientos profundos del tema, no impelmente un diseño css por lo que los sitios serán feos, pero funcionales.
+3.
