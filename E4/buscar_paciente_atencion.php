@@ -36,7 +36,7 @@ $query = 'UPDATE atencion SET atencion."Efectuada" = True WHERE atencion."ID" = 
 $query_datos = 'SELECT * FROM Ficha LEFT JOIN persona ON Ficha."id_paciente" = persona."ID"
 LEFT JOIN rol ON rol."IDPersona" = Ficha."id_paciente" LEFT JOIN beneficiario ON beneficiario."IDPersona"
 = Ficha."id_paciente" WHERE Ficha."id_atencion" = :id_atencion';
-$query_bono = 'SELECT * FROM emitir_bono(:id_atencion, :id_paciente, :id_doctor) AS bono;';
+$query_bono = 'SELECT * FROM emitir_bono(:id_paciente, :id_atencion, :id_doctor) AS bono;';
 
 try{
     $bdd->beginTransaction();
@@ -64,7 +64,7 @@ try{
 }
 catch (Exception $e) {
     $bdd->rollBack();
-    header('Locatino: atencion_medica.php?error=Error al registrar la atencion y emitir bono '. 
+    header('Location: atencion_medica.php?error=Error al registrar la atencion y emitir bono '. 
     $e->getMessage());
     exit();
 }

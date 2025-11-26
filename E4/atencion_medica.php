@@ -21,16 +21,15 @@ if (!isset($_SESSION['usuario'])){
                 <input type="text" id="RUN_paciente" name="RUN_paciente" required>
                 <button type="submit">Buscar paciente</button>
             </form>
-
-        <?php elseif (isset($_SESSION['datos_paciente'])): ?>
-        <h2>Información del paciente y su atencion más reciente: </h2>
-            <?php print_r($_SESSION['datos_paciente']); ?>
-        <?php elseif (isset($_SESSION['bono'])): ?>
-        <h2> Bono emitido: </h2>
-            <?php print_r($_SESSION['bono']); ?>
-        <?php endif; ?>
-        <?php if ($error): ?>
-            <p><?= htmlspecialchars($error) ?></p>
+        <?php else: ?>
+            <?php if (isset($_SESSION['datos_paciente'])): ?>
+            <h2>Información del paciente y su atencion más reciente: </h2>
+                <?php print_r($_SESSION['datos_paciente']); ?>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['bono'])): ?>
+            <h2> Bono emitido: </h2>
+                <?php print_r($_SESSION['bono']); ?>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 </body>

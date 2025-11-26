@@ -45,6 +45,6 @@ catch (Exception $e) {
 $_SESSION['RUN_paciente'] = $run_paciente;
 $_SESSION['ID_paciente'] = $paciente['ID'];
 $_SESSION['datos_paciente'] = $paciente;
-header('Location: agendar_hora.php?succes=Paciente existe - Seleccione médico y/o especialidad');
+header('Location: agendar_hora.php?success=Paciente existe - Seleccione médico y/o especialidad');
 exit();
 ?>

@@ -73,9 +73,6 @@ if (!isset($_SESSION['usuario'])){
                 <button type="submit">Confirmar especialista</button>
             </form>
         <?php endif; ?>
-        <?php if ($error): ?>
-            <p><?= htmlspecialchars($error) ?></p>
-        <?php endif; ?>
     </div>
 </body>
 </html>
